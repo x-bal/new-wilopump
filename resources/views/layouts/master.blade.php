@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
     <link href="{{ asset('/') }}css/phoenix.min.css" rel="stylesheet" id="style-default">
     <link href="{{ asset('/') }}css/user.min.css" rel="stylesheet" id="user-style-default">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             opacity: 0;
@@ -32,20 +33,26 @@
                 <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
                     <div class="navbar-vertical-content scrollbar">
                         <ul class="navbar-nav flex-column" id="navbarVerticalNav">
-                            <li class="nav-item"><a class="nav-link active" href="/dashboard">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="cast"></span></span><span class="nav-link-text">Dashbboard</span></div>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="/dashboard">
+                                    <div class="d-flex align-items-center">
+                                        <span class="nav-link-icon">
+                                            <span data-feather="cast"></span>
+                                        </span>
+                                        <span class="nav-link-text">Dashbboard</span>
+                                    </div>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
+                                <a class="nav-link {{ request()->is('user*') ? 'active' : '' }} dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
                                     <div class="d-flex align-items-center">
                                         <div class="dropdown-indicator-icon d-flex flex-center"><span class="fas fa-caret-right fs-0"></span></div><span class="nav-link-icon"><span data-feather="file-text"></span></span><span class="nav-link-text">Data Master</span>
                                     </div>
                                 </a>
-                                <ul class="nav collapse parent" id="master">
+                                <ul class="nav collapse parent {{ request()->is('user*') ? 'show' : '' }}" id="master">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="" data-bs-toggle="" aria-expanded="false">
+                                        <a class="nav-link" href="{{ route('user.index') }}" data-bs-toggle="" aria-expanded="false">
                                             <div class="d-flex align-items-center">
                                                 <span class="nav-link-text">Data User</span>
                                             </div>
@@ -76,13 +83,13 @@
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row">
                         <li class="nav-item dropdown"><a class="nav-link lh-1 px-0 ms-5" id="navbarDropdownUser" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="avatar avatar-l"><img class="rounded-circle" src="{{ asset('/') }}img/team/57.png" alt=""></div>
+                                <div class="avatar avatar-l"><img class="rounded-circle" src="{{ asset('storage/'. auth()->user()->image) }}" alt=""></div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0 dropdown-profile shadow border border-300" aria-labelledby="navbarDropdownUser">
                                 <div class="card bg-white position-relative border-0">
                                     <div class="card-body p-0 overflow-auto scrollbar" style="height: 18rem;">
                                         <div class="text-center pt-4 pb-3">
-                                            <div class="avatar avatar-xl"><img class="rounded-circle" src="{{ asset('/') }}img/team/57.png" alt=""></div>
+                                            <div class="avatar avatar-xl"><img class="rounded-circle" src="{{ asset('storage/'. auth()->user()->image) }}" alt=""></div>
                                             <h6 class="mt-2">{{ auth()->user()->name }}</h6>
                                         </div>
 
@@ -123,6 +130,28 @@
         </div>
     </main>
     <script src="{{ asset('/') }}js/phoenix.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    @if(session('success'))
+    <script>
+        iziToast.success({
+            title: 'Success',
+            position: 'topRight',
+            message: '{{ session("success") }}',
+        });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+        iziToast.error({
+            title: 'Error',
+            position: 'topRight',
+            message: '{{ session("error") }}',
+        });
+    </script>
+    @endif
 </body>
 
 </html>
