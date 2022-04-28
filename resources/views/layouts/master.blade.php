@@ -38,14 +38,24 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link dropdown-indicator" href="#forms" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="forms">
+                                <a class="nav-link dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
                                     <div class="d-flex align-items-center">
-                                        <div class="dropdown-indicator-icon d-flex flex-center"><span class="fas fa-caret-right fs-0"></span></div><span class="nav-link-icon"><span data-feather="file-text"></span></span><span class="nav-link-text">Forms</span>
+                                        <div class="dropdown-indicator-icon d-flex flex-center"><span class="fas fa-caret-right fs-0"></span></div><span class="nav-link-icon"><span data-feather="file-text"></span></span><span class="nav-link-text">Data Master</span>
                                     </div>
                                 </a>
-                                <ul class="nav collapse parent" id="forms">
-                                    <li class="nav-item"><a class="nav-link" href="../modules/forms/form-control.html" data-bs-toggle="" aria-expanded="false">
-                                            <div class="d-flex align-items-center"><span class="nav-link-text">Form control</span></div>
+                                <ul class="nav collapse parent" id="master">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="" data-bs-toggle="" aria-expanded="false">
+                                            <div class="d-flex align-items-center">
+                                                <span class="nav-link-text">Data User</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="" data-bs-toggle="" aria-expanded="false">
+                                            <div class="d-flex align-items-center">
+                                                <span class="nav-link-text">Data Device</span>
+                                            </div>
                                         </a>
                                     </li>
                                 </ul>
