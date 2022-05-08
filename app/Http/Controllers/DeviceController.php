@@ -4,80 +4,98 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DeviceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $devices = Device::get();
+
+        return view('device.index', compact('devices'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $device = new Device();
+        $action = route('device.store');
+        $act = 'create';
+
+        return view('device.form', compact('device', 'action', 'act'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $attr = $request->validate([
+            'name' => 'required|string',
+            'satuan' => 'required|string',
+            'type' => 'required|string',
+            'lat' => 'required|string',
+            'long' => 'required|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $device = Device::create($attr);
+            $modbuses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+            $digital = [1, 2, 3, 4, 5, 6, 7,];
+
+            foreach ($modbuses as $modbus) {
+                $device->modbuses()->create(['name' => 'Modbus ' . $modbus]);
+            }
+
+            foreach ($digital as $dig) {
+                $device->digitalInputs()->create([
+                    'name' => 'Digital Input ' . $dig,
+                    'digital_input' => $dig
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('device.index')->with('success', 'Device sucessfully created');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Device  $device
-     * @return \Illuminate\Http\Response
-     */
     public function show(Device $device)
     {
-        //
+        return view('device.show', compact('device'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Device  $device
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Device $device)
     {
-        //
+        $action = route('device.update', $device->id);
+        $act = 'edit';
+
+        return view('device.form', compact('device', 'action', 'act'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Device  $device
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Device $device)
     {
-        //
+        $attr = $request->validate([
+            'name' => 'required|string',
+            'satuan' => 'required|string',
+            'type' => 'required|string',
+            'lat' => 'required|string',
+            'long' => 'required|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $device->update($attr);
+
+            DB::commit();
+
+            return redirect()->route('device.index')->with('success', 'Device sucessfully updated');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Device  $device
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Device $device)
     {
         //

@@ -15,6 +15,7 @@ class CreateDigitalInputsTable extends Migration
     {
         Schema::create('digital_inputs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('digital_input');
             $table->integer('yes')->default(1);

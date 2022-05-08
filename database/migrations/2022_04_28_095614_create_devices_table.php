@@ -15,8 +15,6 @@ class CreateDevicesTable extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('modbus_id')->constrained('modbuses')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('digital_input_id')->constrained('digital_inputs')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('lat');
             $table->string('long');

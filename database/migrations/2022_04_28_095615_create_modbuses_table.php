@@ -15,10 +15,11 @@ class CreateModbusesTable extends Migration
     {
         Schema::create('modbuses', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_modbus');
+            $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete()->cascadeOnUpdate();
+            // $table->integer('id_modbus');
             $table->string('name');
-            $table->string('address');
-            $table->string('val');
+            $table->string('address')->nullable();
+            $table->string('val')->nullable();
             $table->integer('is_used')->default(1);
             $table->timestamps();
         });

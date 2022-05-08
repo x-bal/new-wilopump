@@ -5,7 +5,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Wilo Pump - {{ $title }}</title>
+
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/') }}img/favicons/apple-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/') }}img/favicons/favicon-16x16.png">
@@ -45,12 +48,12 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('user*') ? 'active' : '' }} dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
+                                <a class="nav-link {{ request()->is('user*') ? 'active' : '' || request()->is('device*') ? 'active' : '' }} dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
                                     <div class="d-flex align-items-center">
                                         <div class="dropdown-indicator-icon d-flex flex-center"><span class="fas fa-caret-right fs-0"></span></div><span class="nav-link-icon"><span data-feather="file-text"></span></span><span class="nav-link-text">Data Master</span>
                                     </div>
                                 </a>
-                                <ul class="nav collapse parent {{ request()->is('user*') ? 'show' : '' }}" id="master">
+                                <ul class="nav collapse parent {{ request()->is('user*') ? 'show' : '' || request()->is('device*') ? 'show' : '' }}" id="master">
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('user.index') }}" data-bs-toggle="" aria-expanded="false">
                                             <div class="d-flex align-items-center">
@@ -59,7 +62,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="" data-bs-toggle="" aria-expanded="false">
+                                        <a class="nav-link" href="{{ route('device.index') }}" data-bs-toggle="" aria-expanded="false">
                                             <div class="d-flex align-items-center">
                                                 <span class="nav-link-text">Data Device</span>
                                             </div>
