@@ -4,82 +4,54 @@ namespace App\Http\Controllers;
 
 use App\Models\Modbus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ModbusController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function update()
     {
-        //
-    }
+        request()->validate([
+            'id' => 'required',
+            'field' => 'required',
+            'val' => 'required',
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        try {
+            DB::beginTransaction();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            $modbus = Modbus::findOrFail(request('id'));
+            $modbus->update([
+                request('field') => request('val')
+            ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Modbus  $modbus
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Modbus $modbus)
-    {
-        //
-    }
+            DB::commit();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Modbus  $modbus
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Modbus $modbus)
-    {
-        //
-    }
+            if (request('field') == 'name') {
+                $message = 'Modbus name successfully updated';
+            }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Modbus  $modbus
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Modbus $modbus)
-    {
-        //
-    }
+            if (request('field') == 'address') {
+                $message = 'Modbus address successfully updated';
+            }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Modbus  $modbus
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Modbus $modbus)
-    {
-        //
+            if (request('field') == 'is_used' && request('val') == 1) {
+                $message = 'Modbus successfully activated';
+            }
+
+            if (request('field') == 'is_used' && request('val') == 0) {
+                $message = 'Modbus successfully deactivated';
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $message
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'failed',
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

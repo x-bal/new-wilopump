@@ -108,17 +108,17 @@
                                     <tr>
                                         <td class="no text-center">{{ $loop->iteration }}</td>
                                         <td class="name">
-                                            <input type="text" name="name" id="name" class="form-control form-control-sm" value="{{ $modbus->name }}">
+                                            <input type="text" name="name" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-name" value="{{ $modbus->name }}">
                                         </td>
                                         <td class="address">
-                                            <input type="text" name="address" id="address" class="form-control form-control-sm" value="{{ $modbus->address }}">
+                                            <input type="text" name="address" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-address" value="{{ $modbus->address }}">
                                         </td>
                                         <td class="val">
-                                            <input type="text" name="val" id="val" class="form-control form-control-sm" value="{{ $modbus->val }}" disabled>
+                                            <input type="text" name="val" id="val-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->val }}" disabled>
                                         </td>
                                         <td class="used">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input used-modbus" id="used" type="checkbox" name="used" {{ $modbus->is_used == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input modbus-used" data-id="{{ $modbus->id }}" type="checkbox" name="used" {{ $modbus->is_used == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="used">Used</label>
                                             </div>
                                         </td>
@@ -149,7 +149,7 @@
                     <div id="tableDigital" data-list='{"valueNames":["no","digital","name","yes","no","used"],"page":5,"pagination":true}' class="table-list">
 
                         <div class="table-responsive scrollbar">
-                            <table class="table table-bordered table-striped fs--1 mb-0">
+                            <table class="table table-bordered table-striped table-digital fs--1 mb-0">
                                 <thead class="bg-200 text-900">
                                     <tr>
                                         <th class="sort text-center" data-sort="no">No</th>
@@ -168,18 +168,18 @@
                                             <b>{{ $digital->digital_input }}</b>
                                         </td>
                                         <td class="name">
-                                            <input type="text" name="name" id="name" class="form-control form-control-sm" value="{{ $digital->name }}">
+                                            <input type="text" name="name" data-id="{{ $digital->id }}" class="form-control form-control-sm digital-name" value="{{ $digital->name }}">
                                         </td>
                                         <td class="yes">
-                                            <input type="text" name="yes" id="yes" class="form-control form-control-sm" value="{{ $digital->yes }}">
+                                            <input type="text" name="yes" data-id="{{ $digital->id }}" class="form-control form-control-sm digital-yes" value="{{ $digital->yes }}">
                                         </td>
                                         <td class="no">
-                                            <input type="text" name="no" id="no" class="form-control form-control-sm" value="{{ $digital->no }}">
+                                            <input type="text" name="no" data-id="{{ $digital->id }}" class="form-control form-control-sm digital-no" value="{{ $digital->no }}">
                                         </td>
                                         <td class="used">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input used-digital" id="used" type="checkbox" name="used" {{ $digital->is_used == 1 ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="used">Used</label>
+                                                <input class="form-check-input digital-used" data-id="{{ $digital->id }}" type="checkbox" name="used" {{ $digital->is_used == 1 ? 'checked' : '' }}>
+                                                <label class=" form-check-label" for="used">Used</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -199,3 +199,7 @@
     </div>
 </div>
 @stop
+
+@push('script')
+<script src="{{ asset('/js/script.js') }}"></script>
+@endpush

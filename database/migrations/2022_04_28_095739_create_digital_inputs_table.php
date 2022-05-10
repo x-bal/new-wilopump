@@ -18,8 +18,8 @@ class CreateDigitalInputsTable extends Migration
             $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('digital_input');
-            $table->integer('yes')->default(1);
-            $table->integer('no')->default(0);
+            $table->string('yes')->default(1);
+            $table->string('no')->default(0);
             $table->integer('is_used')->default(1);
             $table->timestamps();
         });
