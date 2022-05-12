@@ -28,7 +28,6 @@ class DeviceController extends Controller
     {
         $attr = $request->validate([
             'name' => 'required|string',
-            'satuan' => 'required|string',
             'type' => 'required|string',
             'lat' => 'required|string',
             'long' => 'required|string',
@@ -42,7 +41,9 @@ class DeviceController extends Controller
             $digital = [1, 2, 3, 4, 5, 6, 7,];
 
             foreach ($modbuses as $modbus) {
-                $device->modbuses()->create(['name' => 'Modbus ' . $modbus]);
+                $device->modbuses()->create([
+                    'name' => 'Modbus ' . $modbus,
+                ]);
             }
 
             foreach ($digital as $dig) {

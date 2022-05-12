@@ -30,8 +30,8 @@ class ModbusController extends Controller
                 $message = 'Modbus name successfully updated';
             }
 
-            if (request('field') == 'address') {
-                $message = 'Modbus address successfully updated';
+            if (request('field') == 'satuan') {
+                $message = 'Modbus satuan successfully updated';
             }
 
             if (request('field') == 'is_used' && request('val') == 1) {

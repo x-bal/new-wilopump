@@ -7,9 +7,9 @@ $(".table").on('change', '.modbus-name', function () {
     update(id, field, val, url);
 })
 
-$(".table").on('change', '.modbus-address', function () {
+$(".table").on('change', '.modbus-satuan', function () {
     let id = $(this).attr('data-id');
-    let field = 'address';
+    let field = 'satuan';
     let val = $(this).val();
     let url = '/api/modbus';
 

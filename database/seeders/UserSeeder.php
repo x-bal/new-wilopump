@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SecretKey;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -19,5 +20,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@wilopump.com',
             'password' => bcrypt('admin')
         ]);
+
+        SecretKey::create(['key' => 'wilopump2022']);
     }
 }

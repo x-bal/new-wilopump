@@ -25,15 +25,6 @@
             </div>
 
             <div class="form-group">
-                <label for="satuan">Satuan</label>
-                <input type="text" name="satuan" id="satuan" class="form-control" value="{{ $device->satuan ?? old('satuan') }}">
-
-                @error('satuan')
-                <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group">
                 <label for="type">Type</label>
                 <input type="text" name="type" id="type" class="form-control" value="{{ $device->type ?? old('type') }}">
 

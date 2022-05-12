@@ -26,20 +26,6 @@
 
                 <div class="form-group row mb-3">
                     <div class="col-md-2">
-                        <label for="satuan">Satuan</label>
-                    </div>
-
-                    <div class="col-md-10">
-                        <input type="text" name="satuan" id="satuan" class="form-control" value="{{ $device->satuan ?? old('satuan') }}" disabled>
-
-                        @error('satuan')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group row mb-3">
-                    <div class="col-md-2">
                         <label for="type">Type</label>
                     </div>
 
@@ -90,7 +76,7 @@
 
             <div class="card-body">
                 <form action="" method="post">
-                    <div id="tableModbus" data-list='{"valueNames":["no","name","address","val","used"],"page":5,"pagination":true}'>
+                    <div id="tableModbus" data-list='{"valueNames":["no","name","address","id","val","satuan","used"],"page":5,"pagination":true}'>
 
                         <div class="table-responsive scrollbar">
                             <table class="table table-bordered table-striped fs--1 mb-0">
@@ -99,7 +85,9 @@
                                         <th class="sort text-center" data-sort="no">No</th>
                                         <th class="sort" data-sort="name">Name</th>
                                         <th class="sort" data-sort="address">Address</th>
+                                        <th class="sort" data-sort="id">Id Modbus</th>
                                         <th class="sort" data-sort="val">Val</th>
+                                        <th class="sort" data-sort="satuan">Denomination</th>
                                         <th class="sort" data-sort="used">Used</th>
                                     </tr>
                                 </thead>
@@ -111,10 +99,16 @@
                                             <input type="text" name="name" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-name" value="{{ $modbus->name }}">
                                         </td>
                                         <td class="address">
-                                            <input type="text" name="address" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-address" value="{{ $modbus->address }}">
+                                            <input type="text" name="address" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-address" value="{{ $modbus->address }}" disabled>
+                                        </td>
+                                        <td class="id">
+                                            <input type="number" name="id" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-id" value="{{ $modbus->id_modbus }}" disabled>
                                         </td>
                                         <td class="val">
                                             <input type="text" name="val" id="val-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->val }}" disabled>
+                                        </td>
+                                        <td class="satuan">
+                                            <input type="text" name="satuan" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-satuan" value="{{ $modbus->satuan }}">
                                         </td>
                                         <td class="used">
                                             <div class="form-check form-switch">

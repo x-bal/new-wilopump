@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\DigitalInputController;
 use App\Http\Controllers\ModbusController;
 use Illuminate\Http\Request;
@@ -20,5 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route untuk di web saja
 Route::get('/modbus', [ModbusController::class, 'update']);
 Route::get('/digital', [DigitalInputController::class, 'update']);
+
+// Route untuk device
+Route::post('/send-data-modbus', [ApiController::class, 'sendDataModbus']);
+Route::post('/send-data-digital', [ApiController::class, 'SendDataDigital']);

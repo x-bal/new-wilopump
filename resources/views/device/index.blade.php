@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <h2 class="mb-3 lh-sm">Data Device</h2>
 
-        <div id="tableExample2" data-list='{"valueNames":["no","name","satuan","type","lat","long", "action"],"page":10,"pagination":true}'>
+        <div id="tableExample2" data-list='{"valueNames":["no","name","id","type","lat","long", "action"],"page":10,"pagination":true}'>
 
             <a href="{{ route('device.create') }}" class="btn btn-sm btn-success mb-3">Add Device</a>
 
@@ -14,8 +14,8 @@
                     <thead class="bg-200 text-900">
                         <tr>
                             <th class="sort" data-sort="no">No</th>
+                            <th class="sort" data-sort="id">Id Device</th>
                             <th class="sort" data-sort="name">Name</th>
-                            <th class="sort" data-sort="satuan">Satuan</th>
                             <th class="sort" data-sort="type">Type</th>
                             <th class="sort" data-sort="lat">Lat</th>
                             <th class="sort" data-sort="long">Long</th>
@@ -26,8 +26,8 @@
                         @foreach($devices as $device)
                         <tr>
                             <td class="no">{{ $loop->iteration }}</td>
+                            <td class="id">{{ $device->id }}</td>
                             <td class="name">{{ $device->name }}</td>
-                            <td class="satuan">{{ $device->satuan }}</td>
                             <td class="type">{{ $device->type }}</td>
                             <td class="lat">{{ $device->lat }}</td>
                             <td class="long">{{ $device->long }}</td>
