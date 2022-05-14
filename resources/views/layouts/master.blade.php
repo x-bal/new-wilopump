@@ -72,6 +72,26 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('clock') ? 'active' : '' }}" href="/clock">
+                                    <div class="d-flex align-items-center">
+                                        <span class="nav-link-icon">
+                                            <span data-feather="clock"></span>
+                                        </span>
+                                        <span class="nav-link-text">History</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('setting') ? 'active' : '' }}" href="/setting">
+                                    <div class="d-flex align-items-center">
+                                        <span class="nav-link-icon">
+                                            <span data-feather="settings"></span>
+                                        </span>
+                                        <span class="nav-link-text">Setting</span>
+                                    </div>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -99,7 +119,7 @@
                                         </div>
 
                                         <ul class="nav d-flex flex-column mb-2">
-                                            <li class="nav-item"><a class="nav-link px-3" href="#!"><span class="me-2 text-900" data-feather="user"></span>Profile</a>
+                                            <li class="nav-item"><a class="nav-link px-3" href="/profile"><span class="me-2 text-900" data-feather="user"></span>Profile</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link px-3" href="{{ route('logout') }}" onclick="event.preventDefault();            document.getElementById('logout-form').submit();"><span class="me-2" data-feather="log-out"></span>
@@ -138,6 +158,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
     @if(session('success'))
     <script>

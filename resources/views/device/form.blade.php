@@ -35,7 +35,7 @@
 
             <div class="form-group">
                 <label for="lat">Latitude</label>
-                <input type="number" name="lat" id="lat" class="form-control" value="{{ $device->lat ?? old('lat') }}">
+                <input type="text" name="lat" id="lat" class="form-control" value="{{ $device->lat ?? old('lat') }}">
 
                 @error('lat')
                 <small class="text-danger">{{ $message }}</small>
@@ -44,7 +44,7 @@
 
             <div class="form-group">
                 <label for="long">Longitude</label>
-                <input type="number" name="long" id="long" class="form-control" value="{{ $device->long ?? old('long') }}">
+                <input type="text" name="long" id="long" class="form-control" value="{{ $device->long ?? old('long') }}">
 
                 @error('long')
                 <small class="text-danger">{{ $message }}</small>

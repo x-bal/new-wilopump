@@ -3,69 +3,9 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Detail Device - {{ $device->name }}</h4>
-            </div>
+        <h2 class="mb-3 lh-sm">Detail Device - {{ $device->name }}</h2>
 
-            <div class="card-body">
-                <div class="form-group row mb-3">
-                    <div class="col-md-2">
-                        <label for="name">Name</label>
-                    </div>
-
-                    <div class="col-md-10">
-                        <input type="text" name="name" id="name" class="form-control" value="{{ $device->name ?? old('name') }}" disabled>
-
-                        @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                </div>
-
-                <div class="form-group row mb-3">
-                    <div class="col-md-2">
-                        <label for="type">Type</label>
-                    </div>
-
-                    <div class="col-md-10">
-                        <input type="text" name="type" id="type" class="form-control" value="{{ $device->type ?? old('type') }}" disabled>
-
-                        @error('type')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group row mb-3">
-                    <div class="col-md-2">
-                        <label for="lat">Latitude</label>
-                    </div>
-                    <div class="col-md-10">
-                        <input type="number" name="lat" id="lat" class="form-control" value="{{ $device->lat ?? old('lat') }}" disabled>
-
-                        @error('lat')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-md-2">
-                        <label for="long">Longitude</label>
-                    </div>
-
-                    <div class="col-md-10">
-                        <input type="number" name="long" id="long" class="form-control" value="{{ $device->long ?? old('long') }}" disabled>
-
-                        @error('long')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="map" style="width: 100%; height: 480px;"></div>
     </div>
 
     <div class="col-md-12 my-3">
@@ -196,4 +136,53 @@
 
 @push('script')
 <script src="{{ asset('/js/script.js') }}"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ $apikey }}&callback=initMap" defer></script>
+
+<script>
+    function initMap() {
+        let lat = parseFloat("{{ $device->lat }}");
+        let long = parseFloat("{{ $device->long }}");
+
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: new google.maps.LatLng(lat, long),
+            zoom: 12,
+        });
+
+        const marker = new google.maps.Marker({
+            position: {
+                lat: lat,
+                lng: long
+            },
+            map,
+        });
+
+        marker.addListener("click", () => {
+            let id = "{{ $device->id }}";
+
+            $.ajax({
+                url: '/api/get-device/' + id,
+                type: 'GET',
+                success: function(result) {
+                    let device = result.device;
+
+                    let contentString = '<div id="content"><div id="siteNotice"></div><h5 id="firstHeading" class="firstHeading">' + device.name + '</h5><div id="bodyContent"><p><b>Name : </b>' + device.name + '<br><b>Type : </b>' + device.type + '<br><b>Lat : </b>' + device.lat + '<br><b>Long : </b>' + device.long + '<br></p></div></div>';
+
+                    const infowindow = new google.maps.InfoWindow({
+                        content: contentString,
+                    });
+
+                    infowindow.open({
+                        anchor: marker,
+                        map,
+                        shouldFocus: true,
+                    });
+                }
+            })
+
+        });
+    }
+
+    window.initMap = initMap;
+</script>
 @endpush

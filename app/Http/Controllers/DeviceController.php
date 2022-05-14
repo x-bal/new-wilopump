@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\SecretKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,7 +64,9 @@ class DeviceController extends Controller
 
     public function show(Device $device)
     {
-        return view('device.show', compact('device'));
+        $apikey = SecretKey::findOrFail(2)->key;
+
+        return view('device.show', compact('device', 'apikey'));
     }
 
     public function edit(Device $device)
@@ -78,7 +81,6 @@ class DeviceController extends Controller
     {
         $attr = $request->validate([
             'name' => 'required|string',
-            'satuan' => 'required|string',
             'type' => 'required|string',
             'lat' => 'required|string',
             'long' => 'required|string',
@@ -100,5 +102,21 @@ class DeviceController extends Controller
     public function destroy(Device $device)
     {
         //
+    }
+
+    public function get()
+    {
+        $devices = Device::get();
+
+        return response()->json([
+            'devices' => $devices
+        ]);
+    }
+
+    public function find(Device $device)
+    {
+        return response()->json([
+            'device' => $device
+        ]);
     }
 }
