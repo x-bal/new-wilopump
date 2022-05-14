@@ -21,6 +21,7 @@ class CreateDigitalInputsTable extends Migration
             $table->string('yes')->default(1);
             $table->string('no')->default(0);
             $table->integer('is_used')->default(0);
+            $table->integer('val')->default(0);
             $table->timestamps();
         });
     }

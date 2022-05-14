@@ -75,7 +75,7 @@ class ApiController extends Controller
 
     public function sendDataDigital(Request $request)
     {
-        if ($request->key && $request->iddev && $request->used) {
+        if ($request->key && $request->iddev && $request->used && $request->val) {
             $secretkey = SecretKey::findOrFail(1);
 
             if ($secretkey->key == $request->key) {
@@ -87,9 +87,10 @@ class ApiController extends Controller
                         $used = $request->used;
                         $limit = count($used);
 
-                        foreach ($device->digitalInputs()->limit($limit)->get() as $i => $modbus) {
-                            $modbus->update([
+                        foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
+                            $digital->update([
                                 'is_used' => $used[$i],
+                                'val' => $used[$i],
                             ]);
                         }
 
