@@ -27,7 +27,7 @@
                                         <th class="sort" data-sort="address">Address</th>
                                         <th class="sort" data-sort="id">Id Modbus</th>
                                         <th class="sort" data-sort="val">Val</th>
-                                        <th class="sort" data-sort="satuan">Denomination</th>
+                                        <th class="sort" data-sort="satuan">Unit</th>
                                         <th class="sort" data-sort="used">Used</th>
                                     </tr>
                                 </thead>
@@ -80,7 +80,7 @@
 
             <div class="card-body">
                 <form action="" method="post">
-                    <div id="tableDigital" data-list='{"valueNames":["no","digital","name","yes","no","used"],"page":5,"pagination":true}' class="table-list">
+                    <div id="tableDigital" data-list='{"valueNames":["no","digital","name","yes","no","val","used"],"page":5,"pagination":true}' class="table-list">
 
                         <div class="table-responsive scrollbar">
                             <table class="table table-bordered table-striped table-digital fs--1 mb-0">
@@ -91,6 +91,7 @@
                                         <th class="sort" data-sort="name">Name</th>
                                         <th class="sort" data-sort="yes">Alias (Yes)</th>
                                         <th class="sort" data-sort="no">Alias (No)</th>
+                                        <th class="sort" data-sort="val">Value</th>
                                         <th class="sort" data-sort="used">Used</th>
                                     </tr>
                                 </thead>
@@ -109,6 +110,9 @@
                                         </td>
                                         <td class="no">
                                             <input type="text" name="no" data-id="{{ $digital->id }}" class="form-control form-control-sm digital-no" value="{{ $digital->no }}">
+                                        </td>
+                                        <td class="val">
+                                            <input type="text" name="val" data-id="{{ $digital->id }}" class="form-control form-control-sm digital-val" value="{{ $digital->val }} ({{ $digital->val == 1 ? $digital->yes : $digital->no }})" disabled>
                                         </td>
                                         <td class="used">
                                             <div class="form-check form-switch">
