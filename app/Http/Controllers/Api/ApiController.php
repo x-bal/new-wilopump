@@ -85,12 +85,13 @@ class ApiController extends Controller
                     try {
                         DB::beginTransaction();
                         $used = $request->used;
+                        $value = $request->val;
                         $limit = count($used);
 
                         foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
                             $digital->update([
                                 'is_used' => $used[$i],
-                                'val' => $used[$i],
+                                'val' => $value[$i],
                             ]);
                         }
 
@@ -104,7 +105,7 @@ class ApiController extends Controller
                         DB::rollBack();
                         return response()->json([
                             'status' => 'success',
-                            'modbuses' => $th->getMessage()
+                            'message' => $th->getMessage()
                         ]);
                     }
                 } else {
