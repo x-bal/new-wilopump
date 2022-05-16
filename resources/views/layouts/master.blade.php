@@ -73,7 +73,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('clock') ? 'active' : '' }}" href="/clock">
+                                <a class="nav-link {{ request()->is('history') ? 'active' : '' }}" href="/history">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">
                                             <span data-feather="clock"></span>
@@ -144,7 +144,7 @@
                 <footer class="footer">
                     <div class="row g-0 justify-content-between align-items-center h-100 mb-3">
                         <div class="col-12 col-sm-auto text-center">
-                            <p class="mb-0 text-900">Thank you for creating with tazaka<span class="d-none d-sm-inline-block"></span><span class="mx-1">|</span><br class="d-sm-none">2022 &copy; <a href="https://tazaka.co.id" target="__blank">Tazaka.co.id</a></p>
+                            <p class="mb-0 text-900">Thank you for creating with <a href="https://tazaka.co.id" target="__blank">tazaka</a><span class="d-none d-sm-inline-block"></span><span class="mx-1">|</span><br class="d-sm-none">2022 &copy; <a href="#" target="__blank">Wilo Pumps</a></p>
                         </div>
                         <div class="col-12 col-sm-auto text-center">
                             <p class="mb-0 text-600">v1.0.1</p>

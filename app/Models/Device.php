@@ -19,4 +19,9 @@ class Device extends Model
     {
         return $this->hasMany(DigitalInput::class);
     }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class);
+    }
 }

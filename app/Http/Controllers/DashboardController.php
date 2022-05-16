@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use App\Models\SecretKey;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -83,5 +84,12 @@ class DashboardController extends Controller
             DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
+    }
+
+    public function history()
+    {
+        $histories = History::latest()->get();
+
+        return view('dashboard.history', compact('histories'));
     }
 }

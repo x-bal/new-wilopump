@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class History extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
 }
