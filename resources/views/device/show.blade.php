@@ -15,59 +15,72 @@
             </div>
 
             <div class="card-body">
-                <form action="" method="post">
-                    <div id="tableModbus" data-list='{"valueNames":["no","name","address","id","val","satuan","used"],"page":5,"pagination":true}'>
+                <div id="tableModbus" data-list='{"valueNames":["no","name","address","id","val","after","math","satuan","used"],"page":5,"pagination":true}'>
 
-                        <div class="table-responsive scrollbar">
-                            <table class="table table-bordered table-striped fs--1 mb-0">
-                                <thead class="bg-200 text-900">
-                                    <tr>
-                                        <th class="sort text-center" data-sort="no">No</th>
-                                        <th class="sort" data-sort="name">Name</th>
-                                        <th class="sort" data-sort="address">Address</th>
-                                        <th class="sort" data-sort="id">Id Modbus</th>
-                                        <th class="sort" data-sort="val">Val</th>
-                                        <th class="sort" data-sort="satuan">Unit</th>
-                                        <th class="sort" data-sort="used">Used</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="list">
-                                    @foreach($device->modbuses as $modbus)
-                                    <tr>
-                                        <td class="no text-center">{{ $loop->iteration }}</td>
-                                        <td class="name">
-                                            <input type="text" name="name" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-name" value="{{ $modbus->name }}">
-                                        </td>
-                                        <td class="address">
-                                            <input type="text" name="address" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-address" value="{{ $modbus->address }}" disabled>
-                                        </td>
-                                        <td class="id">
-                                            <input type="number" name="id" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-id" value="{{ $modbus->id_modbus }}" disabled>
-                                        </td>
-                                        <td class="val">
-                                            <input type="text" name="val" id="val-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->val }}" disabled>
-                                        </td>
-                                        <td class="satuan">
-                                            <input type="text" name="satuan" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-satuan" value="{{ $modbus->satuan }}">
-                                        </td>
-                                        <td class="used">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input modbus-used" data-id="{{ $modbus->id }}" type="checkbox" name="used" {{ $modbus->is_used == 1 ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="used">Used</label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="d-flex justify-content-center mt-3">
-                            <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
-                            <ul class="pagination mb-0"></ul>
-                            <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
-                        </div>
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-bordered table-striped fs--1 mb-0">
+                            <thead class="bg-200 text-900">
+                                <tr>
+                                    <th class="sort text-center" data-sort="no">No</th>
+                                    <th class="sort" data-sort="name">Name</th>
+                                    <th class="sort" data-sort="address">Address</th>
+                                    <th class="sort" data-sort="id">Id Modbus</th>
+                                    <th class="sort" data-sort="val">Val</th>
+                                    <th class="sort" data-sort="math" colspan="2">Math</th>
+                                    <th class="sort" data-sort="after">Val(After)</th>
+                                    <th class="sort" data-sort="satuan">Unit</th>
+                                    <th class="sort" data-sort="used">Used</th>
+                                </tr>
+                            </thead>
+                            <tbody class="list">
+                                @foreach($device->modbuses as $modbus)
+                                <tr>
+                                    <td class="no text-center">{{ $loop->iteration }}</td>
+                                    <td class="name">
+                                        <input type="text" name="name" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-name" value="{{ $modbus->name }}">
+                                    </td>
+                                    <td class="address">
+                                        <input type="text" name="address" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-address" value="{{ $modbus->address }}" disabled>
+                                    </td>
+                                    <td class="id">
+                                        <input type="number" name="id" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-id" value="{{ $modbus->id_modbus }}" disabled>
+                                    </td>
+                                    <td class="val">
+                                        <input type="text" name="val" id="val-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->val }}" disabled>
+                                    </td>
+                                    <td class="math" colspan="2">
+                                        <select name="mark" class="form-control form-control-sm mark-{{ $modbus->id }}">
+                                            <option value="*">x</option>
+                                            <option value="/">:</option>
+                                            <option value="+">+</option>
+                                            <option value="-">-</option>
+                                        </select>
+                                        <br>
+                                        <input type="number" name="math" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math">
+                                    </td>
+                                    <td class="after">
+                                        <input type="text" name="after" id="after-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->after }}" disabled>
+                                    </td>
+                                    <td class="satuan">
+                                        <input type="text" name="satuan" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-satuan" value="{{ $modbus->satuan }}">
+                                    </td>
+                                    <td class="used">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input modbus-used" data-id="{{ $modbus->id }}" type="checkbox" name="used" {{ $modbus->is_used == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="used">Used</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                </form>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                        <ul class="pagination mb-0"></ul>
+                        <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -86,7 +99,6 @@
                             <table class="table table-bordered table-striped table-digital fs--1 mb-0">
                                 <thead class="bg-200 text-900">
                                     <tr>
-                                        <th class="sort text-center" data-sort="no">No</th>
                                         <th class="sort" data-sort="digital">Digital Input</th>
                                         <th class="sort" data-sort="name">Name</th>
                                         <th class="sort" data-sort="yes">Alias (Yes)</th>
@@ -98,7 +110,6 @@
                                 <tbody class="list">
                                     @foreach($device->digitalInputs as $digital)
                                     <tr>
-                                        <td class="no text-center">{{ $loop->iteration }}</td>
                                         <td class="digital text-center">
                                             <b>{{ $digital->digital_input }}</b>
                                         </td>

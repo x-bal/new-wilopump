@@ -20,6 +20,8 @@ class CreateModbusesTable extends Migration
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('val')->nullable();
+            $table->string('math')->nullable();
+            $table->string('after')->nullable();
             $table->string('satuan')->nullable();
             $table->string('merge')->nullable();
             $table->integer('is_used')->default(0);

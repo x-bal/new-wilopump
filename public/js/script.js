@@ -108,3 +108,30 @@ function update(id, field, val, url) {
         }
     })
 }
+
+$(".table").on('change', '.modbus-math', function () {
+    let id = $(this).attr('data-id');
+    let val = parseFloat($("#val-" + id).val());
+    let math = parseFloat($(this).val());
+    let mark = $(".mark-" + id).find(":selected").text();
+    let after = 0;
+
+    if (mark == "x") {
+        after = val * math;
+    }
+
+    if (mark == ":") {
+        after = val / math;
+    }
+
+    if (mark == "+") {
+        after = val + math;
+    }
+
+    if (mark == "-") {
+        after = val - math;
+    }
+
+    console.log(val, mark, math)
+    $("#after-" + id).empty().val(after)
+})
