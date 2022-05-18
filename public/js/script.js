@@ -132,6 +132,33 @@ $(".table").on('change', '.modbus-math', function () {
         after = val - math;
     }
 
-    console.log(val, mark, math)
+    // console.log(val, mark, math)
     $("#after-" + id).empty().val(after)
+
+    let field = mark + "," + math;
+
+    $.ajax({
+        url: '/api/math',
+        type: 'GET',
+        data: {
+            id: id,
+            after: after,
+            math: field
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                iziToast.success({
+                    title: 'Success',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            } else {
+                iziToast.error({
+                    title: 'Error',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            }
+        }
+    })
 })

@@ -33,6 +33,8 @@ class ApiController extends Controller
                                 'address' => $address[$i],
                                 'id_modbus' => $idmodbus[$i],
                                 'val' => $val[$i],
+                                'math' => 'x,1',
+                                'after' => $val[$i],
                                 'is_used' => $used[$i],
                             ]);
                         }

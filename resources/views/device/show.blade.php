@@ -49,14 +49,17 @@
                                         <input type="text" name="val" id="val-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->val }}" disabled>
                                     </td>
                                     <td class="math" colspan="2">
+                                        @php
+                                        $math = explode(',', $modbus->math)
+                                        @endphp
                                         <select name="mark" class="form-control form-control-sm mark-{{ $modbus->id }}">
-                                            <option value="*">x</option>
-                                            <option value="/">:</option>
-                                            <option value="+">+</option>
-                                            <option value="-">-</option>
+                                            <option {{ $math[0] == 'x' ? 'selected' : '' }} value="x">x</option>
+                                            <option {{ $math[0] == ':' ? 'selected' : '' }} value=":">:</option>
+                                            <option {{ $math[0] == '+' ? 'selected' : '' }} value="+">+</option>
+                                            <option {{ $math[0] == '-' ? 'selected' : '' }} value="-">-</option>
                                         </select>
                                         <br>
-                                        <input type="number" name="math" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math">
+                                        <input type="number" name="math" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? '' }}">
                                     </td>
                                     <td class="after">
                                         <input type="text" name="after" id="after-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->after }}" disabled>

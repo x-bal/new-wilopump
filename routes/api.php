@@ -22,12 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route untuk di web saja
+// Route only web
 Route::get('/modbus', [ModbusController::class, 'update']);
 Route::get('/digital', [DigitalInputController::class, 'update']);
 Route::get('/get-device', [DeviceController::class, 'get']);
 Route::get('/get-device/{device:id}', [DeviceController::class, 'find']);
+Route::get('/math', [DeviceController::class, 'math']);
 
-// Route untuk device
+// Route api device
 Route::post('/send-data-modbus', [ApiController::class, 'sendDataModbus']);
 Route::post('/send-data-digital', [ApiController::class, 'SendDataDigital']);

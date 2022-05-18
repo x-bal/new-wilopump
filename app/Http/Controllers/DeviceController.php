@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Modbus;
 use App\Models\SecretKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -118,5 +119,30 @@ class DeviceController extends Controller
         return response()->json([
             'device' => $device
         ]);
+    }
+
+    public function math(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $modbus = Modbus::find($request->id);
+
+            $modbus->update([
+                'math' => $request->math,
+                'after' => $request->after,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Value modbus successfully updated'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }
