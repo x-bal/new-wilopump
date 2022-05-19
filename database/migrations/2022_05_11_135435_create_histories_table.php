@@ -15,8 +15,10 @@ class CreateHistoriesTable extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('modbus_id')->constrained('modbuses')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('digital_input_id')->constrained('digital_inputs')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('ket');
+            $table->string('val');
             $table->timestamps();
         });
     }

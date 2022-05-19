@@ -18,8 +18,8 @@ class CreateDevicesTable extends Migration
             $table->string('name');
             $table->string('lat');
             $table->string('long');
-            // $table->string('satuan');
             $table->string('type');
+            $table->integer('is_active')->default(1);
             $table->timestamps();
         });
     }

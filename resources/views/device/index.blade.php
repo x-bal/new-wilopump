@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <h2 class="mb-3 lh-sm">Data Device</h2>
 
-        <div id="tableExample2" data-list='{"valueNames":["no","name","id","type","lat","long", "action"],"page":10,"pagination":true}'>
+        <div id="tableExample2" data-list='{"valueNames":["no","name","id","type","lat","long","is_active", "action"],"page":10,"pagination":true}'>
 
             <a href="{{ route('device.create') }}" class="btn btn-sm btn-success mb-3">Add Device</a>
 
@@ -20,6 +20,7 @@
                             <th class="sort" data-sort="lat">Lat</th>
                             <th class="sort" data-sort="long">Long</th>
                             <th class="sort" data-sort="action">Action</th>
+                            <th class="sort" data-sort="is_active">Active</th>
                         </tr>
                     </thead>
                     <tbody class="list">
@@ -42,6 +43,12 @@
 
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure delete this data?')"><i class="fas fa-trash"></i></button>
                                 </form>
+                            </td>
+                            <td class="is_active">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input device-active" data-id="{{ $device->id }}" type="checkbox" name="used" {{ $device->is_active == 1 ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="used">{{ $device->is_active == 1 ? 'Active' : 'Nonaktif' }}</label>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
