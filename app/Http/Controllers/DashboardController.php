@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use App\Models\History;
 use App\Models\SecretKey;
 use App\Models\User;
@@ -15,8 +16,10 @@ class DashboardController extends Controller
     public function index()
     {
         $apikey = SecretKey::findOrFail(2)->key;
+        $first = Device::where('is_active', 1)->first();
+        $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
 
-        return view('dashboard.index', compact('apikey'));
+        return view('dashboard.index', compact('apikey', 'first', 'devices'));
     }
 
     public function setting()

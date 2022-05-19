@@ -49,6 +49,20 @@
                                 </a>
                             </li>
 
+                            @if(auth()->user()->level == 'Viewer')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('device') ? 'active' : '' }}" href="/device">
+                                    <div class="d-flex align-items-center">
+                                        <span class="nav-link-icon">
+                                            <span data-feather="clock"></span>
+                                        </span>
+                                        <span class="nav-link-text">Device</span>
+                                    </div>
+                                </a>
+                            </li>
+                            @endif
+
+                            @if(auth()->user()->level == 'Admin')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('user*') ? 'active' : '' || request()->is('device*') ? 'active' : '' }} dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
                                     <div class="d-flex align-items-center">
@@ -92,6 +106,7 @@
                                     </div>
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </div>
                 </div>

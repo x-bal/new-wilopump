@@ -7,7 +7,9 @@
 
         <div id="tableExample2" data-list='{"valueNames":["no","name","id","type","lat","long","is_active", "action"],"page":10,"pagination":true}'>
 
+            @if(auth()->user()->level == 'Admin')
             <a href="{{ route('device.create') }}" class="btn btn-sm btn-success mb-3">Add Device</a>
+            @endif
 
             <div class="table-responsive scrollbar">
                 <table class="table table-bordered table-striped fs--1 mb-0">
