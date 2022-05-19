@@ -49,7 +49,7 @@
                                 </a>
                             </li>
 
-                            @if(auth()->user()->level == 'Viewer')
+                            <!-- @if(auth()->user()->level == 'Viewer')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('device') ? 'active' : '' }}" href="/device">
                                     <div class="d-flex align-items-center">
@@ -60,7 +60,7 @@
                                     </div>
                                 </a>
                             </li>
-                            @endif
+                            @endif -->
 
                             @if(auth()->user()->level == 'Admin')
                             <li class="nav-item">
