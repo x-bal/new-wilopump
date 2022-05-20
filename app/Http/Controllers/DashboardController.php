@@ -22,6 +22,15 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('apikey', 'first', 'devices'));
     }
 
+    public function slider()
+    {
+        $apikey = SecretKey::findOrFail(2)->key;
+        $first = Device::where('is_active', 1)->first();
+        $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+
+        return view('dashboard.slider', compact('apikey', 'first', 'devices'));
+    }
+
     public function setting()
     {
         $apikey = SecretKey::findOrFail(2);

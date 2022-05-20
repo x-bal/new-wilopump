@@ -28,6 +28,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/slider', [DashboardController::class, 'slider'])->name('slider');
+
     Route::get('/setting', [DashboardController::class, 'setting'])->name('setting');
     Route::post('/setting/{secret_key:id}', [DashboardController::class, 'updateSetting'])->name('setting.update');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');

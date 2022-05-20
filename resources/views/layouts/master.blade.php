@@ -49,18 +49,16 @@
                                 </a>
                             </li>
 
-                            <!-- @if(auth()->user()->level == 'Viewer')
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('device') ? 'active' : '' }}" href="/device">
+                                <a class="nav-link {{ request()->is('slider') ? 'active' : '' }}" href="/slider">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">
                                             <span data-feather="clock"></span>
                                         </span>
-                                        <span class="nav-link-text">Device</span>
+                                        <span class="nav-link-text">Slider</span>
                                     </div>
                                 </a>
                             </li>
-                            @endif -->
 
                             @if(auth()->user()->level == 'Admin')
                             <li class="nav-item">
