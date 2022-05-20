@@ -4,6 +4,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+    button.gm-ui-hover-effect {
+        visibility: hidden;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -71,8 +77,106 @@
             map: map,
         });
 
+        // marker.addListener("click", () => {
+        let id = "{{ $first->id }}";
+
+        $.ajax({
+            url: '/api/get-device/' + id,
+            type: 'GET',
+            success: function(result) {
+                let device = result.device;
+                let modbus = result.modbus;
+                let digital = result.digital;
+
+                let contentString = `<div class="card">
+                    <div class="card-body row justify-content-center">
+                    <h4>` + device.name + `</h4></br></br>
+                        <div class="col-md-4">
+                            <h6>Info Device</h6>
+
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <td> : </td>
+                                    <td>` + device.name + `</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td> : </td>
+                                    <td>` + device.type + `</td>
+                                </tr>
+                                <tr>
+                                    <th>Lat</th>
+                                    <td> : </td>
+                                    <td>` + device.lat + `</td>
+                                </tr>
+                                <tr>
+                                    <th>Long</th>
+                                    <td> : </td>
+                                    <td>` + device.long + `</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h6>Mobdus</h6>
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>:</th>
+                                    <th>Val</th>
+                                </tr>`;
+
+                $.each(modbus, function(i, data) {
+                    contentString += `<tr>
+                                    <td>` + data.name + `</td>
+                                    <td>:</td>
+                                    <td>` + data.after + data.satuan + `</td>
+                                </tr>`
+                });
+
+                contentString += `</table>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h6>Digital Input</h6>
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>:</th>
+                                    <th>Val</th>
+                                </tr>`;
+
+                $.each(digital, function(i, data) {
+                    contentString += `<tr>
+                                    <td>` + data.name + `</td>
+                                    <td>:</td>
+                                    <td>` + data.val + `</td>
+                                </tr>`
+                });
+
+                contentString += `</table>
+                        </div>
+                    </div>
+                </div>`;
+
+                const infowindow = new google.maps.InfoWindow({
+                    content: contentString,
+                });
+
+                infowindow.open({
+                    anchor: marker,
+                    map,
+                    shouldFocus: true,
+                });
+            }
+        })
+
+        // });
+
         $('.maps').each(function(index, Element) {
             var coords = $(Element).text().split(",");
+
             if (coords.length != 3) {
                 $(this).display = "none";
                 return;
@@ -102,57 +206,104 @@
                 },
                 map: devicemap
             });
+
+            // devmarker.addListener("click", () => {
+            let id = $(Element).attr('id');
+
+            $.ajax({
+                url: '/api/get-device/' + id,
+                type: 'GET',
+                success: function(result) {
+                    let device = result.device;
+                    let modbus = result.modbus;
+                    let digital = result.digital;
+
+                    let contentStringDev = `<div class="card">
+                    <div class="card-body row justify-content-center">
+                    <h4>` + device.name + `</h4></br></br>
+                        <div class="col-md-4">
+                            <h6>Info Device</h6>
+
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <td> : </td>
+                                    <td>` + device.name + `</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td> : </td>
+                                    <td>` + device.type + `</td>
+                                </tr>
+                                <tr>
+                                    <th>Lat</th>
+                                    <td> : </td>
+                                    <td>` + device.lat + `</td>
+                                </tr>
+                                <tr>
+                                    <th>Long</th>
+                                    <td> : </td>
+                                    <td>` + device.long + `</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h6>Mobdus</h6>
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>:</th>
+                                    <th>Val</th>
+                                </tr>`;
+
+                    $.each(modbus, function(i, data) {
+                        contentStringDev += `<tr>
+                                    <td>` + data.name + `</td>
+                                    <td>:</td>
+                                    <td>` + data.after + data.satuan + `</td>
+                                </tr>`
+                    });
+
+                    contentStringDev += `</table>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h6>Digital Input</h6>
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>:</th>
+                                    <th>Val</th>
+                                </tr>`;
+
+                    $.each(digital, function(i, data) {
+                        contentStringDev += `<tr>
+                                    <td>` + data.name + `</td>
+                                    <td>:</td>
+                                    <td>` + data.val + `</td>
+                                </tr>`
+                    });
+
+                    contentStringDev += `</table>
+                        </div>
+                    </div>
+                </div>`;
+
+                    let infowindowdev = new google.maps.InfoWindow({
+                        content: contentStringDev,
+                    });
+
+                    infowindowdev.open({
+                        anchor: devmarker,
+                        devicemap,
+                        shouldFocus: true,
+                    });
+                }
+            })
+
+            // });
         });
-        // @foreach($devices as $dev)
-        // let latdev = parseFloat("{{ $dev->lat }}");
-        // let longdev = parseFloat("{{ $dev->long }}");
-        // let iddev = parseFloat("{{ $dev->id }}");
-
-        // const deviceMap = new google.maps.Map(document.getElementById("map-" + iddev), {
-        //     center: new google.maps.LatLng(parseFloat("{{ $dev->lat }}"), parseFloat("{{ $dev->long }}")),
-        //     zoom: 12,
-        // });
-
-        // const deviceMarker = new google.maps.Marker({
-        //     position: {
-        //         lat: latdev,
-        //         lng: longdev
-        //     },
-        //     label: {
-        //         text: "{{ $dev->name }}",
-        //         fontFamily: "Arial",
-        //         color: "#000",
-        //         stroke: "#fff",
-        //         fontSize: "14px",
-        //     },
-        //     map: deviceMap,
-        // });
-        // @endforeach
-
-        // marker.addListener("click", () => {
-        //     let id = "{{ $first->id }}";
-
-        //     $.ajax({
-        //         url: '/api/get-device/' + id,
-        //         type: 'GET',
-        //         success: function(result) {
-        //             let device = result.device;
-
-        //             let contentString = '<div id="content"><div id="siteNotice"></div><h5 id="firstHeading" class="firstHeading">' + device.name + '</h5><div id="bodyContent"><p><b>Name : </b>' + device.name + '<br><b>Type : </b>' + device.type + '<br><b>Lat : </b>' + device.lat + '<br><b>Long : </b>' + device.long + '<br></p></div></div>';
-
-        //             const infowindow = new google.maps.InfoWindow({
-        //                 content: contentString,
-        //             });
-
-        //             infowindow.open({
-        //                 anchor: marker,
-        //                 map,
-        //                 shouldFocus: true,
-        //             });
-        //         }
-        //     })
-
-        // });
     }
 
     window.initMap = initFirstMap;

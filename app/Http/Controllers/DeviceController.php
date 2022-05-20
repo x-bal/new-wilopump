@@ -116,8 +116,13 @@ class DeviceController extends Controller
 
     public function find(Device $device)
     {
+        $modbus = $device->modbuses()->where('is_used', 1)->get();
+        $digital = $device->digitalInputs()->where('is_used', 1)->get();
+
         return response()->json([
-            'device' => $device
+            'device' => $device,
+            'modbus' => $modbus,
+            'digital' => $digital,
         ]);
     }
 
