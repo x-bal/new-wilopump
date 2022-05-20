@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
+use function Psy\debug;
+
 class DashboardController extends Controller
 {
     public function index()
@@ -25,17 +27,18 @@ class DashboardController extends Controller
     public function slider()
     {
         $apikey = SecretKey::findOrFail(2)->key;
+        $delay = intval(SecretKey::findOrFail(3)->key);
         $first = Device::where('is_active', 1)->first();
         $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
-
-        return view('dashboard.slider', compact('apikey', 'first', 'devices'));
+        return view('dashboard.slider', compact('apikey', 'first', 'devices', 'delay'));
     }
 
     public function setting()
     {
         $apikey = SecretKey::findOrFail(2);
+        $delay = SecretKey::findOrFail(3);
 
-        return view('dashboard.setting', compact('apikey'));
+        return view('dashboard.setting', compact('apikey', 'delay'));
     }
 
     public function updateSetting(Request $request, SecretKey $secretKey)
@@ -49,7 +52,15 @@ class DashboardController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'Google api key successfully updated');
+            if ($request->type == 'apikey') {
+                $message  = 'Google api key successfully updated';
+            }
+
+            if ($request->type == 'delay') {
+                $message  = 'Delay time slider successfully updated';
+            }
+
+            return back()->with('success', $message);
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', $th->getMessage());
