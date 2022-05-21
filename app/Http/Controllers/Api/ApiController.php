@@ -19,40 +19,46 @@ class ApiController extends Controller
                 $device = Device::find($request->iddev);
 
                 if ($device) {
-                    try {
-                        DB::beginTransaction();
+                    if ($device->is_active == 1) {
+                        try {
+                            DB::beginTransaction();
 
-                        $address = $request->address;
-                        $idmodbus = $request->idmodbus;
-                        $val = $request->val;
-                        $used = $request->used;
-                        $limit = count($address);
+                            $address = $request->address;
+                            $idmodbus = $request->idmodbus;
+                            $val = $request->val;
+                            $used = $request->used;
+                            $limit = count($address);
 
-                        foreach ($device->modbuses()->limit($limit)->get() as $i => $modbus) {
-                            $modbus->update([
-                                'address' => $address[$i],
-                                'id_modbus' => $idmodbus[$i],
-                                'val' => $val[$i],
-                                'math' => 'x,1',
-                                'after' => $val[$i],
-                                'is_used' => $used[$i],
+                            foreach ($device->modbuses()->limit($limit)->get() as $i => $modbus) {
+                                $modbus->update([
+                                    'address' => $address[$i],
+                                    'id_modbus' => $idmodbus[$i],
+                                    'val' => $val[$i],
+                                    'math' => 'x,1',
+                                    'after' => $val[$i],
+                                    'is_used' => $used[$i],
+                                ]);
+                            }
+
+                            DB::commit();
+
+                            return response()->json([
+                                'status' => 'success',
+                                'address' => $address,
+                                'idmodbus' => $idmodbus,
+                                'val' => $val,
+                            ]);
+                        } catch (\Throwable $th) {
+                            DB::rollBack();
+                            return response()->json([
+                                'status' => 'success',
+                                'modbuses' => $th->getMessage()
                             ]);
                         }
-
-                        DB::commit();
-
+                    } else {
                         return response()->json([
-                            'status' => 'success',
-                            // 'modbuses' => $device->modbuses()->limit($limit)->get()
-                            'address' => $address,
-                            'idmodbus' => $idmodbus,
-                            'val' => $val,
-                        ]);
-                    } catch (\Throwable $th) {
-                        DB::rollBack();
-                        return response()->json([
-                            'status' => 'success',
-                            'modbuses' => $th->getMessage()
+                            'status' => 'error',
+                            'modbuses' => 'Device is not activated'
                         ]);
                     }
                 } else {
@@ -84,30 +90,37 @@ class ApiController extends Controller
                 $device = Device::find($request->iddev);
 
                 if ($device) {
-                    try {
-                        DB::beginTransaction();
-                        $used = $request->used;
-                        $value = $request->val;
-                        $limit = count($used);
+                    if ($device->is_active == 1) {
+                        try {
+                            DB::beginTransaction();
+                            $used = $request->used;
+                            $value = $request->val;
+                            $limit = count($used);
 
-                        foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
-                            $digital->update([
-                                'is_used' => $used[$i],
-                                'val' => $value[$i],
+                            foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
+                                $digital->update([
+                                    'is_used' => $used[$i],
+                                    'val' => $value[$i],
+                                ]);
+                            }
+
+                            DB::commit();
+
+                            return response()->json([
+                                'status' => 'success',
+                                'digitalInputs' => $device->digitalInputs()->limit($limit)->get()
+                            ]);
+                        } catch (\Throwable $th) {
+                            DB::rollBack();
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => $th->getMessage()
                             ]);
                         }
-
-                        DB::commit();
-
+                    } else {
                         return response()->json([
-                            'status' => 'success',
-                            'digitalInputs' => $device->digitalInputs()->limit($limit)->get()
-                        ]);
-                    } catch (\Throwable $th) {
-                        DB::rollBack();
-                        return response()->json([
-                            'status' => 'success',
-                            'message' => $th->getMessage()
+                            'status' => 'error',
+                            'message' => 'Device is not activated'
                         ]);
                     }
                 } else {

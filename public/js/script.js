@@ -162,3 +162,52 @@ $(".table").on('change', '.modbus-math', function () {
         }
     })
 })
+
+$(".table").on('click', '.device-active', function () {
+    let id = $(this).attr('data-id');
+    let active = 0;
+    let status = '';
+
+    if ($(this).is(':checked')) {
+        active = 1;
+        status = 'Active';
+    } else {
+        active = 0;
+        status = 'Nonactive'
+    }
+
+    $.ajax({
+        url: '/api/device/active',
+        type: 'GET',
+        data: {
+            id: id,
+            active: active
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                $(".label-" + id).empty().append(status)
+
+                iziToast.success({
+                    title: 'Success',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            } else {
+                iziToast.error({
+                    title: 'Error',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            }
+        },
+        error: function (response) {
+            let message = response.responseJSON.message;
+
+            iziToast.error({
+                title: 'Error',
+                position: 'topRight',
+                message: message,
+            });
+        }
+    });
+})

@@ -48,8 +48,8 @@
                             </td>
                             <td class="is_active">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input device-active" data-id="{{ $device->id }}" type="checkbox" name="used" {{ $device->is_active == 1 ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="used">{{ $device->is_active == 1 ? 'Active' : 'Nonaktif' }}</label>
+                                    <input class="form-check-input device-active" data-id="{{ $device->id }}" type="checkbox" name="active" {{ $device->is_active == 1 ? 'checked' : '' }}>
+                                    <label class="form-check-label label-{{ $device->id }}" for="active">{{ $device->is_active == 1 ? 'Active' : 'Nonactive' }}</label>
                                 </div>
                             </td>
                         </tr>
@@ -66,3 +66,7 @@
     </div>
 </div>
 @stop
+
+@push('script')
+<script src="{{ asset('/js/script.js') }}"></script>
+@endpush

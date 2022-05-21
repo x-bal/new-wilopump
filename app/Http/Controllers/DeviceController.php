@@ -150,4 +150,35 @@ class DeviceController extends Controller
             ]);
         }
     }
+
+    public function active()
+    {
+        try {
+            DB::beginTransaction();
+
+            $device = Device::find(request('id'));
+            $device->update([
+                'is_active' => request('active')
+            ]);
+
+            if (request('active') == 1) {
+                $message = 'Device successfully activated';
+            } else {
+                $message = 'Device successfully non activated';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $message
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 }
