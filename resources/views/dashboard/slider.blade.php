@@ -69,10 +69,26 @@
             },
             label: {
                 text: "{{ $first->name }}",
-                fontFamily: "Arial",
+                fontFamily: "Poppins",
                 color: "#000",
                 stroke: "#fff",
                 fontSize: "14px",
+            },
+            map: map,
+        });
+
+        let rightMarker = new google.maps.Marker({
+            position: {
+                lat: lat + 0.0001,
+                lng: long + 0.1
+            },
+            map: map,
+        });
+
+        let leftMarker = new google.maps.Marker({
+            position: {
+                lat: lat - 0.0001,
+                lng: long - 0.1
             },
             map: map,
         });
@@ -88,87 +104,108 @@
                 let modbus = result.modbus;
                 let digital = result.digital;
 
-                let contentString = `<div class="card">
-                    <div class="card-body row justify-content-center">
-                    <h4>` + device.name + `</h4></br></br>
-                        <div class="col-md-4">
-                            <h6>Info Device</h6>
+                let infoFirst = `<div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Info Device</h5>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td> : </td>
+                                                <td>` + device.name + `</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Type</th>
+                                                <td> : </td>
+                                                <td>` + device.type + `</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Lat</th>
+                                                <td> : </td>
+                                                <td>` + device.lat + `</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Long</th>
+                                                <td> : </td>
+                                                <td>` + device.long + `</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>`;
 
-                            <table>
-                                <tr>
-                                    <th>Name</th>
-                                    <td> : </td>
-                                    <td>` + device.name + `</td>
-                                </tr>
-                                <tr>
-                                    <th>Type</th>
-                                    <td> : </td>
-                                    <td>` + device.type + `</td>
-                                </tr>
-                                <tr>
-                                    <th>Lat</th>
-                                    <td> : </td>
-                                    <td>` + device.lat + `</td>
-                                </tr>
-                                <tr>
-                                    <th>Long</th>
-                                    <td> : </td>
-                                    <td>` + device.long + `</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="col-md-4">
-                            <h6>Mobdus</h6>
-                            <table>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>:</th>
-                                    <th>Val</th>
-                                </tr>`;
-
+                let mobdusFirst = `<div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Modbus</h5>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td> : </td>
+                                                <td>Val</td>
+                                            </tr>`
                 $.each(modbus, function(i, data) {
-                    contentString += `<tr>
-                                    <td>` + data.name + `</td>
-                                    <td>:</td>
-                                    <td>` + data.after + data.satuan + `</td>
-                                </tr>`
-                });
+                    mobdusFirst += `<tr>
+                                        <td>` + data.name + `</td>
+                                        <td> : </td>
+                                        <td>` + data.after + data.satuan + `</td>
+                                    </tr>`
+                })
+                mobdusFirst += `</table>
+                                    </div>
+                                </div>`;
 
-                contentString += `</table>
-                        </div>
-
-                        <div class="col-md-4">
-                            <h6>Digital Input</h6>
-                            <table>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>:</th>
-                                    <th>Val</th>
-                                </tr>`;
-
+                let digitalFirst = `<div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Digital Input</h5>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td> : </td>
+                                                <td>Val</td>
+                                            </tr>`
                 $.each(digital, function(i, data) {
-                    contentString += `<tr>
-                                    <td>` + data.name + `</td>
-                                    <td>:</td>
-                                    <td>` + data.val + `</td>
-                                </tr>`
+                    digitalFirst += `<tr>
+                                        <td>` + data.name + `</td>
+                                        <td> : </td>
+                                        <td>` + data.val + `</td>
+                                    </tr>`
+                })
+                digitalFirst += `</table>
+                                    </div>
+                                </div>`;
+
+
+
+                let firstInfo = new google.maps.InfoWindow({
+                    content: infoFirst,
                 });
 
-                contentString += `</table>
-                        </div>
-                    </div>
-                </div>`;
-
-                const infowindow = new google.maps.InfoWindow({
-                    content: contentString,
+                let firstModbus = new google.maps.InfoWindow({
+                    content: mobdusFirst,
                 });
 
-                infowindow.open({
+                let firstDigital = new google.maps.InfoWindow({
+                    content: digitalFirst,
+                });
+
+                firstInfo.open({
                     anchor: marker,
                     map,
                     shouldFocus: true,
                 });
+
+                firstModbus.open({
+                    anchor: leftMarker,
+                    map,
+                    shouldFocus: true,
+                });
+
+                firstDigital.open({
+                    anchor: rightMarker,
+                    map,
+                    shouldFocus: true,
+                });
+
+                leftMarker.setVisible(false)
+                rightMarker.setVisible(false)
             }
         })
 
@@ -207,6 +244,22 @@
                 map: devicemap
             });
 
+            let rightDevMarker = new google.maps.Marker({
+                position: {
+                    lat: parseFloat(coords[0]) + 0.0001,
+                    lng: parseFloat(coords[1]) + 0.1
+                },
+                map: devicemap,
+            });
+
+            let leftDevMarker = new google.maps.Marker({
+                position: {
+                    lat: parseFloat(coords[0]) - 0.0001,
+                    lng: parseFloat(coords[1]) - 0.1
+                },
+                map: devicemap,
+            });
+
             // devmarker.addListener("click", () => {
             let id = $(Element).attr('id');
 
@@ -218,87 +271,108 @@
                     let modbus = result.modbus;
                     let digital = result.digital;
 
-                    let contentStringDev = `<div class="card">
-                    <div class="card-body row justify-content-center">
-                    <h4>` + device.name + `</h4></br></br>
-                        <div class="col-md-4">
-                            <h6>Info Device</h6>
+                    let infodev = `<div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Info Device</h5>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td> : </td>
+                                                <td>` + device.name + `</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Type</th>
+                                                <td> : </td>
+                                                <td>` + device.type + `</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Lat</th>
+                                                <td> : </td>
+                                                <td>` + device.lat + `</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Long</th>
+                                                <td> : </td>
+                                                <td>` + device.long + `</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>`;
 
-                            <table>
-                                <tr>
-                                    <th>Name</th>
-                                    <td> : </td>
-                                    <td>` + device.name + `</td>
-                                </tr>
-                                <tr>
-                                    <th>Type</th>
-                                    <td> : </td>
-                                    <td>` + device.type + `</td>
-                                </tr>
-                                <tr>
-                                    <th>Lat</th>
-                                    <td> : </td>
-                                    <td>` + device.lat + `</td>
-                                </tr>
-                                <tr>
-                                    <th>Long</th>
-                                    <td> : </td>
-                                    <td>` + device.long + `</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="col-md-4">
-                            <h6>Mobdus</h6>
-                            <table>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>:</th>
-                                    <th>Val</th>
-                                </tr>`;
-
+                    let modbusdev = `<div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Modbus</h5>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td> : </td>
+                                                <td>Val</td>
+                                            </tr>`
                     $.each(modbus, function(i, data) {
-                        contentStringDev += `<tr>
-                                    <td>` + data.name + `</td>
-                                    <td>:</td>
-                                    <td>` + data.after + data.satuan + `</td>
-                                </tr>`
-                    });
+                        modbusdev += `<tr>
+                                        <td>` + data.name + `</td>
+                                        <td> : </td>
+                                        <td>` + data.after + data.satuan + `</td>
+                                    </tr>`
+                    })
+                    modbusdev += `</table>
+                                    </div>
+                                </div>`;
 
-                    contentStringDev += `</table>
-                        </div>
-
-                        <div class="col-md-4">
-                            <h6>Digital Input</h6>
-                            <table>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>:</th>
-                                    <th>Val</th>
-                                </tr>`;
-
+                    let digitaldev = `<div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Digital Input</h5>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td> : </td>
+                                                <td>Val</td>
+                                            </tr>`
                     $.each(digital, function(i, data) {
-                        contentStringDev += `<tr>
-                                    <td>` + data.name + `</td>
-                                    <td>:</td>
-                                    <td>` + data.val + `</td>
-                                </tr>`
+                        digitaldev += `<tr>
+                                        <td>` + data.name + `</td>
+                                        <td> : </td>
+                                        <td>` + data.val + `</td>
+                                    </tr>`
+                    })
+                    digitaldev += `</table>
+                                    </div>
+                                </div>`;
+
+
+
+                    let devinfo = new google.maps.InfoWindow({
+                        content: infodev,
                     });
 
-                    contentStringDev += `</table>
-                        </div>
-                    </div>
-                </div>`;
-
-                    let infowindowdev = new google.maps.InfoWindow({
-                        content: contentStringDev,
+                    let devmodbus = new google.maps.InfoWindow({
+                        content: modbusdev,
                     });
 
-                    infowindowdev.open({
+                    let devdigi = new google.maps.InfoWindow({
+                        content: digitaldev,
+                    });
+
+                    devinfo.open({
                         anchor: devmarker,
                         devicemap,
                         shouldFocus: true,
                     });
+
+                    devmodbus.open({
+                        anchor: leftDevMarker,
+                        devicemap,
+                        shouldFocus: true,
+                    });
+
+                    devdigi.open({
+                        anchor: rightDevMarker,
+                        devicemap,
+                        shouldFocus: true,
+                    });
+
+                    leftDevMarker.setVisible(false)
+                    rightDevMarker.setVisible(false)
                 }
             })
 
