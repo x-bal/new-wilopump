@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Device;
+use App\Models\History;
 use App\Models\SecretKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ class ApiController extends Controller
 {
     public function SendDataModbus(Request $request)
     {
-        if ($request->key && $request->iddev && $request->address && $request->idmodbus && $request->val && $request->used) {
+        if ($request->key && $request->iddev && $request->addr && $request->idm && $request->val && $request->used) {
             $secretkey = SecretKey::findOrFail(1);
 
             if ($secretkey->key == $request->key) {
@@ -23,8 +24,8 @@ class ApiController extends Controller
                         try {
                             DB::beginTransaction();
 
-                            $address = $request->address;
-                            $idmodbus = $request->idmodbus;
+                            $address = $request->addr;
+                            $idmodbus = $request->idm;
                             $val = $request->val;
                             $used = $request->used;
                             $limit = count($address);
@@ -34,9 +35,13 @@ class ApiController extends Controller
                                     'address' => $address[$i],
                                     'id_modbus' => $idmodbus[$i],
                                     'val' => $val[$i],
-                                    'math' => 'x,1',
-                                    'after' => $val[$i],
                                     'is_used' => $used[$i],
+                                ]);
+
+                                History::create([
+                                    'device_id' => $device->id,
+                                    'ket' => 'Insert Data ' . $modbus->name,
+                                    'val' => $val[$i]
                                 ]);
                             }
 
@@ -101,6 +106,12 @@ class ApiController extends Controller
                                 $digital->update([
                                     'is_used' => $used[$i],
                                     'val' => $value[$i],
+                                ]);
+
+                                History::create([
+                                    'device_id' => $device->id,
+                                    'ket' => 'Insert Data ' . $digital->name,
+                                    'val' > $value[$i]
                                 ]);
                             }
 

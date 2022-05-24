@@ -211,3 +211,14 @@ $(".table").on('click', '.device-active', function () {
         }
     });
 })
+
+$('.table').on('click', '.modbus-merge', function () {
+    var ischecked = $(this).is(':checked');
+    let id = $(this).attr('data-id')
+    console.log(id)
+    if (ischecked == false) {
+        $('#merge-' + id).remove();
+    } else {
+        $('.form-merge').append('<input type="hidden" name="modbus_id[]" id="merge-' + id + '" value="' + id + '"/>');
+    }
+})

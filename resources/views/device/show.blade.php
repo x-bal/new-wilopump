@@ -15,12 +15,13 @@
             </div>
 
             <div class="card-body">
-                <div id="tableModbus" data-list='{"valueNames":["no","name","address","id","val","after","math","satuan","used"],"page":5,"pagination":true}'>
+                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used"],"page":5,"pagination":true}'>
 
                     <div class="table-responsive scrollbar">
                         <table class="table table-bordered table-striped fs--1 mb-0">
                             <thead class="bg-200 text-900">
                                 <tr>
+                                    <th class="sort text-center" data-sort="check">#</th>
                                     <th class="sort text-center" data-sort="no">No</th>
                                     <th class="sort" data-sort="name">Name</th>
                                     <th class="sort" data-sort="address">Address</th>
@@ -35,6 +36,9 @@
                             <tbody class="list">
                                 @foreach($device->modbuses as $modbus)
                                 <tr>
+                                    <td class="check text-center">
+                                        <input type="checkbox" name="check" data-id="{{ $modbus->id }}" class="modbus-merge">
+                                    </td>
                                     <td class="no text-center">{{ $loop->iteration }}</td>
                                     <td class="name">
                                         <input type="text" name="name" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-name" value="{{ $modbus->name }}">
@@ -84,6 +88,9 @@
                         <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
                     </div>
                 </div>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Merge
+                </button>
             </div>
         </div>
     </div>
@@ -146,6 +153,35 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Form Merge Modbus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('modbus.merge') }}" method="post" class="form-merge">
+                    @csrf
+                    <div class="form-group">
+                        <label for="name">Merge Name</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
+
+                        @error('name')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

@@ -218,22 +218,23 @@
                 $(this).display = "none";
                 return;
             }
+
+            var devLat = parseFloat(coords[0]);
+            var devLong = parseFloat(coords[1]);
+
             var latlng = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
             var myOptions = {
                 zoom: 12,
-                center: latlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                disableDefaultUI: false,
-                mapTypeControl: true,
-                zoomControl: true,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.SMALL
-                }
+                center: new google.maps.LatLng(devLat, devLong),
             };
+
             var devicemap = new google.maps.Map(Element, myOptions);
 
             var devmarker = new google.maps.Marker({
-                position: latlng,
+                position: {
+                    lat: devLat,
+                    lng: devLong
+                },
                 label: {
                     text: coords[2],
                     fontFamily: "Poppins",
@@ -246,16 +247,16 @@
 
             let rightDevMarker = new google.maps.Marker({
                 position: {
-                    lat: parseFloat(coords[0]) + 0.0001,
-                    lng: parseFloat(coords[1]) + 0.1
+                    lat: devLat + 0.0001,
+                    lng: devLong + 0.1
                 },
                 map: devicemap,
             });
 
             let leftDevMarker = new google.maps.Marker({
                 position: {
-                    lat: parseFloat(coords[0]) - 0.0001,
-                    lng: parseFloat(coords[1]) - 0.1
+                    lat: devLat - 0.0001,
+                    lng: devLong - 0.1
                 },
                 map: devicemap,
             });

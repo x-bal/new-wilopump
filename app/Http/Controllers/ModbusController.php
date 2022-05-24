@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Merge;
 use App\Models\Modbus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,27 @@ class ModbusController extends Controller
                 'status' => 'failed',
                 'message' => $th->getMessage()
             ]);
+        }
+    }
+
+    public function merge(Request $request)
+    {
+        $attr = $request->validate(
+            [
+                'name' => 'required',
+                'modbus_id' => 'required',
+            ],
+            [
+                'modbus_id.required' => 'Select Modbus'
+            ]
+        );
+
+        try {
+            DB::beginTransaction();
+
+            $merge = Merge::create([]);
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }
