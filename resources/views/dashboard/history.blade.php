@@ -7,7 +7,7 @@
     </div>
 
     <div class="col-md-12">
-        <div id="tableModbus" data-list='{"valueNames":["no","device","desc","time"],"page":10,"pagination":true}'>
+        <div id="tableModbus" data-list='{"valueNames":["no","device","desc","val","time"],"page":10,"pagination":true}'>
 
             <div class="table-responsive scrollbar">
                 <table class="table table-bordered table-striped fs--1 mb-0">
@@ -16,6 +16,7 @@
                             <th class="sort text-center" data-sort="no">No</th>
                             <th class="sort" data-sort="time">Time</th>
                             <th class="sort" data-sort="device">Device</th>
+                            <th class="sort" data-sort="val">Val</th>
                             <th class="sort" data-sort="desc">Desc</th>
                         </tr>
                     </thead>
@@ -25,6 +26,7 @@
                             <td class="no text-center">{{ $loop->iteration }}</td>
                             <td class="time">{{ Carbon\Carbon::parse($history->created_at)->format('d/m/Y H:i:s') }}</td>
                             <td class="device">{{ $history->device->name }}</td>
+                            <td class="val">{{ $history->val }}</td>
                             <td class="desc">{{ $history->ket }}</td>
                         </tr>
                         @endforeach
