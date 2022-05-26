@@ -11,15 +11,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-use function Psy\debug;
-
 class DashboardController extends Controller
 {
     public function index()
     {
         $apikey = SecretKey::findOrFail(2)->key;
         $first = Device::where('is_active', 1)->first();
-        $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+        if ($first) {
+            $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+        } else {
+            $devices = '';
+        }
 
         return view('dashboard.index', compact('apikey', 'first', 'devices'));
     }
@@ -27,7 +29,7 @@ class DashboardController extends Controller
     public function slider()
     {
         $apikey = SecretKey::findOrFail(2)->key;
-        $delay = intval(SecretKey::findOrFail(3)->key);
+        $delay = intval(SecretKey::findOrFail(3)->key * 1000);
         $first = Device::where('is_active', 1)->first();
         $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
         return view('dashboard.slider', compact('apikey', 'first', 'devices', 'delay'));

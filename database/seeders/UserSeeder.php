@@ -23,5 +23,6 @@ class UserSeeder extends Seeder
 
         SecretKey::create(['key' => 'wilopump2022']);
         SecretKey::create(['key' => 'AIzaSyBaX6BeXf3p3BnVU3SUElO9LY9EwRsWKOo']);
+        SecretKey::create(['key' => 3000]);
     }
 }

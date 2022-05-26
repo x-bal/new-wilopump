@@ -15,8 +15,10 @@ class CreateMergesTable extends Migration
     {
         Schema::create('merges', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
-            $table->string('math')->default('x,1');
+            $table->string('val');
+            $table->string('math')->default('x,');
             $table->string('after')->nullable();
             $table->string('unit')->nullable();
             $table->timestamps();

@@ -1,5 +1,20 @@
 @extends('layouts.master', ['title' => 'Dashbboard'])
 
+@push('style')
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+    .map-label {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, .4) !important;
+        color: #DB0202 !important;
+        top: 35px;
+        left: 0;
+        position: relative;
+        font-weight: bold;
+        font-size: 16px !important;
+    }
+</style>
+@endpush
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -40,11 +55,10 @@
                         animation: google.maps.Animation.DROP,
                         label: {
                             text: data.name,
-                            fontFamily: "Arial",
-                            color: "#000",
-                            stroke: "#fff",
-                            fontSize: "14px",
+                            fontFamily: "Poppins",
+                            className: "map-label"
                         },
+                        zIndex: i,
                         map: map,
                     });
 
@@ -59,7 +73,36 @@
                             success: function(result) {
                                 let device = result.device;
 
-                                let contentString = '<div id="content"><div id="siteNotice"></div><h5 id="firstHeading" class="firstHeading">' + device.name + '</h5><div id="bodyContent"><p><b>Name : </b>' + device.name + '<br><b>Type : </b>' + device.type + '<br><b>Lat : </b>' + device.lat + '<br><b>Long : </b>' + device.long + '<br><a href="/device/' + id + '">More details</a></p></div></div>';
+                                let contentString = `<div class="card">
+                                <h6>` + device.name + `</h6>
+                                <table>
+                                    <tr>
+                                        <td>Type</td>
+                                        <td> : </td>
+                                        <td>` + device.type + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Power</td>
+                                        <td> : </td>
+                                        <td>` + device.power + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Head</td>
+                                        <td> : </td>
+                                        <td>` + device.head + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flow</td>
+                                        <td> : </td>
+                                        <td>` + device.flow + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Data Send</td>
+                                        <td> : </td>
+                                        <td>` + result.history + `</td>
+                                    </tr>
+                                </table>
+                            </div>`
 
                                 const infowindow = new google.maps.InfoWindow({
                                     content: contentString,

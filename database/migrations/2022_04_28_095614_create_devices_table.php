@@ -16,9 +16,15 @@ class CreateDevicesTable extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type');
+            $table->string('power');
+            $table->string('head');
+            $table->string('flow');
             $table->string('lat');
             $table->string('long');
-            $table->string('type');
+            $table->string('digital')->nullable();
+            $table->string('modbus')->nullable();
+            $table->string('image')->nullable();
             $table->integer('is_active')->default(1);
             $table->timestamps();
         });

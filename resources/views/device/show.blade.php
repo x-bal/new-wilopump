@@ -1,5 +1,21 @@
 @extends('layouts.master', ['title' => 'Detail Device'])
+@push('style')
+<style>
+    button.gm-ui-hover-effect {
+        visibility: hidden;
+    }
 
+    .map-label {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, .4) !important;
+        color: #DB0202 !important;
+        top: 35px;
+        left: 0;
+        position: relative;
+        font-weight: bold;
+        font-size: 16px !important;
+    }
+</style>
+@endpush
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -98,6 +114,91 @@
     <div class="col-md-12 my-3">
         <div class="card">
             <div class="card-header">
+                <h4 class="card-title">Merge Modbus {{ $device->name }}</h4>
+            </div>
+
+            <div class="card-body">
+                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used"],"page":5,"pagination":true}'>
+
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-bordered table-striped fs--1 mb-0">
+                            <thead class="bg-200 text-900">
+                                <tr>
+                                    <th class="sort text-center" data-sort="no">No</th>
+                                    <th class="sort" data-sort="name">Name</th>
+                                    <th class="sort" data-sort="address">Modbus</th>
+                                    <th class="sort" data-sort="val">Val</th>
+                                    <th class="sort" data-sort="math" colspan="2">Math</th>
+                                    <th class="sort" data-sort="after">Val(After)</th>
+                                    <th class="sort" data-sort="satuan">Unit</th>
+                                    <th class="sort" data-sort="used">Used</th>
+                                    <th class="sort" data-sort="check">Act</th>
+                                </tr>
+                            </thead>
+                            <tbody class="list">
+                                @foreach($device->merges as $merge)
+                                <tr>
+                                    <td class="no text-center">{{ $loop->iteration }}</td>
+                                    <td class="name">
+                                        <input type="text" name="name" data-id="{{ $merge->id }}" class="form-control form-control-sm modbus-name" value="{{ $merge->name }}">
+                                    </td>
+                                    <td class="address text-center">
+                                        @foreach($merge->modbuses as $mod)
+                                        ({{ $mod->id }}) {{ $mod->address }} <br>
+                                        @endforeach
+                                    </td>
+                                    <td class="val">
+                                        <b>{{ $merge->val }}</b>
+                                    </td>
+                                    <td class="math" colspan="2">
+                                        @php
+                                        $math = explode(',', $merge->math)
+                                        @endphp
+                                        <select name="mark" class="form-control form-control-sm mark-{{ $merge->id }}">
+                                            <option {{ $math[0] == 'x' ? 'selected' : '' }} value="x">x</option>
+                                            <option {{ $math[0] == ':' ? 'selected' : '' }} value=":">:</option>
+                                            <option {{ $math[0] == '+' ? 'selected' : '' }} value="+">+</option>
+                                            <option {{ $math[0] == '-' ? 'selected' : '' }} value="-">-</option>
+                                        </select>
+                                        <br>
+                                        <input type="number" name="math" data-id="{{ $merge->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
+                                    </td>
+                                    <td class="after">
+                                        <input type="text" name="after" id="after-{{ $merge->id }}" class="form-control form-control-sm" value="{{ $merge->after }}" disabled>
+                                    </td>
+                                    <td class="satuan">
+                                        <input type="text" name="satuan" data-id="{{ $merge->id }}" class="form-control form-control-sm modbus-satuan" value="{{ $merge->satuan }}">
+                                    </td>
+                                    <td class="used">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input modbus-used" data-id="{{ $merge->id }}" type="checkbox" name="used" {{ $merge->is_used == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="used">Used</label>
+                                        </div>
+                                    </td>
+                                    <td class="check">
+                                        <form action="{{ route('merge.delete', $merge->id) }}" method="post">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this merge ?')"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                        <ul class="pagination mb-0"></ul>
+                        <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 my-3">
+        <div class="card">
+            <div class="card-header">
                 <h4 class="card-title">Digital Input {{ $device->name }}</h4>
             </div>
 
@@ -177,12 +278,26 @@
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label for="convert">Convert To</label>
+                        <select name="convert" id="convert" class="form-control">
+                            <option disabled selected>-- Select Convert --</option>
+                            <option value="be">Big Endian</option>
+                            <option value="le">Little Endian</option>
+                            <option value="mbe">Mid Big Endian</option>
+                            <option value="mle">Mid Little Endian</option>
+                        </select>
+
+                        @error('convert')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-success">Submit</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -211,30 +326,186 @@
             map,
         });
 
-        marker.addListener("click", () => {
-            let id = "{{ $device->id }}";
-
-            $.ajax({
-                url: '/api/get-device/' + id,
-                type: 'GET',
-                success: function(result) {
-                    let device = result.device;
-
-                    let contentString = '<div id="content"><div id="siteNotice"></div><h5 id="firstHeading" class="firstHeading">' + device.name + '</h5><div id="bodyContent"><p><b>Name : </b>' + device.name + '<br><b>Type : </b>' + device.type + '<br><b>Lat : </b>' + device.lat + '<br><b>Long : </b>' + device.long + '<br></p></div></div>';
-
-                    const infowindow = new google.maps.InfoWindow({
-                        content: contentString,
-                    });
-
-                    infowindow.open({
-                        anchor: marker,
-                        map,
-                        shouldFocus: true,
-                    });
-                }
-            })
-
+        let infoMarker = new google.maps.Marker({
+            position: {
+                lat: lat + 0.026,
+                lng: long - 0.12
+            },
+            map: map,
         });
+
+        let imgMarker = new google.maps.Marker({
+            position: {
+                lat: lat - 0.010,
+                lng: long - 0.12
+            },
+            map: map,
+        });
+
+        let upMarker = new google.maps.Marker({
+            position: {
+                lat: lat - 0.050,
+                lng: long + 0.1
+            },
+            map: map,
+        });
+
+        let downMarker = new google.maps.Marker({
+            position: {
+                lat: lat - 0.070,
+                lng: long - 0.12
+            },
+            map: map,
+        });
+
+
+        let id = "{{ $device->id }}";
+
+        $.ajax({
+            url: '/api/get-device/' + id,
+            type: 'GET',
+            success: function(result) {
+                let dataMarker = [marker, infoMarker, imgMarker, upMarker, downMarker];
+                getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker)
+            }
+        })
+
+        function getData(device, image, modbus, digital, history, dataMap, dataMarker) {
+            let infoFirst = `<div class="card">
+                                <h6>` + device.name + `</h6>
+                                <table>
+                                    <tr>
+                                        <td>Type</td>
+                                        <td> : </td>
+                                        <td>` + device.type + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Power</td>
+                                        <td> : </td>
+                                        <td>` + device.power + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Head</td>
+                                        <td> : </td>
+                                        <td>` + device.head + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flow</td>
+                                        <td> : </td>
+                                        <td>` + device.flow + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Data Send</td>
+                                        <td> : </td>
+                                        <td>` + history + `</td>
+                                    </tr>
+                                </table>
+                            </div>`;
+            dataMarker[1].setMap(null)
+
+            let firstInfo = new google.maps.InfoWindow({
+                content: infoFirst,
+            });
+
+            firstInfo.open({
+                anchor: dataMarker[1],
+                map: dataMap,
+                shouldFocus: true,
+            });
+
+            let imgFirst = `<div class="card text-center">
+                                <img src="` + image + `" alt="" width="60px">
+                            </div>`;
+
+            dataMarker[2].setMap(null)
+            let firstImg = new google.maps.InfoWindow({
+                content: imgFirst,
+            });
+
+            firstImg.open({
+                anchor: dataMarker[2],
+                map: dataMap,
+                shouldFocus: true,
+            });
+
+            let upFirst = ``;
+
+            if (modbus.length > 0) {
+                upFirst = `<div class="card">
+                                        <h6>` + device.modbus + `</h6>
+                                        <table>`
+                $.each(modbus, function(i, data) {
+                    upFirst += `<tr>
+                                        <td>` + data.name + `</td>
+                                        <td> : </td>`;
+                    if (data.after == null) {
+                        upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                    } else {
+                        upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                    }
+                })
+                upFirst += `        </tr>
+                                </table>
+                            </div>`;
+
+                dataMarker[3].setMap(null)
+
+                let upWindow = new google.maps.InfoWindow({
+                    content: imgFirst,
+                });
+                upWindow.setContent(upFirst)
+
+                upWindow.open({
+                    anchor: dataMarker[3],
+                    map: dataMap,
+                    shouldFocus: true,
+                });
+            } else {
+                upFirst = ``;
+            }
+
+            let downFirst = ``;
+
+            if (digital.length > 0) {
+                downFirst = `<div class="card">
+                                <h6>` + device.digital + `</h6>
+                                    <table>`
+                $.each(digital, function(i, data) {
+                    downFirst += `<tr>
+                                    <td>` + data.name + `</td>
+                                    <td> : </td>`;
+                    if (data.val == 1) {
+                        downFirst += `<td>` + data.yes + `</td>`
+                    } else {
+                        downFirst += `<td>` + data.no + `</td>`
+                    }
+                    downFirst += `</tr>`
+                })
+                downFirst += `</table>
+                            </div>`;
+
+                dataMarker[4].setMap(null)
+
+                let downWindow = new google.maps.InfoWindow({
+                    content: downFirst,
+                });
+
+
+                downWindow.open({
+                    anchor: dataMarker[4],
+                    map: dataMap,
+                    shouldFocus: true,
+                });
+
+            } else {
+                downFirst = ``;
+            }
+        }
+
+        infoMarker.setVisible(false)
+        imgMarker.setVisible(false)
+        upMarker.setVisible(false)
+        downMarker.setVisible(false)
     }
 
     window.initMap = initMap;

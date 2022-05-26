@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\History;
 use App\Models\Modbus;
 use App\Models\SecretKey;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DeviceController extends Controller
 {
@@ -31,12 +34,21 @@ class DeviceController extends Controller
         $attr = $request->validate([
             'name' => 'required|string',
             'type' => 'required|string',
+            'power' => 'required|string',
+            'flow' => 'required|string',
+            'head' => 'required|string',
+            'modbus' => 'required|string',
+            'digital' => 'required|string',
             'lat' => 'required|string',
             'long' => 'required|string',
+            'image' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         try {
             DB::beginTransaction();
+
+            $image = $request->file('image');
+            $attr['image'] = $image->storeAs('images/device', 'dev' . date('Ymd') . rand(1000, 9999) . '.' . $image->extension());
 
             $device = Device::create($attr);
             $modbuses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -59,6 +71,7 @@ class DeviceController extends Controller
 
             return redirect()->route('device.index')->with('success', 'Device sucessfully created');
         } catch (\Throwable $th) {
+            DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
     }
@@ -83,12 +96,26 @@ class DeviceController extends Controller
         $attr = $request->validate([
             'name' => 'required|string',
             'type' => 'required|string',
+            'power' => 'required|string',
+            'flow' => 'required|string',
+            'head' => 'required|string',
+            'modbus' => 'required|string',
+            'digital' => 'required|string',
             'lat' => 'required|string',
             'long' => 'required|string',
+            'image' => 'mimes:jpg,jpeg,png',
         ]);
 
         try {
             DB::beginTransaction();
+
+            if ($request->file('image')) {
+                Storage::delete($device->image);
+                $image = $request->file('image');
+                $attr['image'] = $image->storeAs('images/device', 'dev' . date('Ymd') . rand(1000, 9999) . '.' . $image->extension());
+            } else {
+                $attr['image'] = $device->image;
+            }
 
             $device->update($attr);
 
@@ -96,6 +123,7 @@ class DeviceController extends Controller
 
             return redirect()->route('device.index')->with('success', 'Device sucessfully updated');
         } catch (\Throwable $th) {
+            DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
     }
@@ -118,11 +146,15 @@ class DeviceController extends Controller
     {
         $modbus = $device->modbuses()->where('is_used', 1)->get();
         $digital = $device->digitalInputs()->where('is_used', 1)->get();
+        $image = asset('/storage/' . $device->image);
+        $history = $device->histories()->latest()->first();
 
         return response()->json([
             'device' => $device,
             'modbus' => $modbus,
             'digital' => $digital,
+            'image' => $image,
+            'history' => $history ? Carbon::parse($history->created_at)->format('d/m/Y H:i:s') : '-',
         ]);
     }
 
@@ -135,6 +167,12 @@ class DeviceController extends Controller
             $modbus->update([
                 'math' => $request->math,
                 'after' => $request->after,
+            ]);
+
+            History::create([
+                'device_id' => $modbus->device->id,
+                'val' => $request->after,
+                'ket' => 'Math ' . $modbus->name
             ]);
 
             DB::commit();

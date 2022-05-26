@@ -42,4 +42,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('device', DeviceController::class);
 
     Route::post('/modbus/merge', [ModbusController::class, 'merge'])->name('modbus.merge');
+    Route::post('/merge/{merge:id}', [ModbusController::class, 'deleteMerge'])->name('merge.delete');
 });

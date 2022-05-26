@@ -30,7 +30,7 @@
             @csrf
             <div class="form-group">
                 <input type="hidden" name="type" value="delay">
-                <label for="key">Delay Time Slider</label>
+                <label for="key">Delay Time Slider (s)</label>
                 <input type="text" name="key" id="key" class="form-control" value="{{ $delay->key ?? old('key') }}">
 
                 @error('key')
