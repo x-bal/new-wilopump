@@ -19,6 +19,10 @@
         font-weight: bold;
         font-size: 16px !important;
     }
+
+    .gm-style .gm-style-iw {
+        background-color: #009c81;
+    }
 </style>
 @endpush
 
@@ -134,7 +138,7 @@
         }, 3000)
 
         function getData(device, image, modbus, digital, history, dataMap, dataMarker) {
-            let infoFirst = `<div class="card">
+            let infoFirst = `<div class="card" style="background-color: #009c81;">
                                 <h6>` + device.name + `</h6>
                                 <table>
                                     <tr>
@@ -176,7 +180,7 @@
                 shouldFocus: true,
             });
 
-            let imgFirst = `<div class="card text-center">
+            let imgFirst = `<div class="card text-center" style="background-color: #009c81;">
                                 <img src="` + image + `" alt="" width="60px">
                             </div>`;
 
@@ -194,7 +198,7 @@
             let upFirst = ``;
 
             if (modbus.length > 0) {
-                upFirst = `<div class="card">
+                upFirst = `<div class="card" style="background-color: #009c81;">
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
@@ -230,7 +234,7 @@
             let downFirst = ``;
 
             if (digital.length > 0) {
-                downFirst = `<div class="card">
+                downFirst = `<div class="card" style="background-color: #009c81;">
                                 <h6>` + device.digital + `</h6>
                                     <table>`
                 $.each(digital, function(i, data) {

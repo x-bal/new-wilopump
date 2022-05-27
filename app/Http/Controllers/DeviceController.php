@@ -165,9 +165,14 @@ class DeviceController extends Controller
             $modbus = Modbus::find($request->id);
 
             $modbus->update([
+                'math' => '',
+            ]);
+
+            $modbus->update([
                 'math' => $request->math,
                 'after' => $request->after,
             ]);
+
 
             History::create([
                 'device_id' => $modbus->device->id,

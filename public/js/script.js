@@ -109,11 +109,21 @@ function update(id, field, val, url) {
     })
 }
 
+$(".table").on('change', '.modbus-mark', function () {
+    let id = $(this).attr('data-id');
+    let mark = $(".mark-" + id).find(":selected").val();
+
+    if (mark == '&') {
+        $("#math-" + id).val('')
+        $("#math-" + id).attr('placeholder', '16.0')
+    }
+})
+
 $(".table").on('change', '.modbus-math', function () {
     let id = $(this).attr('data-id');
     let val = parseFloat($("#val-" + id).val());
     let math = parseFloat($(this).val());
-    let mark = $(".mark-" + id).find(":selected").text();
+    let mark = $(".mark-" + id).find(":selected").val();
     let after = 0;
 
     if (mark == "x") {
@@ -132,10 +142,18 @@ $(".table").on('change', '.modbus-math', function () {
         after = val - math;
     }
 
+    if (mark == "&") {
+        let before = $(this).val()
+        let max = before.split('.')[0]
+        let min = before.split('.')[1]
+
+        after = ((val - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
+    }
+
     // console.log(val, mark, math)
     $("#after-" + id).empty().val(after)
 
-    let field = mark + "," + math;
+    let field = mark + ',' + math;
 
     $.ajax({
         url: '/api/math',

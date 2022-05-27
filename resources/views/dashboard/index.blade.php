@@ -13,6 +13,10 @@
         font-weight: bold;
         font-size: 16px !important;
     }
+
+    .gm-style .gm-style-iw {
+        background-color: #009c81;
+    }
 </style>
 @endpush
 @section('content')
@@ -73,7 +77,7 @@
                             success: function(result) {
                                 let device = result.device;
 
-                                let contentString = `<div class="card">
+                                let contentString = `<div class="card" style="background-color: #009c81;">
                                 <h6>` + device.name + `</h6>
                                 <table>
                                     <tr>

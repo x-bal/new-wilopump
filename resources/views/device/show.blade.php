@@ -14,6 +14,10 @@
         font-weight: bold;
         font-size: 16px !important;
     }
+
+    .gm-style .gm-style-iw {
+        background-color: #009c81;
+    }
 </style>
 @endpush
 @section('content')
@@ -72,14 +76,15 @@
                                         @php
                                         $math = explode(',', $modbus->math)
                                         @endphp
-                                        <select name="mark" class="form-control form-control-sm mark-{{ $modbus->id }}">
+                                        <select name="mark" class="form-control form-control-sm modbus-mark mark-{{ $modbus->id }}" data-id="{{ $modbus->id }}">
                                             <option {{ $math[0] == 'x' ? 'selected' : '' }} value="x">x</option>
                                             <option {{ $math[0] == ':' ? 'selected' : '' }} value=":">:</option>
                                             <option {{ $math[0] == '+' ? 'selected' : '' }} value="+">+</option>
                                             <option {{ $math[0] == '-' ? 'selected' : '' }} value="-">-</option>
+                                            <option {{ $math[0] == '&' ? 'selected' : '' }} value="&">PV[Units]</option>
                                         </select>
                                         <br>
-                                        <input type="number" name="math" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
+                                        <input type="number" name="math" id="math-{{ $modbus->id }}" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
                                     </td>
                                     <td class="after">
                                         <input type="text" name="after" id="after-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->after }}" disabled>
@@ -371,7 +376,7 @@
         })
 
         function getData(device, image, modbus, digital, history, dataMap, dataMarker) {
-            let infoFirst = `<div class="card">
+            let infoFirst = `<div class="card" style="background-color: #009c81;">
                                 <h6>` + device.name + `</h6>
                                 <table>
                                     <tr>
@@ -413,7 +418,7 @@
                 shouldFocus: true,
             });
 
-            let imgFirst = `<div class="card text-center">
+            let imgFirst = `<div class="card text-center" style="background-color: #009c81;">
                                 <img src="` + image + `" alt="" width="60px">
                             </div>`;
 
@@ -431,7 +436,7 @@
             let upFirst = ``;
 
             if (modbus.length > 0) {
-                upFirst = `<div class="card">
+                upFirst = `<div class="card" style="background-color: #009c81;">
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
@@ -467,7 +472,7 @@
             let downFirst = ``;
 
             if (digital.length > 0) {
-                downFirst = `<div class="card">
+                downFirst = `<div class="card" style="background-color: #009c81;">
                                 <h6>` + device.digital + `</h6>
                                     <table>`
                 $.each(digital, function(i, data) {

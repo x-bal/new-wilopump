@@ -165,8 +165,7 @@ class ModbusController extends Controller
             $hexConvert = $this->hex2float($hexa);
         }
 
-
-        return $hexConvert;
+        return number_format($hexConvert, 2);
     }
 
     public function deleteMerge(Merge $merge)
