@@ -115,7 +115,10 @@ $(".table").on('change', '.modbus-mark', function () {
 
     if (mark == '&') {
         $("#math-" + id).val('')
-        $("#math-" + id).attr('placeholder', '16.0')
+        $("#math-" + id).attr('type', 'text')
+        $("#math-" + id).attr('placeholder', 'PVmax&PVmin&1000')
+    } else {
+        $("#math-" + id).attr('type', 'number')
     }
 })
 
@@ -142,18 +145,31 @@ $(".table").on('change', '.modbus-math', function () {
         after = val - math;
     }
 
+    let field = mark + ',' + math;
+
     if (mark == "&") {
         let before = $(this).val()
-        let max = before.split('.')[0]
-        let min = before.split('.')[1]
+        let max = before.split('&')[0]
+        let min = before.split('&')[1]
+        let devide = before.split('&')[2]
 
-        after = ((val - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
+        if (before.split('&').length < 3 || before.split('&').length > 3) {
+            alert("Format not matches");
+            return false;
+        }
+
+        if (val <= 4) {
+            val = 4;
+        }
+
+        if (val >= 20) {
+            val = 20;
+        }
+        field = mark + ',' + $(this).val()
+        after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
     }
 
-    // console.log(val, mark, math)
     $("#after-" + id).empty().val(after)
-
-    let field = mark + ',' + math;
 
     $.ajax({
         url: '/api/math',
@@ -239,4 +255,166 @@ $('.table').on('click', '.modbus-merge', function () {
     } else {
         $('.form-merge').append('<input type="hidden" name="modbus_id[]" id="merge-' + id + '" value="' + id + '"/>');
     }
+})
+
+$(".table-merge").on('change', '.merge-type', function () {
+    let id = $(this).attr('data-id');
+    let type = $(this).val();
+
+    $.ajax({
+        url: '/api/merge/change',
+        type: 'GET',
+        data: {
+            id: id,
+            type: type
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                $("#merge-val-" + id).empty().append(response.val)
+
+                iziToast.success({
+                    title: 'Success',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            } else {
+                iziToast.error({
+                    title: 'Error',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            }
+        },
+        error: function (response) {
+            let message = response.responseJSON.message;
+
+            iziToast.error({
+                title: 'Error',
+                position: 'topRight',
+                message: message,
+            });
+        }
+    })
+})
+
+$(".table-merge").on('change', '.merge-mark', function () {
+    let id = $(this).attr('data-id');
+    let mark = $(".mark-merge-" + id).find(":selected").val();
+    console.log(id)
+
+    if (mark == '&') {
+        $("#merge-math-" + id).val('')
+        $("#merge-math-" + id).attr('type', 'text')
+        $("#merge-math-" + id).attr('placeholder', 'PVmax&PVmin&1000')
+    } else {
+        $("#merge-math-" + id).attr('type', 'number')
+    }
+})
+
+$(".table-merge").on('change', '.merge-math', function () {
+    let id = $(this).attr('data-id');
+    let val = parseFloat($("#merge-val-" + id).val());
+    let math = parseFloat($(this).val());
+    let mark = $(".mark-merge" + id).find(":selected").val();
+    let after = 0;
+
+    if (mark == "x") {
+        after = val * math;
+    }
+
+    if (mark == ":") {
+        after = val / math;
+    }
+
+    if (mark == "+") {
+        after = val + math;
+    }
+
+    if (mark == "-") {
+        after = val - math;
+    }
+
+    let field = mark + ',' + math;
+
+    if (mark == "&") {
+        let before = $(this).val()
+        let max = before.split('&')[0]
+        let min = before.split('&')[1]
+        let devide = before.split('&')[2]
+
+        if (before.split('&').length < 3 || before.split('&').length > 3) {
+            alert("Format not matches");
+            return false;
+        }
+
+        if (val <= 4) {
+            val = 4;
+        }
+
+        if (val >= 20) {
+            val = 20;
+        }
+        field = mark + ',' + $(this).val()
+        after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
+    }
+
+    $("#merge-after-" + id).empty().val(after)
+
+    $.ajax({
+        url: '/api/merge/math',
+        type: 'GET',
+        data: {
+            id: id,
+            after: after,
+            math: field
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                iziToast.success({
+                    title: 'Success',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            } else {
+                iziToast.error({
+                    title: 'Error',
+                    position: 'topRight',
+                    message: response.message,
+                });
+            }
+        }
+    })
+})
+
+$(".table-merge").on('change', '.merge-satuan', function () {
+    let id = $(this).attr('data-id');
+    let field = 'unit';
+    let val = $(this).val();
+    let url = '/api/merge';
+
+    update(id, field, val, url);
+})
+
+$(".table-merge").on('click', '.merge-used', function () {
+    let id = $(this).attr('data-id');
+    let field = 'is_used';
+    let val = 0;
+    let url = '/api/merge';
+
+    if ($(this).is(':checked')) {
+        val = 1;
+    } else {
+        val = 0;
+    }
+
+    update(id, field, val, url)
+})
+
+$(".table").on('change', '.merge-name', function () {
+    let id = $(this).attr('data-id');
+    let field = 'name';
+    let val = $(this).val();
+    let url = '/api/merge';
+
+    update(id, field, val, url);
 })

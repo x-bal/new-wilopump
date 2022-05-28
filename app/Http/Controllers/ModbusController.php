@@ -82,9 +82,11 @@ class ModbusController extends Controller
 
                     $val = $this->endian($request->convert, $decOne, $decTwo);
 
+                    // dd($val);
                     $merge = Merge::create([
                         'device_id' => $modbusOne->device_id,
                         'name' => $request->name,
+                        'type' => $request->convert,
                         'val' => $val
                     ]);
 
@@ -127,6 +129,29 @@ class ModbusController extends Controller
 
     public function endian($convert, $decOne, $decTwo)
     {
+        $lengthOne = strlen($decOne);
+        $diffOne = 4 - $lengthOne;
+        $lengthTwo = strlen($decTwo);
+        $diffTwo = 4 - $lengthTwo;
+        $addOne = 0;
+        $addTwo = 0;
+
+
+        if ($diffOne > 0) {
+            for ($i = 1; $i < $diffOne; $i++) {
+                $addOne .= 0;
+            }
+        }
+
+        if ($diffTwo > 0) {
+            for ($i = 1; $i < $diffTwo; $i++) {
+                $addTwo .= 0;
+            }
+        }
+
+        $decOne = $addOne . $decOne;
+        $decTwo = $addTwo . $decTwo;
+
         $hexOne = str_split($decOne);
         $hexTwo = str_split($decTwo);
 
@@ -184,6 +209,124 @@ class ModbusController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function change(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $merge = Merge::find($request->id);
+
+            $modbusOne = $merge->modbuses[0];
+            $modbusTwo = $merge->modbuses[1];
+
+            $decOne = $modbusOne->val;
+            $decTwo = $modbusTwo->val;
+
+            $result = $this->endian($request->type, $decOne, $decTwo);
+
+            $merge->update([
+                'val' => $result,
+                'type' => $request->type
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Merge successfully changed',
+                'val' => $result
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ]);
+        }
+    }
+
+    public function math(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $merge = Merge::find($request->id);
+
+            $merge->update([
+                'math' => '',
+            ]);
+
+            $merge->update([
+                'math' => $request->math,
+                'after' => $request->after,
+            ]);
+
+
+            History::create([
+                'device_id' => $merge->device->id,
+                'val' => $request->after,
+                'ket' => 'Math ' . $merge->name
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Value Merge successfully updated'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function updateMerge()
+    {
+        request()->validate([
+            'id' => 'required',
+            'field' => 'required',
+            'val' => 'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $merge = Merge::findOrFail(request('id'));
+            $merge->update([
+                request('field') => request('val')
+            ]);
+
+            DB::commit();
+
+            if (request('field') == 'name') {
+                $message = 'Merge name successfully updated';
+            }
+
+            if (request('field') == 'unit') {
+                $message = 'Merge Unit successfully updated';
+            }
+
+            if (request('field') == 'is_used' && request('val') == 1) {
+                $message = 'Merge successfully activated';
+            }
+
+            if (request('field') == 'is_used' && request('val') == 0) {
+                $message = 'Merge successfully deactivated';
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $message
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'failed',
+                'message' => $th->getMessage()
+            ]);
         }
     }
 }

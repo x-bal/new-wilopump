@@ -84,7 +84,7 @@
                                             <option {{ $math[0] == '&' ? 'selected' : '' }} value="&">PV[Units]</option>
                                         </select>
                                         <br>
-                                        <input type="number" name="math" id="math-{{ $modbus->id }}" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
+                                        <input type="{{ $math[0] == '&' ? 'text' : 'number' }}" name="math" id="math-{{ $modbus->id }}" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
                                     </td>
                                     <td class="after">
                                         <input type="text" name="after" id="after-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->after }}" disabled>
@@ -123,15 +123,16 @@
             </div>
 
             <div class="card-body">
-                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used"],"page":5,"pagination":true}'>
+                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used", "type"],"page":5,"pagination":true}'>
 
                     <div class="table-responsive scrollbar">
-                        <table class="table table-bordered table-striped fs--1 mb-0">
+                        <table class="table table-bordered table-striped table-merge fs--1 mb-0">
                             <thead class="bg-200 text-900">
                                 <tr>
                                     <th class="sort text-center" data-sort="no">No</th>
                                     <th class="sort" data-sort="name">Name</th>
                                     <th class="sort" data-sort="address">Modbus</th>
+                                    <th class="sort" data-sort="type">Type</th>
                                     <th class="sort" data-sort="val">Val</th>
                                     <th class="sort" data-sort="math" colspan="2">Math</th>
                                     <th class="sort" data-sort="after">Val(After)</th>
@@ -145,38 +146,47 @@
                                 <tr>
                                     <td class="no text-center">{{ $loop->iteration }}</td>
                                     <td class="name">
-                                        <input type="text" name="name" data-id="{{ $merge->id }}" class="form-control form-control-sm modbus-name" value="{{ $merge->name }}">
+                                        <input type="text" name="name" data-id="{{ $merge->id }}" class="form-control form-control-sm merge-name" value="{{ $merge->name }}">
                                     </td>
                                     <td class="address text-center">
                                         @foreach($merge->modbuses as $mod)
                                         ({{ $mod->id }}) {{ $mod->address }} <br>
                                         @endforeach
                                     </td>
+                                    <td>
+                                        <select name="type" data-id="{{ $merge->id }}" class="form-control merge-type">
+                                            <option {{ $merge->type == 'be' ? 'selected' : '' }} value="be">Big Endian</option>
+                                            <option {{ $merge->type == 'le' ? 'selected' : '' }} value="le">Little Endian</option>
+                                            <option {{ $merge->type == 'mbe' ? 'selected' : '' }} value="mbe">Mid Big Endian</option>
+                                            <option {{ $merge->type == 'mle' ? 'selected' : '' }} value="mle">Mid Little Endian</option>
+                                        </select>
+                                    </td>
                                     <td class="val">
-                                        <b>{{ $merge->val }}</b>
+                                        <b id="merge-val-{{ $merge->id }}">{{ $merge->val }}</b>
                                     </td>
                                     <td class="math" colspan="2">
                                         @php
-                                        $math = explode(',', $merge->math)
+                                        $mergeMath = explode(',', $merge->math)
                                         @endphp
-                                        <select name="mark" class="form-control form-control-sm mark-{{ $merge->id }}">
-                                            <option {{ $math[0] == 'x' ? 'selected' : '' }} value="x">x</option>
-                                            <option {{ $math[0] == ':' ? 'selected' : '' }} value=":">:</option>
-                                            <option {{ $math[0] == '+' ? 'selected' : '' }} value="+">+</option>
-                                            <option {{ $math[0] == '-' ? 'selected' : '' }} value="-">-</option>
+                                        <select name="mark" class="form-control form-control-sm merge-mark mark-merge-{{ $merge->id }}" data-id="{{ $merge->id }}">
+                                            <option {{ $mergeMath[0] == 'x' ? 'selected' : '' }} value="x">x</option>
+                                            <option {{ $mergeMath[0] == ':' ? 'selected' : '' }} value=":">:</option>
+                                            <option {{ $mergeMath[0] == '+' ? 'selected' : '' }} value="+">+</option>
+                                            <option {{ $mergeMath[0] == '-' ? 'selected' : '' }} value="-">-</option>
+                                            <option {{ $mergeMath[0] == '&' ? 'selected' : '' }} value="&">PV[Units]</option>
                                         </select>
                                         <br>
-                                        <input type="number" name="math" data-id="{{ $merge->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
+                                        <input type="number" name="math" id="merge-math-{{ $merge->id }}" data-id="{{ $merge->id }}" class="form-control form-control-sm merge-math" value="{{ $mergeMath[1] ?? 1 }}">
                                     </td>
                                     <td class="after">
-                                        <input type="text" name="after" id="after-{{ $merge->id }}" class="form-control form-control-sm" value="{{ $merge->after }}" disabled>
+                                        <input type="text" name="after" id="merge-after-{{ $merge->id }}" class="form-control form-control-sm" value="{{ $merge->after }}" disabled>
                                     </td>
                                     <td class="satuan">
-                                        <input type="text" name="satuan" data-id="{{ $merge->id }}" class="form-control form-control-sm modbus-satuan" value="{{ $merge->satuan }}">
+                                        <input type="text" name="satuan" data-id="{{ $merge->id }}" class="form-control form-control-sm merge-satuan" value="{{ $merge->unit }}">
                                     </td>
                                     <td class="used">
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input modbus-used" data-id="{{ $merge->id }}" type="checkbox" name="used" {{ $merge->is_used == 1 ? 'checked' : '' }}>
+                                            <input class="form-check-input merge-used" data-id="{{ $merge->id }}" type="checkbox" name="used" {{ $merge->is_used == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label" for="used">Used</label>
                                         </div>
                                     </td>

@@ -29,6 +29,9 @@ Route::get('/get-device', [DeviceController::class, 'get']);
 Route::get('/get-device/{device:id}', [DeviceController::class, 'find']);
 Route::get('/device/active', [DeviceController::class, 'active']);
 Route::get('/math', [DeviceController::class, 'math']);
+Route::get('/merge/change', [ModbusController::class, 'change']);
+Route::get('/merge/math', [ModbusController::class, 'math']);
+Route::get('/merge', [ModbusController::class, 'updateMerge']);
 
 // Route api device
 Route::post('/send-data-modbus', [ApiController::class, 'sendDataModbus']);

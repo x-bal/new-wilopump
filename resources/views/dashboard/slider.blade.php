@@ -361,6 +361,8 @@
         });
     }
 
+    jQuery('.gm-style-iw').prev('div').remove();
+
     window.initMap = initFirstMap;
 </script>
 @endpush
