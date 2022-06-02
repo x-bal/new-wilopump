@@ -20,9 +20,9 @@
         font-size: 16px !important;
     }
 
-    .gm-style .gm-style-iw {
-        background-color: #009c81;
-    }
+    /* .gm-style .gm-style-iw {
+        
+    } */
 </style>
 @endpush
 
@@ -93,7 +93,7 @@
 
         let infoMarker = new google.maps.Marker({
             position: {
-                lat: lat + 0.026,
+                lat: lat + 0.001,
                 lng: long - 0.12
             },
             map: map,
@@ -101,7 +101,7 @@
 
         let imgMarker = new google.maps.Marker({
             position: {
-                lat: lat - 0.010,
+                lat: lat - 0.060,
                 lng: long - 0.12
             },
             map: map,
@@ -118,7 +118,7 @@
         let downMarker = new google.maps.Marker({
             position: {
                 lat: lat - 0.070,
-                lng: long - 0.12
+                lng: long - 0.001
             },
             map: map,
         });
@@ -138,7 +138,7 @@
         }, 3000)
 
         function getData(device, image, modbus, digital, history, dataMap, dataMarker) {
-            let infoFirst = `<div class="card" style="background-color: #009c81;">
+            let infoFirst = `<div class="card" style="">
                                 <h6>` + device.name + `</h6>
                                 <table>
                                     <tr>
@@ -166,6 +166,9 @@
                                         <td> : </td>
                                         <td>` + history + `</td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-center"><a href="/device/` + device.id + `">More Detail</a></td>
+                                    </tr>
                                 </table>
                             </div>`;
             dataMarker[1].setMap(null)
@@ -180,7 +183,7 @@
                 shouldFocus: true,
             });
 
-            let imgFirst = `<div class="card text-center" style="background-color: #009c81;">
+            let imgFirst = `<div class="card text-center" style="">
                                 <img src="` + image + `" alt="" width="60px">
                             </div>`;
 
@@ -198,7 +201,7 @@
             let upFirst = ``;
 
             if (modbus.length > 0) {
-                upFirst = `<div class="card" style="background-color: #009c81;">
+                upFirst = `<div class="card" style="">
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
@@ -234,7 +237,7 @@
             let downFirst = ``;
 
             if (digital.length > 0) {
-                downFirst = `<div class="card" style="background-color: #009c81;">
+                downFirst = `<div class="card" style="">
                                 <h6>` + device.digital + `</h6>
                                     <table>`
                 $.each(digital, function(i, data) {
@@ -310,7 +313,7 @@
 
             let infoDevMarker = new google.maps.Marker({
                 position: {
-                    lat: devLat + 0.026,
+                    lat: devLat + 0.001,
                     lng: devLong - 0.12
                 },
                 map: devicemap
@@ -318,7 +321,7 @@
 
             let imgDevMarker = new google.maps.Marker({
                 position: {
-                    lat: devLat - 0.010,
+                    lat: devLat - 0.060,
                     lng: devLong - 0.12
                 },
                 map: devicemap
@@ -335,7 +338,7 @@
             let downDevMarker = new google.maps.Marker({
                 position: {
                     lat: devLat - 0.070,
-                    lng: devLong - 0.12
+                    lng: devLong - 0.001
                 },
                 map: devicemap
             });

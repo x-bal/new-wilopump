@@ -14,9 +14,9 @@
         font-size: 16px !important;
     }
 
-    .gm-style .gm-style-iw {
+    /* .gm-style .gm-style-iw {
         background-color: #009c81;
-    }
+    } */
 </style>
 @endpush
 @section('content')
@@ -77,7 +77,7 @@
                             success: function(result) {
                                 let device = result.device;
 
-                                let contentString = `<div class="card" style="background-color: #009c81;">
+                                let contentString = `<div class="card">
                                 <h6>` + device.name + `</h6>
                                 <table>
                                     <tr>
@@ -104,6 +104,9 @@
                                         <td>Last Data Send</td>
                                         <td> : </td>
                                         <td>` + result.history + `</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-center"><a href="/device/` + device.id + `">More Detail</a></td>
                                     </tr>
                                 </table>
                             </div>`
