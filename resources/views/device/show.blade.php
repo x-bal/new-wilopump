@@ -79,7 +79,7 @@
                                             <option {{ $math[0] == ':' ? 'selected' : '' }} value=":">:</option>
                                             <option {{ $math[0] == '+' ? 'selected' : '' }} value="+">+</option>
                                             <option {{ $math[0] == '-' ? 'selected' : '' }} value="-">-</option>
-                                            <option {{ $math[0] == '&' ? 'selected' : '' }} value="&">PV[Units]</option>
+                                            <option {{ $math[0] == '&' ? 'selected' : '' }} value="&">4-20mA</option>
                                         </select>
                                         <br>
                                         <input type="{{ $math[0] == '&' ? 'text' : 'number' }}" name="math" id="math-{{ $modbus->id }}" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
@@ -171,7 +171,7 @@
                                             <option {{ $mergeMath[0] == ':' ? 'selected' : '' }} value=":">:</option>
                                             <option {{ $mergeMath[0] == '+' ? 'selected' : '' }} value="+">+</option>
                                             <option {{ $mergeMath[0] == '-' ? 'selected' : '' }} value="-">-</option>
-                                            <option {{ $mergeMath[0] == '&' ? 'selected' : '' }} value="&">PV[Units]</option>
+                                            <option {{ $mergeMath[0] == '&' ? 'selected' : '' }} value="&">4-20mA</option>
                                         </select>
                                         <br>
                                         <input type="number" name="math" id="merge-math-{{ $merge->id }}" data-id="{{ $merge->id }}" class="form-control form-control-sm merge-math" value="{{ $mergeMath[1] ?? 1 }}">

@@ -184,7 +184,7 @@
             });
 
             let imgFirst = `<div class="card text-center" style="">
-                                <img src="` + image + `" alt="" width="60px">
+                                <img src="` + image + `" alt="" width="100px">
                             </div>`;
 
             dataMarker[2].setMap(null)
