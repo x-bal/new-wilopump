@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route only web
 Route::get('/modbus', [ModbusController::class, 'update']);
 Route::get('/digital', [DigitalInputController::class, 'update']);
-Route::get('/get-device', [DeviceController::class, 'get']);
 Route::get('/get-device/{device:id}', [DeviceController::class, 'find']);
 Route::get('/device/active', [DeviceController::class, 'active']);
 Route::get('/math', [DeviceController::class, 'math']);

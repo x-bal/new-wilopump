@@ -111,7 +111,7 @@ class ApiController extends Controller
                                 History::create([
                                     'device_id' => $device->id,
                                     'ket' => 'Insert Data ' . $digital->name,
-                                    'val' > $value[$i]
+                                    'val' => $value[$i]
                                 ]);
                             }
 

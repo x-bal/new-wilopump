@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Models\History;
 use App\Models\Modbus;
 use App\Models\SecretKey;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -135,7 +136,22 @@ class DeviceController extends Controller
 
     public function get()
     {
-        $devices = Device::get();
+        if (auth()->user()->level == 'Viewer') {
+            $user = User::find(auth()->user()->id);
+            $first = $user->devices()->first();
+            if ($first) {
+                $devices = $user->devices;
+            } else {
+                $devices = '';
+            }
+        } else {
+            $first = Device::where('is_active', 1)->first();
+            if ($first) {
+                $devices = Device::where('is_active', 1)->get();
+            } else {
+                $devices = '';
+            }
+        }
 
         return response()->json([
             'devices' => $devices

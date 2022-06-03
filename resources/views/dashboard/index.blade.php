@@ -43,7 +43,7 @@
         });
 
         $.ajax({
-            url: '/api/get-device',
+            url: '/get-device',
             type: 'GET',
             success: function(response) {
                 $.each(response.devices, function(i, data) {

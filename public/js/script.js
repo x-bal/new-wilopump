@@ -418,3 +418,15 @@ $(".table").on('change', '.merge-name', function () {
 
     update(id, field, val, url);
 })
+
+$('.access-check').on('click', function () {
+    var ischecked = $(this).is(':checked');
+    let id = $(this).val();
+
+    console.log(id)
+    if (ischecked == false) {
+        $('#device-' + id).remove();
+    } else {
+        $('.form-access').append('<input type="hidden" name="device_id[]" id="device-' + id + '" value="' + id + '"/>');
+    }
+})

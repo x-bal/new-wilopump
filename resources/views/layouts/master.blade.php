@@ -95,6 +95,16 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->is('access-viewer') ? 'active' : '' }}" href="/access-viewer">
+                                    <div class="d-flex align-items-center">
+                                        <span class="nav-link-icon">
+                                            <span data-feather="settings"></span>
+                                        </span>
+                                        <span class="nav-link-text">Access Viewer</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->is('setting') ? 'active' : '' }}" href="/setting">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">

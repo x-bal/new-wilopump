@@ -16,11 +16,22 @@ class DashboardController extends Controller
     public function index()
     {
         $apikey = SecretKey::findOrFail(2)->key;
-        $first = Device::where('is_active', 1)->first();
-        if ($first) {
-            $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+
+        if (auth()->user()->level == 'Viewer') {
+            $user = User::find(auth()->user()->id);
+            $first = $user->devices()->first();
+            if ($first) {
+                $devices = $user->devices;
+            } else {
+                $devices = '';
+            }
         } else {
-            $devices = '';
+            $first = Device::where('is_active', 1)->first();
+            if ($first) {
+                $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+            } else {
+                $devices = '';
+            }
         }
 
         return view('dashboard.index', compact('apikey', 'first', 'devices'));
@@ -30,8 +41,22 @@ class DashboardController extends Controller
     {
         $apikey = SecretKey::findOrFail(2)->key;
         $delay = intval(SecretKey::findOrFail(3)->key * 1000);
-        $first = Device::where('is_active', 1)->first();
-        $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+        if (auth()->user()->level == 'Viewer') {
+            $user = User::find(auth()->user()->id);
+            $first = $user->devices()->first();
+            if ($first) {
+                $devices = $user->devices()->where('device_id', '!=', $first->id)->get();
+            } else {
+                $devices = '';
+            }
+        } else {
+            $first = Device::where('is_active', 1)->first();
+            if ($first) {
+                $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
+            } else {
+                $devices = '';
+            }
+        }
         return view('dashboard.slider', compact('apikey', 'first', 'devices', 'delay'));
     }
 
@@ -116,5 +141,53 @@ class DashboardController extends Controller
         $histories = History::latest()->get();
 
         return view('dashboard.history', compact('histories'));
+    }
+
+    public function access()
+    {
+        $viewers = User::where('level', 'Viewer')->get();
+        $devices = Device::where('is_active', 1)->get();
+
+        return view('dashboard.access', compact('viewers', 'devices'));
+    }
+
+    public function createAccess()
+    {
+        $viewers = User::where('level', 'Viewer')->get();
+        $devices = Device::where('is_active', 1)->get();
+
+        return view('dashboard.create', compact('viewers', 'devices'));
+    }
+
+    public function editAccess($id)
+    {
+        $viewers = User::where('level', 'Viewer')->get();
+        $devices = Device::where('is_active', 1)->get();
+        $user = User::find($id);
+        $userDevice = DB::table('device_user')->select('device_id')->where('user_id', $user->id)->get();
+
+        return view('dashboard.edit', compact('viewers', 'devices', 'user', 'userDevice'));
+    }
+
+    public function storeAccess(Request $request)
+    {
+        $request->validate([
+            'viewer_id' => 'required',
+            'device_id' => 'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $user = User::find($request->viewer_id);
+            $user->devices()->sync($request->device_id);
+
+            DB::commit();
+
+            return redirect()->route('access.viewer')->with('success', 'Access device successfully gived');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
     }
 }
