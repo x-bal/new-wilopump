@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
     Route::get('/history', [DashboardController::class, 'history'])->name('history');
+    Route::get('/export', [DashboardController::class, 'export'])->name('export');
 
     Route::resource('user', UserController::class);
     Route::resource('device', DeviceController::class);

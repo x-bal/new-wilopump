@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\HistoryExport;
 use App\Models\Device;
 use App\Models\History;
 use App\Models\SecretKey;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -139,8 +141,9 @@ class DashboardController extends Controller
     public function history()
     {
         $histories = History::latest()->get();
+        $devices = Device::where('is_active', 1)->get();
 
-        return view('dashboard.history', compact('histories'));
+        return view('dashboard.history', compact('histories', 'devices'));
     }
 
     public function access()
@@ -189,5 +192,17 @@ class DashboardController extends Controller
             DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
+    }
+
+    public function export(Request $request)
+    {
+        $attr = $request->validate([
+            'device' => 'required',
+            'from' => 'required',
+            'to' => 'required',
+            'type' => 'required',
+        ]);
+
+        return Excel::download(new HistoryExport, 'history.xlsx');
     }
 }

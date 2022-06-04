@@ -14,4 +14,14 @@ class History extends Model
     {
         return $this->belongsTo(Device::class);
     }
+
+    public function modbus()
+    {
+        return $this->belongsTo(Modbus::class);
+    }
+
+    public function digital()
+    {
+        return $this->belongsTo(DigitalInput::class);
+    }
 }

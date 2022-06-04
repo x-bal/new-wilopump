@@ -19,4 +19,9 @@ class Modbus extends Model
     {
         return $this->belongsTo(Merge::class);
     }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class);
+    }
 }

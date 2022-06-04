@@ -33,15 +33,17 @@ class ApiController extends Controller
                             foreach ($device->modbuses()->limit($limit)->get() as $i => $modbus) {
                                 $modbus->update([
                                     'address' => $address[$i],
-                                    'id_modbus' => $idmodbus[$i],
+                                    'id_modbus' => $modbus->id,
                                     'val' => $val[$i],
                                     'is_used' => $used[$i],
                                 ]);
 
                                 History::create([
                                     'device_id' => $device->id,
+                                    'modbus_id' => $idmodbus[$i],
                                     'ket' => 'Insert Data ' . $modbus->name,
-                                    'val' => $val[$i]
+                                    'val' => $val[$i],
+                                    'time' => date('Y-m-d H:i')
                                 ]);
                             }
 
@@ -110,8 +112,10 @@ class ApiController extends Controller
 
                                 History::create([
                                     'device_id' => $device->id,
+                                    'digital_input_id' => $digital->id,
                                     'ket' => 'Insert Data ' . $digital->name,
-                                    'val' => $value[$i]
+                                    'val' => $value[$i],
+                                    'time' => date('Y-m-d H:i')
                                 ]);
                             }
 
