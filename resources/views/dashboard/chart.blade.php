@@ -21,7 +21,7 @@
         <a href="" class="btn btn-success download-chart">Download</a>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-12 chart">
         <canvas id="myChart"></canvas>
     </div>
 </div>
@@ -34,6 +34,7 @@
         let device = $(this).val();
         let labels = [];
         let dataset = [];
+        $("#myChart").empty();
 
         $.ajax({
             url: '/api/get-device/' + device,
@@ -70,7 +71,17 @@
                     }
                 };
 
-                const myChart = new Chart(
+                let myChart = document.getElementById('myChart')
+                myChart.remove();
+
+                const canvas = document.createElement("canvas");
+                canvas.setAttribute("id", "myChart");
+                canvas.setAttribute('width', '1007');
+                canvas.setAttribute('height', '503');
+                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
+                $(".chart").append(canvas)
+
+                myChart = new Chart(
                     document.getElementById('myChart'),
                     config
                 );
