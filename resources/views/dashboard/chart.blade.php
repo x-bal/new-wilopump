@@ -61,9 +61,10 @@
                         animation: {
                             onComplete: function() {
                                 var url_base64 = document.getElementById('myChart').toDataURL('image/png');
+                                let name = response.device.name + '-chart.png';
 
                                 $(".download-chart").attr('href', url_base64)
-                                $(".download-chart").attr('download', 'Chart.png')
+                                $(".download-chart").attr('download', name)
                             }
                         }
                     }
