@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
+    Route::get('/chart', [DashboardController::class, 'chart'])->name('chart');
+
     Route::get('/history', [DashboardController::class, 'history'])->name('history');
     Route::get('/export', [DashboardController::class, 'export'])->name('export');
 

@@ -85,6 +85,16 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->is('chart') ? 'active' : '' }}" href="/chart">
+                                    <div class="d-flex align-items-center">
+                                        <span class="nav-link-icon">
+                                            <span data-feather="clock"></span>
+                                        </span>
+                                        <span class="nav-link-text">Chart</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->is('history') ? 'active' : '' }}" href="/history">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">

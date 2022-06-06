@@ -205,4 +205,16 @@ class DashboardController extends Controller
 
         return Excel::download(new HistoryExport, 'history.xlsx');
     }
+
+    public function chart()
+    {
+        $devices = Device::where('is_active', 1)->get();
+        $device = '';
+
+        if (request('device')) {
+            $device = Device::find(request('device'));
+        }
+
+        return view('dashboard.chart', compact('devices', 'device'));
+    }
 }
