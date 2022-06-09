@@ -240,4 +240,33 @@ class DeviceController extends Controller
             ]);
         }
     }
+
+    public function history(Device $device)
+    {
+        $modbus = History::with('modbus')->where('device_id', $device->id)->where('modbus_id', '!=', 0)->latest()->get();
+        $digital = History::with('digital')->where('device_id', $device->id)->where('digital_input_id', '!=', 0)->latest()->get();
+
+        return response()->json([
+            'device' => $device,
+            'modbus' => $modbus,
+            'digital' => $digital,
+        ]);
+    }
+
+    public function historyModbus(Device $device)
+    {
+        if (request('from') != '' && request('to') != '') {
+            $history = Modbus::where('device_id', $device->id)->where('is_showed', 1)->whereHas('histories', function ($q) {
+                $q->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')]);
+            })->with('histories', function ($q) {
+                $q->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')]);
+            })->latest()->get();
+        } else {
+            $history = Modbus::where('device_id', $device->id)->where('is_showed', 1)->with('histories')->latest()->get();
+        }
+
+        return response()->json([
+            'history' => $history,
+        ]);
+    }
 }

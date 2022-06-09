@@ -22,11 +22,6 @@ class ModbusController extends Controller
             DB::beginTransaction();
 
             $modbus = Modbus::findOrFail(request('id'));
-            $modbus->update([
-                request('field') => request('val')
-            ]);
-
-            DB::commit();
 
             if (request('field') == 'name') {
                 $message = 'Modbus name successfully updated';
@@ -36,13 +31,35 @@ class ModbusController extends Controller
                 $message = 'Modbus satuan successfully updated';
             }
 
-            if (request('field') == 'is_used' && request('val') == 1) {
-                $message = 'Modbus successfully activated';
+            if (request('field') == 'is_showed' && request('val') == 1) {
+                $message = 'Modbus successfully showed';
             }
 
-            if (request('field') == 'is_used' && request('val') == 0) {
-                $message = 'Modbus successfully deactivated';
+            if (request('field') == 'is_showed' && request('val') == 0) {
+                $message = 'Modbus successfully not showed';
             }
+
+            if (request('field') == 'is_showed' && request('val') == 1) {
+                $count = Modbus::where('device_id', $modbus->device_id)->where('is_showed', 1)->count();
+                if ($count >= 6) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Maximum show modbus is 6'
+                    ], 200);
+                } else {
+                    $modbus->update([
+                        request('field') => request('val')
+                    ]);
+                }
+            } else {
+                $modbus->update([
+                    request('field') => request('val')
+                ]);
+            }
+
+            DB::commit();
+
+
 
             return response()->json([
                 'status' => 'success',

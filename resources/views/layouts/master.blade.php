@@ -34,6 +34,9 @@
 <body>
     <main class="main" id="top">
         <div class="container-fluid px-0">
+            @if(request()->is('slider') && request('q') == 'full')
+
+            @else
             <nav class="navbar navbar-light navbar-vertical navbar-vibrant navbar-expand-lg">
                 <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
                     <div class="navbar-vertical-content scrollbar">
@@ -85,22 +88,22 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('chart') ? 'active' : '' }}" href="/chart">
+                                <a class="nav-link {{ request()->is('trend-grafik') ? 'active' : '' }}" href="/trend-grafik">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">
-                                            <span data-feather="clock"></span>
+                                            <i class="fas fa-chart-bar"></i>
                                         </span>
-                                        <span class="nav-link-text">Chart</span>
+                                        <span class="nav-link-text">Trend Grafik</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('history') ? 'active' : '' }}" href="/history">
+                                <a class="nav-link {{ request()->is('chart') ? 'active' : '' }}" href="/chart">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">
-                                            <span data-feather="clock"></span>
+                                            <i class="fas fa-chart-line"></i>
                                         </span>
-                                        <span class="nav-link-text">History</span>
+                                        <span class="nav-link-text">Chart</span>
                                     </div>
                                 </a>
                             </li>
@@ -134,7 +137,6 @@
                 <div class="navbar-logo"><button class="btn navbar-toggler navbar-toggler-humburger-icon" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button> <a class="navbar-brand me-1 me-sm-3" href="/dashboard">
                         <div class="d-flex align-items-center">
                             <div class="d-flex align-items-center"><img src="{{ asset('/') }}img/wilologo.png" alt=" wilo" width="70">
-                                <!-- <p class="logo-text ms-2 d-none d-sm-block">Wilo Pump</p> -->
                             </div>
                         </div>
                     </a></div>
@@ -171,9 +173,14 @@
                     </ul>
                 </div>
             </nav>
+            @endif
+
             <div class="content">
                 @yield('content')
 
+                @if(request()->is('slider') && request('q') == 'full')
+
+                @else
                 <footer class="footer">
                     <div class="row g-0 justify-content-between align-items-center h-100 mb-3">
                         <div class="col-12 col-sm-auto text-center">
@@ -184,6 +191,7 @@
                         </div>
                     </div>
                 </footer>
+                @endif
             </div>
         </div>
     </main>

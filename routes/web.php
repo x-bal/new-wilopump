@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
     Route::get('/chart', [DashboardController::class, 'chart'])->name('chart');
+    Route::get('/trend-grafik', [DashboardController::class, 'grafik'])->name('grafik');
 
     Route::get('/history', [DashboardController::class, 'history'])->name('history');
     Route::get('/export', [DashboardController::class, 'export'])->name('export');

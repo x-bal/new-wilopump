@@ -15,11 +15,9 @@ class HistoryExport implements FromView
         $from = request('from');
         $to = Carbon::parse(request('to'))->addDay(1)->format('Y-m-d');
         $device = Device::find(request('device'));
-        $type = request('type');
 
-        if ($type == 'all') {
-            $histories = History::where('device_id', $device->id)->whereBetween('created_at', [$from, $to])->groupBy('time')->get();
-        }
+        $histories = History::where('device_id', $device->id)->whereBetween('created_at', [$from, $to])->groupBy('time')->get();
+
 
         return view('export', [
             'device' => $device,

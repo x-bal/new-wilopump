@@ -22,6 +22,6 @@ class Modbus extends Model
 
     public function histories()
     {
-        return $this->hasMany(History::class);
+        return $this->hasMany(History::class, 'modbus_id');
     }
 }

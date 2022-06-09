@@ -40,7 +40,7 @@ class ApiController extends Controller
 
                                 History::create([
                                     'device_id' => $device->id,
-                                    'modbus_id' => $idmodbus[$i],
+                                    'modbus_id' => $modbus->id,
                                     'ket' => 'Insert Data ' . $modbus->name,
                                     'val' => $val[$i],
                                     'time' => date('Y-m-d H:i')

@@ -16,9 +16,9 @@ $(".table").on('change', '.modbus-satuan', function () {
     update(id, field, val, url);
 })
 
-$(".table").on('click', '.modbus-used', function () {
+$(".table").on('click', '.modbus-showed', function () {
     let id = $(this).attr('data-id');
-    let field = 'is_used';
+    let field = 'is_showed';
     let val = 0;
     let url = '/api/modbus';
 
@@ -83,6 +83,7 @@ function update(id, field, val, url) {
             val: val,
         },
         success: function (response) {
+            console.log(response)
             if (response.status == 'success') {
                 iziToast.success({
                     title: 'Success',

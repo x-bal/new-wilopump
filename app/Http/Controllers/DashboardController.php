@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Exports\HistoryExport;
 use App\Models\Device;
 use App\Models\History;
+use App\Models\Modbus;
 use App\Models\SecretKey;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -200,7 +202,6 @@ class DashboardController extends Controller
             'device' => 'required',
             'from' => 'required',
             'to' => 'required',
-            'type' => 'required',
         ]);
 
         return Excel::download(new HistoryExport, 'history.xlsx');
@@ -216,5 +217,39 @@ class DashboardController extends Controller
         }
 
         return view('dashboard.chart', compact('devices', 'device'));
+    }
+
+    public function grafik()
+    {
+        $devices = Device::where('is_active', 1)->get();
+        $active = [];
+        $device = '';
+        $modbuses = '';
+        $digital = '';
+
+        if (request('device')) {
+            $device = Device::find(request('device'));
+            $active = Modbus::where('is_showed', 1)->get();
+
+            if (request('from') != '' && request('to') != '') {
+                $modbuses = History::whereHas('modbus', function ($query) {
+                    $query->where('is_used', 1);
+                })->where('device_id', $device->id)->where('modbus_id', '!=', 0)->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')])->latest()->limit(100)->get();
+
+                $digital = History::whereHas('digital', function ($query) {
+                    $query->where('is_used', 1);
+                })->where('device_id', $device->id)->where('digital_input_id', '!=', 0)->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')])->latest()->limit(100)->get();
+            } else {
+                $modbuses = History::whereHas('modbus', function ($query) {
+                    $query->where('is_used', 1);
+                })->where('device_id', $device->id)->where('modbus_id', '!=', 0)->latest()->limit(100)->get();
+
+                $digital = History::whereHas('digital', function ($query) {
+                    $query->where('is_used', 1);
+                })->where('device_id', $device->id)->where('digital_input_id', '!=', 0)->latest()->limit(100)->get();
+            }
+        }
+
+        return view('dashboard.grafik', compact('devices', 'device', 'modbuses', 'digital', 'active'));
     }
 }

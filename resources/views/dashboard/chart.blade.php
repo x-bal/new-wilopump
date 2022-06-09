@@ -55,8 +55,8 @@
                     }]
                 };
 
-                const config = {
-                    type: 'line',
+                let config = {
+                    type: 'bar',
                     data: data,
                     options: {
                         animation: {

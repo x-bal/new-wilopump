@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/modbus', [ModbusController::class, 'update']);
 Route::get('/digital', [DigitalInputController::class, 'update']);
 Route::get('/get-device/{device:id}', [DeviceController::class, 'find']);
+Route::get('/get-history/{device:id}', [DeviceController::class, 'history']);
+Route::get('/get-history-modbus/{device:id}', [DeviceController::class, 'historyModbus']);
 Route::get('/device/active', [DeviceController::class, 'active']);
 Route::get('/math', [DeviceController::class, 'math']);
 Route::get('/merge/change', [ModbusController::class, 'change']);

@@ -33,7 +33,7 @@
             </div>
 
             <div class="card-body">
-                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used"],"page":5,"pagination":true}'>
+                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used","showed"],"page":5,"pagination":true}'>
 
                     <div class="table-responsive scrollbar">
                         <table class="table table-bordered table-striped fs--1 mb-0">
@@ -49,6 +49,7 @@
                                     <th class="sort" data-sort="after">Val(After)</th>
                                     <th class="sort" data-sort="satuan">Unit</th>
                                     <th class="sort" data-sort="used">Used</th>
+                                    <th class="sort" data-sort="showed">Showed</th>
                                 </tr>
                             </thead>
                             <tbody class="list">
@@ -92,8 +93,14 @@
                                     </td>
                                     <td class="used">
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input modbus-used" data-id="{{ $modbus->id }}" type="checkbox" name="used" {{ $modbus->is_used == 1 ? 'checked' : '' }}>
+                                            <input class="form-check-input modbus-used" data-id="{{ $modbus->id }}" type="checkbox" name="used" disabled {{ $modbus->is_used == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label" for="used">Used</label>
+                                        </div>
+                                    </td>
+                                    <td class="showed">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input modbus-showed" data-id="{{ $modbus->id }}" type="checkbox" name="showed" {{ $modbus->is_showed == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="showed">Showed</label>
                                         </div>
                                     </td>
                                 </tr>

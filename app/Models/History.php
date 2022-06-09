@@ -17,11 +17,11 @@ class History extends Model
 
     public function modbus()
     {
-        return $this->belongsTo(Modbus::class);
+        return $this->belongsTo(Modbus::class, 'modbus_id');
     }
 
     public function digital()
     {
-        return $this->belongsTo(DigitalInput::class);
+        return $this->belongsTo(DigitalInput::class, 'digital_input_id');
     }
 }

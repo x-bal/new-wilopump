@@ -29,9 +29,14 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
+        @if(request()->is('slider') && request('q') == 'full')
+        <h2 class="mb-3 lh-sm">Slider</h2>
+        @else
         <h2 class="mb-3 lh-sm">Slider</h2>
 
-        <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <a href="/slider?q=full" target="__blank" class="btn btn-success mb-3">Full Size</a>
+        @endif
+        <div id="carouselExampleControls" class="carousel carousel-dark slide mb-3" data-bs-ride="carousel">
             <div class="row justify-content-center">
                 <div class="col-md-12" style="width: 96%;">
                     <div class="carousel-inner">
