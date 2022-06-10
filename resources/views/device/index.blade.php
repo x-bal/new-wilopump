@@ -39,6 +39,8 @@
                             <td class="action">
                                 <a href="{{ route('device.show', $device->id) }}" class="btn btn-sm btn-secondary mr-2"><i class="fas fa-eye"></i></a>
 
+                                <a href="{{ route('device.grafik', $device->id) }}" class="btn btn-sm btn-warning mr-2"><i class="fas fa-chart-line"></i></a>
+
                                 <a href="{{ route('device.edit', $device->id) }}" class="btn btn-sm btn-info mr-2"><i class="fas fa-edit"></i></a>
 
                                 <form action="{{ route('device.destroy', $device->id) }}" method="post" style="display: inline;">

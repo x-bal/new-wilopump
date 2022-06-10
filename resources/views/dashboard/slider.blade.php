@@ -137,12 +137,12 @@
                 type: 'GET',
                 success: function(result) {
                     let dataMarker = [marker, infoMarker, imgMarker, upMarker, downMarker];
-                    getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker)
+                    getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker, result.merge)
                 }
             })
         }, 3000)
 
-        function getData(device, image, modbus, digital, history, dataMap, dataMarker) {
+        function getData(device, image, modbus, digital, history, dataMap, dataMarker, merge) {
             let infoFirst = `<div class="card" style="">
                                 <h6>` + device.name + `</h6>
                                 <table>
@@ -210,15 +210,32 @@
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
-                    upFirst += `<tr>
+                    if (data.merge_id == 0) {
+                        upFirst += `<tr>
                                         <td>` + data.name + `</td>
                                         <td> : </td>`;
-                    if (data.after == null) {
-                        upFirst += `<td>` + data.val + data.satuan + `</td>`;
-                    } else {
-                        upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                        if (data.after == null) {
+                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                        } else {
+                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                        }
+                        upFirst += `</tr>`
                     }
                 })
+
+                if (merge.length > 0) {
+                    $.each(merge, function(i, mrg) {
+                        upFirst += `<tr>
+                                        <td>` + mrg.name + `</td>
+                                        <td> : </td>`;
+                        if (mrg.after == null) {
+                            upFirst += `<td>` + mrg.val + mrg.unit + `</td>`;
+                        } else {
+                            upFirst += `<td>` + mrg.val + mrg.unit + `</td>`;
+                        }
+                    });
+                }
+
                 upFirst += `        </tr>
                                 </table>
                             </div>`;
@@ -357,7 +374,7 @@
                     success: function(result) {
                         let dataDevMarker = [devmarker, infoDevMarker, imgDevMarker, upDevMarker, downDevMarker]
 
-                        getData(result.device, result.image, result.modbus, result.digital, result.history, devicemap, dataDevMarker)
+                        getData(result.device, result.image, result.modbus, result.digital, result.history, devicemap, dataDevMarker, result.merge)
                     }
                 })
             }, 3000)

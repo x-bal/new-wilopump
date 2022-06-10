@@ -386,11 +386,11 @@
             type: 'GET',
             success: function(result) {
                 let dataMarker = [marker, infoMarker, imgMarker, upMarker, downMarker];
-                getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker)
+                getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker, result.merge)
             }
         })
 
-        function getData(device, image, modbus, digital, history, dataMap, dataMarker) {
+        function getData(device, image, modbus, digital, history, dataMap, dataMarker, merge) {
             let infoFirst = `<div class="card" style="">
                                 <h6>` + device.name + `</h6>
                                 <table>
@@ -455,15 +455,32 @@
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
-                    upFirst += `<tr>
-                                        <td>` + data.name + `</td>
-                                        <td> : </td>`;
-                    if (data.after == null) {
-                        upFirst += `<td>` + data.val + data.satuan + `</td>`;
-                    } else {
-                        upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                    if (data.merge_id == 0) {
+                        upFirst += `<tr>
+                                            <td>` + data.name + `</td>
+                                            <td> : </td>`;
+                        if (data.after == null) {
+                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                        } else {
+                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                        }
                     }
+                    upFirst += `</tr>`;
                 })
+
+                if (merge.length > 0) {
+                    $.each(merge, function(i, data) {
+                        upFirst += `<tr>
+                                    <td>` + data.name + `</td>
+                                    <td> : </td>`;
+                        if (data.after == null) {
+                            upFirst += `<td>` + data.val + data.unit + `</td>`;
+                        } else {
+                            upFirst += `<td>` + data.val + data.unit + `</td>`;
+                        }
+                    })
+                }
+
                 upFirst += `        </tr>
                                 </table>
                             </div>`;

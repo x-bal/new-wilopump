@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/export', [DashboardController::class, 'export'])->name('export');
 
     Route::resource('user', UserController::class);
+    Route::get('/device/{device:id}/grafik', [DeviceController::class, 'grafik'])->name('device.grafik');
     Route::resource('device', DeviceController::class);
 
     Route::post('/modbus/merge', [ModbusController::class, 'merge'])->name('modbus.merge');

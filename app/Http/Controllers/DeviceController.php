@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\History;
+use App\Models\Merge;
 use App\Models\Modbus;
 use App\Models\SecretKey;
 use App\Models\User;
@@ -164,11 +165,13 @@ class DeviceController extends Controller
         $digital = $device->digitalInputs()->where('is_used', 1)->get();
         $image = asset('/storage/' . $device->image);
         $history = $device->histories()->latest()->first();
+        $merge = Merge::where('device_id', $device->id)->get();
 
         return response()->json([
             'device' => $device,
             'modbus' => $modbus,
             'digital' => $digital,
+            'merge' => $merge,
             'image' => $image,
             'history' => $history ? Carbon::parse($history->created_at)->format('d/m/Y H:i:s') : '-',
         ]);
@@ -268,5 +271,13 @@ class DeviceController extends Controller
         return response()->json([
             'history' => $history,
         ]);
+    }
+
+    public function grafik(Device $device)
+    {
+        $apikey = SecretKey::findOrFail(2)->key;
+        $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->get();
+
+        return view('device.grafik', compact('device', 'apikey', 'active'));
     }
 }
