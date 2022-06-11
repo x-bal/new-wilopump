@@ -1,35 +1,32 @@
-<table>
-    <thead>
+<table class="table table-bordered table-striped fs--1 mb-0">
+    <thead class="bg-200 text-900 bg-success text-white">
         <tr>
-            <th>No</th>
-            <th>Date</th>
-            @foreach($device->digitalInputs as $dig)
-            <th>{{ $dig->name }}</th>
+            <th class="sort" data-sort="no">No</th>
+            <th class="sort" data-sort="date">Date</th>
+            @foreach($digital as $dig)
+            <th class="sort" data-sort="id">{{ $dig->name }}</th>
             @endforeach
-            @foreach($device->modbuses as $modbus)
-            <th>{{ $modbus->name }}</th>
+            @foreach($modbus as $mod)
+            <th class="sort" data-sort="id">{{ $mod->name }}</th>
             @endforeach
         </tr>
     </thead>
-
-    <tbody>
-        @foreach($histories as $history)
+    <tbody class="list">
+        @foreach($history as $hd)
         <tr>
             <td>{{ $loop->iteration }}</td>
-            <td>{{ $history->created_at }}</td>
-            @foreach(App\Models\History::where('time', $history->time)->get() as $his)
-            @if($his->digital_input_id != 0)
+            <td>{{ Carbon\Carbon::parse($hd->created_at)->format('d/m/Y H:i:s') }}</td>
+            @foreach(App\Models\History::where('time', $hd->time)->whereHas('digital', function($q){
+            $q->where('is_used', 1);
+            })->get() as $dig)
             <td>
-                {{ $his->val == 1 ? App\Models\DigitalInput::where('id', $his->digital_input_id)->first()->yes : App\Models\DigitalInput::where('id', $his->digital_input_id)->first()->no }}
+                {{ $dig->val == 1 ? $dig->digital->yes : $dig->digital->no }}
             </td>
-            @endif
             @endforeach
-            @foreach(App\Models\History::where('time', $history->time)->get() as $hs)
-            @if($hs->modbus_id != 0)
-            <td>
-                {{ $hs->val }}
-            </td>
-            @endif
+            @foreach(App\Models\History::where('time', $hd->time)->whereHas('modbus', function($q){
+            $q->where('is_used', 1);
+            })->get() as $mod)
+            <td>{{ $mod->val }}</td>
             @endforeach
         </tr>
         @endforeach

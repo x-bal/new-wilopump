@@ -22,18 +22,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route only web
-Route::get('/modbus', [ModbusController::class, 'update']);
-Route::get('/digital', [DigitalInputController::class, 'update']);
-Route::get('/get-device/{device:id}', [DeviceController::class, 'find']);
-Route::get('/get-history/{device:id}', [DeviceController::class, 'history']);
-Route::get('/get-history-modbus/{device:id}', [DeviceController::class, 'historyModbus']);
-Route::get('/device/active', [DeviceController::class, 'active']);
-Route::get('/math', [DeviceController::class, 'math']);
-Route::get('/merge/change', [ModbusController::class, 'change']);
-Route::get('/merge/math', [ModbusController::class, 'math']);
-Route::get('/merge', [ModbusController::class, 'updateMerge']);
+Route::group(['middleware' => 'throttle:1000,1'], function () {
+    // Route only web
+    Route::get('/modbus', [ModbusController::class, 'update']);
+    Route::get('/digital', [DigitalInputController::class, 'update']);
+    Route::get('/get-device/{device:id}', [DeviceController::class, 'find']);
+    Route::get('/get-history/{device:id}', [DeviceController::class, 'history']);
+    Route::get('/get-history-modbus/{device:id}', [DeviceController::class, 'historyModbus']);
+    Route::get('/device/active', [DeviceController::class, 'active']);
+    Route::get('/math', [DeviceController::class, 'math']);
+    Route::get('/merge/change', [ModbusController::class, 'change']);
+    Route::get('/merge/math', [ModbusController::class, 'math']);
+    Route::get('/merge', [ModbusController::class, 'updateMerge']);
 
-// Route api device
-Route::post('/send-data-modbus', [ApiController::class, 'sendDataModbus']);
-Route::post('/send-data-digital', [ApiController::class, 'SendDataDigital']);
+    // Route api device
+    Route::post('/send-data-modbus', [ApiController::class, 'sendDataModbus']);
+    Route::post('/send-data-digital', [ApiController::class, 'SendDataDigital']);
+});

@@ -215,7 +215,7 @@ class ModbusController extends Controller
         try {
             DB::beginTransaction();
 
-            foreach ($merge->modbuses() as $modbus) {
+            foreach ($merge->modbuses as $modbus) {
                 $modbus->update(['merge_id' => 0]);
             }
 

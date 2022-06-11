@@ -88,12 +88,12 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('trend-grafik') ? 'active' : '' }}" href="/trend-grafik">
+                                <a class="nav-link {{ request()->is('view-data') ? 'active' : '' }}" href="/view-data">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon">
                                             <i class="fas fa-chart-bar"></i>
                                         </span>
-                                        <span class="nav-link-text">Trend Grafik</span>
+                                        <span class="nav-link-text">View Data</span>
                                     </div>
                                 </a>
                             </li>

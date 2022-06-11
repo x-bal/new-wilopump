@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\DigitalInput;
 use App\Models\History;
 use App\Models\Merge;
 use App\Models\Modbus;
@@ -259,25 +260,33 @@ class DeviceController extends Controller
     public function historyModbus(Device $device)
     {
         if (request('from') != '' && request('to') != '') {
-            $history = Modbus::where('device_id', $device->id)->where('is_showed', 1)->whereHas('histories', function ($q) {
+            $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->whereHas('histories', function ($q) {
                 $q->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')]);
             })->with('histories', function ($q) {
                 $q->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')]);
             })->latest()->get();
         } else {
-            $history = Modbus::where('device_id', $device->id)->where('is_showed', 1)->with('histories')->latest()->get();
+            $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->with('histories')->latest()->limit(10)->get();
+            $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
+            $modbus = Modbus::where('device_id', $device->id)->where('is_used', 1)->get();
+            $history = History::where('device_id', $device->id)->groupBy('time')->limit(10)->get();
         }
 
         return response()->json([
+            'active' => $active,
             'history' => $history,
+            'digital' => $digital,
+            'modbus' => $modbus,
         ]);
     }
 
     public function grafik(Device $device)
     {
         $apikey = SecretKey::findOrFail(2)->key;
-        $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->get();
+        $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
+        $modbus = Modbus::where('device_id', $device->id)->where('is_used', 1)->get();
+        $history = History::where('device_id', $device->id)->groupBy('time')->limit(10)->get();
 
-        return view('device.grafik', compact('device', 'apikey', 'active'));
+        return view('device.grafik', compact('device', 'apikey', 'modbus', 'digital', 'history',));
     }
 }

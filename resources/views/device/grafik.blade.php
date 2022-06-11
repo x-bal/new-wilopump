@@ -52,6 +52,82 @@
         <canvas id="chart-6" width="100%"></canvas>
     </div>
 </div>
+
+@php
+$no = 1;
+@endphp
+<div class="row my-3">
+    <h4 class="text-center mb-3">Pump History</h4>
+
+    <form action="{{ route('export') }}" class="row mb-3 d-flex justify-content-center">
+        @csrf
+        <input type="hidden" name="device" value="{{ $device->id }}">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label for="from">From</label>
+                <input type="date" name="from" id="from" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label for="from">From</label>
+                <input type="date" name="from" id="from" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group mt-5">
+                <button type="submit" class="btn btn-success">Export</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="col-md-12">
+        <div id="tableExample2" data-list='{"valueNames":["no","date","name","id","type","lat","long","is_active", "action"],"page":10,"pagination":true}'>
+
+            <div class="table-responsive scrollbar">
+                <table class="table table-bordered table-striped fs--1 mb-0">
+                    <thead class="bg-200 text-900 bg-success text-white">
+                        <tr>
+                            <th class="sort" data-sort="no">No</th>
+                            <th class="sort" data-sort="date">Date</th>
+                            @foreach($digital as $dig)
+                            <th class="sort" data-sort="id">{{ $dig->name }}</th>
+                            @endforeach
+                            @foreach($modbus as $mod)
+                            <th class="sort" data-sort="id">{{ $mod->name }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        @foreach($history as $hd)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ Carbon\Carbon::parse($hd->created_at)->format('d/m/Y H:i:s') }}</td>
+                            @foreach(App\Models\History::where('time', $hd->time)->whereHas('digital', function($q){
+                            $q->where('is_used', 1);
+                            })->get() as $dig)
+                            <td>
+                                {{ $dig->val == 1 ? $dig->digital->yes : $dig->digital->no }}
+                            </td>
+                            @endforeach
+                            @foreach(App\Models\History::where('time', $hd->time)->whereHas('modbus', function($q){
+                            $q->where('is_used', 1);
+                            })->get() as $mod)
+                            <td>{{ $mod->val }}</td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                <ul class="pagination mb-0"></ul>
+                <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 @push('script')
@@ -59,6 +135,10 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ $apikey }}&callback=initMap" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    $(".table-history").DataTable();
+</script>
 
 <script>
     function initMap() {
@@ -113,14 +193,23 @@
 
         let id = "{{ $device->id }}";
 
-        $.ajax({
-            url: '/api/get-device/' + id,
-            type: 'GET',
-            success: function(result) {
-                let dataMarker = [marker, infoMarker, imgMarker, upMarker, downMarker];
-                getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker, result.merge)
-            }
-        })
+        function getMap() {
+
+            $.ajax({
+                url: '/api/get-device/' + id,
+                type: 'GET',
+                success: function(result) {
+                    let dataMarker = [marker, infoMarker, imgMarker, upMarker, downMarker];
+                    getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker, result.merge)
+                }
+            })
+        }
+
+        getMap();
+
+        setInterval(function() {
+            getMap()
+        }, 30000)
 
         function getData(device, image, modbus, digital, history, dataMap, dataMarker, merge) {
             let infoFirst = `<div class="card" style="">
@@ -307,313 +396,129 @@
         return date + '/' + (month + 1) + '/' + year + ' ' + hours + ':' + minute + ':' + second
     }
 
-    $.ajax({
-        url: '/api/get-history-modbus/' + id,
-        type: 'GET',
-        success: function(response) {
-            let modbus = response.history;
+    function getChart() {
+        $.ajax({
+            url: '/api/get-history-modbus/' + id,
+            type: 'GET',
+            success: function(response) {
+                let active = response.active;
+                let history = response.history;
+                let digital = response.digital;
 
-            if (modbus[0]) {
-                $.each(modbus[0].histories, function(i, data) {
-                    let time = parseTime(data.created_at)
+                labelsOne = [];
+                labelsTwo = [];
+                labelsThree = [];
+                labelsFour = [];
+                labelsFive = [];
+                labelsSix = [];
+                datasetOne = [];
+                datasetTwo = [];
+                datasetThree = [];
+                datasetFour = [];
+                datasetFive = [];
+                datasetSix = [];
 
-                    labelsOne.push(time)
-                    datasetOne.push(data.val)
-                })
+                if (active[0]) {
+                    $.each(active[0].histories, function(i, data) {
+                        let time = parseTime(data.created_at)
 
-                let dataOne = {
-                    labels: labelsOne,
-                    datasets: [{
-                        label: modbus[0].name,
-                        backgroundColor: 'rgb(0, 156, 130)',
-                        borderColor: 'rgb(0, 156, 130)',
-                        data: datasetOne,
-                    }]
-                };
+                        labelsOne.push(time)
+                        datasetOne.push(data.val)
 
-                let config = {
-                    type: 'line',
-                    data: dataOne,
-                    options: {
-                        // animation: {
-                        //     onComplete: function() {
-                        //         var url_base64 = document.getElementById('myChart').toDataURL('image/png');
-                        //         let name = modbus[0].name + '-chart.png';
+                        createChart('chart-1', 'chart-1', labelsOne, datasetOne, active[0].name)
+                    });
+                }
 
-                        //         $(".download-chart").attr('href', url_base64)
-                        //         $(".download-chart").attr('download', name)
-                        //     }
-                        // }
-                    }
-                };
+                if (active[1]) {
+                    $.each(active[1].histories, function(i, data) {
+                        let time = parseTime(data.created_at)
 
-                let chartOne = document.getElementById('chart-1')
-                chartOne.remove();
+                        labelsTwo.push(time)
+                        datasetTwo.push(data.val)
 
-                const canvas = document.createElement("canvas");
-                canvas.setAttribute("id", "chart-1");
-                canvas.setAttribute('width', '1007');
-                canvas.setAttribute('height', '503');
-                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
-                $(".chart-1").append(canvas)
+                        createChart('chart-2', 'chart-2', labelsTwo, datasetTwo, active[1].name)
+                    })
 
-                chartOne = new Chart(
-                    document.getElementById('chart-1'),
-                    config
-                );
+                }
+
+                if (active[2]) {
+                    $.each(active[2].histories, function(i, data) {
+                        let time = parseTime(data.created_at)
+
+                        labelsThree.push(time)
+                        datasetThree.push(data.val)
+
+                        createChart('chart-3', 'chart-3', labelsThree, datasetThree, active[2].name)
+                    })
+
+                }
+
+                if (active[3]) {
+                    $.each(active[3].histories, function(i, data) {
+                        let time = parseTime(data.created_at)
+
+                        labelsFour.push(time)
+                        datasetFour.push(data.val)
+
+                        createChart('chart-4', 'chart-4', labelsFour, datasetFour, active[3].name)
+                    })
+                }
+
+                if (active[4]) {
+                    $.each(active[4].histories, function(i, data) {
+                        let time = parseTime(data.created_at)
+
+                        labelsFive.push(time)
+                        datasetFive.push(data.val)
+
+                        createChart('chart-5', 'chart-5', labelsFive, datasetFive, active[4].name)
+                    })
+                }
+
+                if (active[5]) {
+                    $.each(active[5].histories, function(i, data) {
+                        let time = parseTime(data.created_at)
+
+                        labelsSix.push(time)
+                        datasetSix.push(data.val)
+
+                        createChart('chart-6', 'chart-6', labelsSix, datasetSix, active[5].name)
+                    })
+                }
+
+
+
             }
+        })
+    }
 
-            if (modbus[1]) {
-                $.each(modbus[1].histories, function(i, data) {
-                    let time = parseTime(data.created_at)
+    getChart()
 
-                    labelsTwo.push(time)
-                    datasetTwo.push(data.val)
-                })
+    setInterval(function() {
+        getChart()
+    }, 30000)
 
-                let dataTwo = {
-                    labels: labelsTwo,
-                    datasets: [{
-                        label: modbus[1].name,
-                        backgroundColor: 'rgb(0, 156, 130)',
-                        borderColor: 'rgb(0, 156, 130)',
-                        data: datasetTwo,
-                    }]
-                };
+    function createChart(ctxid, ctxclass, labels, dataset, label) {
+        $("#" + ctxid).remove();
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("id", ctxid);
+        canvas.setAttribute('width', '1007');
+        canvas.setAttribute('height', '503');
+        canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
+        $("." + ctxclass).append(canvas)
 
-                let config = {
-                    type: 'line',
-                    data: dataTwo,
-                    options: {
-                        // animation: {
-                        //     onComplete: function() {
-                        //         var url_base64 = document.getElementById('myChart').toDataURL('image/png');
-                        //         let name = modbus[0].name + '-chart.png';
-
-                        //         $(".download-chart").attr('href', url_base64)
-                        //         $(".download-chart").attr('download', name)
-                        //     }
-                        // }
-                    }
-                };
-
-                let chartTwo = document.getElementById('chart-2')
-                chartTwo.remove();
-
-                const canvas = document.createElement("canvas");
-                canvas.setAttribute("id", "chart-2");
-                canvas.setAttribute('width', '1007');
-                canvas.setAttribute('height', '503');
-                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
-                $(".chart-2").append(canvas)
-
-                chartTwo = new Chart(
-                    document.getElementById('chart-2'),
-                    config
-                );
+        let myChart = new Chart($("#" + ctxid), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: dataset,
+                    backgroundColor: 'rgb(0, 156, 130)',
+                    borderColor: 'rgb(0, 156, 130)',
+                }]
             }
-
-            if (modbus[2]) {
-                $.each(modbus[2].histories, function(i, data) {
-                    let time = parseTime(data.created_at)
-
-                    labelsThree.push(time)
-                    datasetThree.push(data.val)
-                })
-
-                let dataThree = {
-                    labels: labelsThree,
-                    datasets: [{
-                        label: modbus[2].name,
-                        backgroundColor: 'rgb(0, 156, 130)',
-                        borderColor: 'rgb(0, 156, 130)',
-                        data: datasetThree,
-                    }]
-                };
-
-                let config = {
-                    type: 'line',
-                    data: dataThree,
-                    options: {
-                        // animation: {
-                        //     onComplete: function() {
-                        //         var url_base64 = document.getElementById('myChart').toDataURL('image/png');
-                        //         let name = modbus[0].name + '-chart.png';
-
-                        //         $(".download-chart").attr('href', url_base64)
-                        //         $(".download-chart").attr('download', name)
-                        //     }
-                        // }
-                    }
-                };
-
-                let chartThree = document.getElementById('chart-3')
-                chartThree.remove();
-
-                const canvas = document.createElement("canvas");
-                canvas.setAttribute("id", "chart-3");
-                canvas.setAttribute('width', '1007');
-                canvas.setAttribute('height', '503');
-                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
-                $(".chart-3").append(canvas)
-
-                chartThree = new Chart(
-                    document.getElementById('chart-3'),
-                    config
-                );
-            }
-
-            if (modbus[3]) {
-                $.each(modbus[3].histories, function(i, data) {
-                    let time = parseTime(data.created_at)
-
-                    labelsFour.push(time)
-                    datasetFour.push(data.val)
-                })
-
-                let dataFour = {
-                    labels: labelsFour,
-                    datasets: [{
-                        label: modbus[3].name,
-                        backgroundColor: 'rgb(0, 156, 130)',
-                        borderColor: 'rgb(0, 156, 130)',
-                        data: datasetFour,
-                    }]
-                };
-
-                let config = {
-                    type: 'line',
-                    data: dataFour,
-                    options: {
-                        // animation: {
-                        //     onComplete: function() {
-                        //         var url_base64 = document.getElementById('myChart').toDataURL('image/png');
-                        //         let name = modbus[0].name + '-chart.png';
-
-                        //         $(".download-chart").attr('href', url_base64)
-                        //         $(".download-chart").attr('download', name)
-                        //     }
-                        // }
-                    }
-                };
-
-                let chartFour = document.getElementById('chart-4')
-                chartFour.remove();
-
-                const canvas = document.createElement("canvas");
-                canvas.setAttribute("id", "chart-4");
-                canvas.setAttribute('width', '1007');
-                canvas.setAttribute('height', '503');
-                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
-                $(".chart-4").append(canvas)
-
-                chartFour = new Chart(
-                    document.getElementById('chart-4'),
-                    config
-                );
-            }
-
-            if (modbus[4]) {
-                $.each(modbus[4].histories, function(i, data) {
-                    let time = parseTime(data.created_at)
-
-                    labelsFive.push(time)
-                    datasetFive.push(data.val)
-                })
-
-                let dataFive = {
-                    labels: labelsFive,
-                    datasets: [{
-                        label: modbus[4].name,
-                        backgroundColor: 'rgb(0, 156, 130)',
-                        borderColor: 'rgb(0, 156, 130)',
-                        data: datasetFive,
-                    }]
-                };
-
-                let config = {
-                    type: 'line',
-                    data: dataFive,
-                    options: {
-                        // animation: {
-                        //     onComplete: function() {
-                        //         var url_base64 = document.getElementById('myChart').toDataURL('image/png');
-                        //         let name = modbus[0].name + '-chart.png';
-
-                        //         $(".download-chart").attr('href', url_base64)
-                        //         $(".download-chart").attr('download', name)
-                        //     }
-                        // }
-                    }
-                };
-
-                let chartFive = document.getElementById('chart-5')
-                chartFive.remove();
-
-                const canvas = document.createElement("canvas");
-                canvas.setAttribute("id", "chart-5");
-                canvas.setAttribute('width', '1007');
-                canvas.setAttribute('height', '503');
-                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
-                $(".chart-5").append(canvas)
-
-                chartFive = new Chart(
-                    document.getElementById('chart-5'),
-                    config
-                );
-            }
-
-            if (modbus[5]) {
-                $.each(modbus[5].histories, function(i, data) {
-                    let time = parseTime(data.created_at)
-
-                    labelsSix.push(time)
-                    datasetSix.push(data.val)
-                })
-
-                let dataSix = {
-                    labels: labelsSix,
-                    datasets: [{
-                        label: modbus[5].name,
-                        backgroundColor: 'rgb(0, 156, 130)',
-                        borderColor: 'rgb(0, 156, 130)',
-                        data: datasetSix,
-                    }]
-                };
-
-                let config = {
-                    type: 'line',
-                    data: dataSix,
-                    options: {
-                        // animation: {
-                        //     onComplete: function() {
-                        //         var url_base64 = document.getElementById('myChart').toDataURL('image/png');
-                        //         let name = modbus[0].name + '-chart.png';
-
-                        //         $(".download-chart").attr('href', url_base64)
-                        //         $(".download-chart").attr('download', name)
-                        //     }
-                        // }
-                    }
-                };
-
-                let chartSix = document.getElementById('chart-6')
-                chartSix.remove();
-
-                const canvas = document.createElement("canvas");
-                canvas.setAttribute("id", "chart-6");
-                canvas.setAttribute('width', '1007');
-                canvas.setAttribute('height', '503');
-                canvas.setAttribute('style', 'display: block; box-sizing: border-box; height: 64vh; width: 35vw;');
-                $(".chart-6").append(canvas)
-
-                chartSix = new Chart(
-                    document.getElementById('chart-6'),
-                    config
-                );
-            }
-
-        }
-    })
+        });
+    }
 </script>
 @endpush

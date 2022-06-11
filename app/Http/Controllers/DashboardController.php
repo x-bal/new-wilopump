@@ -198,13 +198,7 @@ class DashboardController extends Controller
 
     public function export(Request $request)
     {
-        $attr = $request->validate([
-            'device' => 'required',
-            'from' => 'required',
-            'to' => 'required',
-        ]);
-
-        return Excel::download(new HistoryExport, 'history.xlsx');
+        return Excel::download(new HistoryExport, 'History Device.xlsx');
     }
 
     public function chart()
@@ -221,35 +215,13 @@ class DashboardController extends Controller
 
     public function grafik()
     {
-        $devices = Device::where('is_active', 1)->get();
-        $active = [];
-        $device = '';
-        $modbuses = '';
-        $digital = '';
-
-        if (request('device')) {
-            $device = Device::find(request('device'));
-            $active = Modbus::where('is_showed', 1)->get();
-
-            if (request('from') != '' && request('to') != '') {
-                $modbuses = History::whereHas('modbus', function ($query) {
-                    $query->where('is_used', 1);
-                })->where('device_id', $device->id)->where('modbus_id', '!=', 0)->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')])->latest()->limit(100)->get();
-
-                $digital = History::whereHas('digital', function ($query) {
-                    $query->where('is_used', 1);
-                })->where('device_id', $device->id)->where('digital_input_id', '!=', 0)->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')])->latest()->limit(100)->get();
-            } else {
-                $modbuses = History::whereHas('modbus', function ($query) {
-                    $query->where('is_used', 1);
-                })->where('device_id', $device->id)->where('modbus_id', '!=', 0)->latest()->limit(100)->get();
-
-                $digital = History::whereHas('digital', function ($query) {
-                    $query->where('is_used', 1);
-                })->where('device_id', $device->id)->where('digital_input_id', '!=', 0)->latest()->limit(100)->get();
-            }
+        if (auth()->user()->level == 'Admin') {
+            $devices = Device::where('is_active', 1)->get();
+        } else {
+            $user = User::find(auth()->user()->id);
+            $devices = $user->devices();
         }
 
-        return view('dashboard.grafik', compact('devices', 'device', 'modbuses', 'digital', 'active'));
+        return view('dashboard.grafik', compact('devices'));
     }
 }
