@@ -219,7 +219,7 @@ class DashboardController extends Controller
             $devices = Device::where('is_active', 1)->get();
         } else {
             $user = User::find(auth()->user()->id);
-            $devices = $user->devices();
+            $devices = $user->devices;
         }
 
         return view('dashboard.grafik', compact('devices'));

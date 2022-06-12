@@ -210,6 +210,7 @@
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
+                    console.log(data.after)
                     if (data.merge_id == 0) {
                         upFirst += `<tr>
                                         <td>` + data.name + `</td>
@@ -217,7 +218,7 @@
                         if (data.after == null) {
                             upFirst += `<td>` + data.val + data.satuan + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                            upFirst += `<td>` + data.after + data.satuan + `</td>`;
                         }
                         upFirst += `</tr>`
                     }
@@ -231,7 +232,7 @@
                         if (mrg.after == null) {
                             upFirst += `<td>` + mrg.val + mrg.unit + `</td>`;
                         } else {
-                            upFirst += `<td>` + mrg.val + mrg.unit + `</td>`;
+                            upFirst += `<td>` + mrg.after + mrg.unit + `</td>`;
                         }
                     });
                 }

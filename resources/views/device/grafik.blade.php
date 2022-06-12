@@ -137,10 +137,6 @@ $no = 1;
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    $(".table-history").DataTable();
-</script>
-
-<script>
     function initMap() {
         let lat = parseFloat("{{ $device->lat }}");
         let long = parseFloat("{{ $device->long }}");
@@ -283,7 +279,7 @@ $no = 1;
                         if (data.after == null) {
                             upFirst += `<td>` + data.val + data.satuan + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                            upFirst += `<td>` + data.after + data.satuan + `</td>`;
                         }
                     }
                     upFirst += `</tr>`;
@@ -297,7 +293,7 @@ $no = 1;
                         if (data.after == null) {
                             upFirst += `<td>` + data.val + data.unit + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.val + data.unit + `</td>`;
+                            upFirst += `<td>` + data.after + data.unit + `</td>`;
                         }
                     })
                 }
@@ -421,22 +417,24 @@ $no = 1;
                 if (active[0]) {
                     $.each(active[0].histories, function(i, data) {
                         let time = parseTime(data.created_at)
+                        let labelName = active[0].name + ' (' + active[0].satuan + ')';
 
                         labelsOne.push(time)
                         datasetOne.push(data.val)
 
-                        createChart('chart-1', 'chart-1', labelsOne, datasetOne, active[0].name)
+                        createChart('chart-1', 'chart-1', labelsOne, datasetOne, labelName)
                     });
                 }
 
                 if (active[1]) {
                     $.each(active[1].histories, function(i, data) {
                         let time = parseTime(data.created_at)
+                        let labelName = active[1].name + ' (' + active[1].satuan + ')';
 
                         labelsTwo.push(time)
                         datasetTwo.push(data.val)
 
-                        createChart('chart-2', 'chart-2', labelsTwo, datasetTwo, active[1].name)
+                        createChart('chart-2', 'chart-2', labelsTwo, datasetTwo, labelName)
                     })
 
                 }
@@ -444,11 +442,12 @@ $no = 1;
                 if (active[2]) {
                     $.each(active[2].histories, function(i, data) {
                         let time = parseTime(data.created_at)
+                        let labelName = active[2].name + ' (' + active[2].satuan + ')';
 
                         labelsThree.push(time)
                         datasetThree.push(data.val)
 
-                        createChart('chart-3', 'chart-3', labelsThree, datasetThree, active[2].name)
+                        createChart('chart-3', 'chart-3', labelsThree, datasetThree, labelName)
                     })
 
                 }
@@ -456,38 +455,38 @@ $no = 1;
                 if (active[3]) {
                     $.each(active[3].histories, function(i, data) {
                         let time = parseTime(data.created_at)
+                        let labelName = active[3].name + ' (' + active[3].satuan + ')';
 
                         labelsFour.push(time)
                         datasetFour.push(data.val)
 
-                        createChart('chart-4', 'chart-4', labelsFour, datasetFour, active[3].name)
+                        createChart('chart-4', 'chart-4', labelsFour, datasetFour, labelName)
                     })
                 }
 
                 if (active[4]) {
                     $.each(active[4].histories, function(i, data) {
                         let time = parseTime(data.created_at)
+                        let labelName = active[4].name + ' (' + active[4].satuan + ')';
 
                         labelsFive.push(time)
                         datasetFive.push(data.val)
 
-                        createChart('chart-5', 'chart-5', labelsFive, datasetFive, active[4].name)
+                        createChart('chart-5', 'chart-5', labelsFive, datasetFive, labelName)
                     })
                 }
 
                 if (active[5]) {
                     $.each(active[5].histories, function(i, data) {
                         let time = parseTime(data.created_at)
+                        let labelName = active[5].name + ' (' + active[5].satuan + ')';
 
                         labelsSix.push(time)
                         datasetSix.push(data.val)
 
-                        createChart('chart-6', 'chart-6', labelsSix, datasetSix, active[5].name)
+                        createChart('chart-6', 'chart-6', labelsSix, datasetSix, labelName)
                     })
                 }
-
-
-
             }
         })
     }

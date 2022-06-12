@@ -87,6 +87,8 @@
                                     </li>
                                 </ul>
                             </li>
+                            @endif
+
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('view-data') ? 'active' : '' }}" href="/view-data">
                                     <div class="d-flex align-items-center">
@@ -97,6 +99,7 @@
                                     </div>
                                 </a>
                             </li>
+                            @if(auth()->user()->level == 'Admin')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('chart') ? 'active' : '' }}" href="/chart">
                                     <div class="d-flex align-items-center">
