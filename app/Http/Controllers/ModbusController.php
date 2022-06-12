@@ -150,8 +150,8 @@ class ModbusController extends Controller
         $diffOne = 4 - $lengthOne;
         $lengthTwo = strlen($decTwo);
         $diffTwo = 4 - $lengthTwo;
-        $addOne = 0;
-        $addTwo = 0;
+        $addOne = '';
+        $addTwo = '';
 
 
         if ($diffOne > 0) {
@@ -189,12 +189,6 @@ class ModbusController extends Controller
             $hexConvert = $this->hex2float($hexa);
         }
 
-        if ($convert == 'le') {
-            $hexa = $d . $c . $b . $a;
-
-            $hexConvert = $this->hex2float($hexa);
-        }
-
         if ($convert == 'mbe') {
             $hexa = $b . $a . $d . $c;
 
@@ -207,7 +201,7 @@ class ModbusController extends Controller
             $hexConvert = $this->hex2float($hexa);
         }
 
-        return number_format($hexConvert, 2);
+        return $hexConvert;
     }
 
     public function deleteMerge(Merge $merge)
@@ -238,8 +232,8 @@ class ModbusController extends Controller
             $modbusOne = $merge->modbuses[0];
             $modbusTwo = $merge->modbuses[1];
 
-            $decOne = $modbusOne->val;
-            $decTwo = $modbusTwo->val;
+            $decOne = dechex($modbusOne->val);
+            $decTwo = dechex($modbusTwo->val);
 
             $result = $this->endian($request->type, $decOne, $decTwo);
 
@@ -253,7 +247,7 @@ class ModbusController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Merge successfully changed',
-                'val' => $result
+                'val' => $result,
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();

@@ -270,6 +270,7 @@ $(".table-merge").on('change', '.merge-type', function () {
             type: type
         },
         success: function (response) {
+            console.log(response)
             if (response.status == 'success') {
                 $("#merge-val-" + id).empty().append(response.val)
 
