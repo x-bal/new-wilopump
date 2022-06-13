@@ -35,24 +35,24 @@ class ApiController extends Controller
                                     $math = explode(',', $modbus->math);
 
                                     if ($math[0] == 'x') {
-                                        $after = $val[$i] * intval($math[1]);
+                                        $after = $val[$i] * floatval($math[1]);
                                     }
 
                                     if ($math[0] == ':') {
-                                        $after = $val[$i] / intval($math[1]);
+                                        $after = $val[$i] / floatval($math[1]);
                                     }
 
                                     if ($math[0] == '+') {
-                                        $after = $val[$i] + intval($math[1]);
+                                        $after = $val[$i] + floatval($math[1]);
                                     }
 
                                     if ($math[0] == '-') {
-                                        $after = $val[$i] - intval($math[1]);
+                                        $after = $val[$i] - floatval($math[1]);
                                     }
 
                                     if ($math[0] == '&') {
                                         $rumus = explode('&', $math[1]);
-                                        $after = ((($val[$i] / intval($rumus[2])) - 4) / 16) * (intval($rumus[0]) - intval($rumus[1])) + intval($rumus[1]);
+                                        $after = ((($val[$i] / floatval($rumus[2])) - 4) / 16) * (floatval($rumus[0]) - floatval($rumus[1])) + floatval($rumus[1]);
                                     }
                                 }
 

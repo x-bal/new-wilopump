@@ -125,8 +125,8 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">Merge Modbus {{ $device->name }}</h4>
-            </div>
 
+            </div>
             <div class="card-body">
                 <div id="tableMerge" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used", "type"],"page":5,"pagination":true}'>
 
