@@ -31,11 +31,38 @@ class ApiController extends Controller
                             $limit = count($address);
 
                             foreach ($device->modbuses()->limit($limit)->get() as $i => $modbus) {
+                                if ($modbus->math != NULL) {
+                                    $math = explode(',', $modbus->math);
+
+                                    if ($math[0] == 'x') {
+                                        $after = $val[$i] * intval($math[1]);
+                                    }
+
+                                    if ($math[0] == ':') {
+                                        $after = $val[$i] / intval($math[1]);
+                                    }
+
+                                    if ($math[0] == '+') {
+                                        $after = $val[$i] + intval($math[1]);
+                                    }
+
+                                    if ($math[0] == '-') {
+                                        $after = $val[$i] - intval($math[1]);
+                                    }
+
+                                    if ($math[0] == '&') {
+                                        $rumus = explode('&', $math[1]);
+                                        $after = ((($val[$i] / intval($rumus[2])) - 4) / 16) * (intval($rumus[0]) - intval($rumus[1])) + intval($rumus[1]);
+                                    }
+                                }
+
                                 $modbus->update([
                                     'address' => $address[$i],
                                     'id_modbus' => $modbus->id,
                                     'val' => $val[$i],
                                     'is_used' => $used[$i],
+                                    'math' => $modbus->after == NULL ? 'x,1' : $modbus->math,
+                                    'after' => $modbus->after == NULL || $modbus->after == 0 ? $val[$i] * 1 : $after,
                                 ]);
 
                                 History::create([

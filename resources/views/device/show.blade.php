@@ -128,7 +128,7 @@
             </div>
 
             <div class="card-body">
-                <div id="tableModbus" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used", "type"],"page":5,"pagination":true}'>
+                <div id="tableMerge" data-list='{"valueNames":["no","check","name","address","id","val","after","math","satuan","used", "type"],"page":5,"pagination":true}'>
 
                     <div class="table-responsive scrollbar">
                         <table class="table table-bordered table-striped table-merge fs--1 mb-0">
