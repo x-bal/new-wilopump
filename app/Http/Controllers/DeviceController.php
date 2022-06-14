@@ -266,15 +266,18 @@ class DeviceController extends Controller
                 $q->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')]);
             })->latest()->get();
         } else {
-            $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->with('histories', function ($q) {
-                $q->latest()->limit(60);
-            })->whereHas('histories', function ($q) {
-                $q->latest()->limit(60);
+            $count = Modbus::where('device_id', $device->id)->where('is_showed', 1)->count();
+            $total = $count * 10;
+
+            $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->with('histories', function ($q) use ($total) {
+                $q->latest()->limit($total);
+            })->whereHas('histories', function ($q) use ($total) {
+                $q->latest()->limit($total);
             })->get();
 
             $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
             $modbus = Modbus::where('device_id', $device->id)->where('is_used', 1)->get();
-            $history = History::where('device_id', $device->id)->groupBy('time')->limit(10)->get();
+            $history = History::where('device_id', $device->id)->groupBy('time')->limit(10)->latest()->get();
         }
 
         return response()->json([
@@ -290,7 +293,7 @@ class DeviceController extends Controller
         $apikey = SecretKey::findOrFail(2)->key;
         $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
         $modbus = Modbus::where('device_id', $device->id)->where('is_used', 1)->get();
-        $history = History::where('device_id', $device->id)->groupBy('time')->limit(10)->get();
+        $history = History::where('device_id', $device->id)->groupBy('time')->limit(10)->latest()->get();
 
         return view('device.grafik', compact('device', 'apikey', 'modbus', 'digital', 'history',));
     }
