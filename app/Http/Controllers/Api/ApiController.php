@@ -58,7 +58,7 @@ class ApiController extends Controller
 
                                 $modbus->update([
                                     'address' => $address[$i],
-                                    'id_modbus' => $modbus->id,
+                                    'id_modbus' => $idmodbus[$i],
                                     'val' => $val[$i],
                                     'is_used' => $used[$i],
                                     'math' => $modbus->after == NULL ? 'x,1' : $modbus->math,
@@ -74,13 +74,51 @@ class ApiController extends Controller
                                 ]);
                             }
 
+                            foreach ($device->merges as $i => $merge) {
+                                $modbuses[$i] = [];
+                                foreach ($merge->modbuses as $mod) {
+                                    array_push($modbuses[$i], $mod->val);
+                                }
+
+                                $valMerge = $this->endian($merge->type, dechex($modbuses[$i][0]), dechex($modbuses[$i][1]));
+
+                                if ($merge->math != NULL) {
+                                    $mathMerge = explode(',', $merge->math);
+
+                                    if ($mathMerge[0] == 'x') {
+                                        $afterMerge = $valMerge * floatval($mathMerge[1]);
+                                    }
+
+                                    if ($mathMerge[0] == ':') {
+                                        $afterMerge = $valMerge / floatval($mathMerge[1]);
+                                    }
+
+                                    if ($mathMerge[0] == '+') {
+                                        $afterMerge = $valMerge + floatval($mathMerge[1]);
+                                    }
+
+                                    if ($mathMerge[0] == '-') {
+                                        $afterMerge = $valMerge - floatval($mathMerge[1]);
+                                    }
+
+                                    if ($mathMerge[0] == '&') {
+                                        $rumusMerge = explode('&', $mathMerge[1]);
+                                        $afterMerge = ((($valMerge / floatval($rumusMerge[2])) - 4) / 16) * (floatval($rumusMerge[0]) - floatval($rumusMerge[1])) + floatval($rumusMerge[1]);
+                                    }
+                                }
+
+                                $merge->update([
+                                    'val' => $valMerge,
+                                    'math' => $merge->after == NULL ? 'x,1' : $merge->math,
+                                    'after' => $merge->after == NULL || $merge->after == 0 ? $valMerge * 1 : $afterMerge
+                                ]);
+                            }
+
                             DB::commit();
 
                             return response()->json([
                                 'status' => 'success',
-                                'address' => $address,
-                                'idmodbus' => $idmodbus,
-                                'val' => $val,
+                                'modbus' => $device->modbuses()->limit($limit)->get(),
                             ]);
                         } catch (\Throwable $th) {
                             DB::rollBack();
@@ -183,5 +221,73 @@ class ApiController extends Controller
                 'message' => 'Wrong parameters'
             ]);
         }
+    }
+
+    public function hex2float($strHex)
+    {
+        $hex = sscanf($strHex, "%02x%02x%02x%02x%02x%02x%02x%02x");
+        $bin = implode('', array_map('chr', $hex));
+        $array = unpack("Gnum", $bin);
+        return $array['num'];
+    }
+
+    public function endian($convert, $decOne, $decTwo)
+    {
+        $lengthOne = strlen($decOne);
+        $diffOne = 4 - $lengthOne;
+        $lengthTwo = strlen($decTwo);
+        $diffTwo = 4 - $lengthTwo;
+        $addOne = '';
+        $addTwo = '';
+
+
+        if ($diffOne > 0) {
+            for ($i = 1; $i < $diffOne; $i++) {
+                $addOne .= 0;
+            }
+        }
+
+        if ($diffTwo > 0) {
+            for ($i = 1; $i < $diffTwo; $i++) {
+                $addTwo .= 0;
+            }
+        }
+
+        $decOne = $addOne . $decOne;
+        $decTwo = $addTwo . $decTwo;
+
+        $hexOne = str_split($decOne);
+        $hexTwo = str_split($decTwo);
+
+        $a = $hexOne[0] . $hexOne[1];
+        $b = $hexOne[2] . $hexOne[3];
+        $c = $hexTwo[0] . $hexTwo[1];
+        $d = $hexTwo[2] . $hexTwo[3];
+
+        if ($convert == 'be') {
+            $hexa = $a . $b . $c . $d;
+
+            $hexConvert = $this->hex2float($hexa);
+        }
+
+        if ($convert == 'le') {
+            $hexa = $d . $c . $b . $a;
+
+            $hexConvert = $this->hex2float($hexa);
+        }
+
+        if ($convert == 'mbe') {
+            $hexa = $b . $a . $d . $c;
+
+            $hexConvert = $this->hex2float($hexa);
+        }
+
+        if ($convert == 'mle') {
+            $hexa = $c . $d . $a . $b;
+
+            $hexConvert = $this->hex2float($hexa);
+        }
+
+        return $hexConvert;
     }
 }

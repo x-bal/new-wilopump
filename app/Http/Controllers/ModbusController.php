@@ -284,7 +284,8 @@ class ModbusController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Value Merge successfully updated'
+                'message' => 'Value Merge successfully updated',
+                'merge' => $request->all()
             ]);
         } catch (\Throwable $th) {
             return response()->json([

@@ -302,7 +302,7 @@ $(".table-merge").on('change', '.merge-type', function () {
 $(".table-merge").on('change', '.merge-mark', function () {
     let id = $(this).attr('data-id');
     let mark = $(".mark-merge-" + id).find(":selected").val();
-    console.log(id)
+    // console.log(mark)
 
     if (mark == '&') {
         $("#merge-math-" + id).val('')
@@ -315,10 +315,11 @@ $(".table-merge").on('change', '.merge-mark', function () {
 
 $(".table-merge").on('change', '.merge-math', function () {
     let id = $(this).attr('data-id');
-    let val = parseFloat($("#merge-val-" + id).val());
+    let val = parseFloat($("#merge-val-" + id).text());
     let math = parseFloat($(this).val());
-    let mark = $(".mark-merge" + id).find(":selected").val();
+    let mark = $(".mark-merge-" + id).find(":selected").val();
     let after = 0;
+
 
     if (mark == "x") {
         after = val * math;
@@ -337,6 +338,7 @@ $(".table-merge").on('change', '.merge-math', function () {
     }
 
     let field = mark + ',' + math;
+    // console.log(after)
 
     if (mark == "&") {
         let before = $(this).val()
@@ -371,6 +373,8 @@ $(".table-merge").on('change', '.merge-math', function () {
             math: field
         },
         success: function (response) {
+            console.log(response)
+
             if (response.status == 'success') {
                 iziToast.success({
                     title: 'Success',
