@@ -123,7 +123,7 @@ class ApiController extends Controller
                         } catch (\Throwable $th) {
                             DB::rollBack();
                             return response()->json([
-                                'status' => 'success',
+                                'status' => 'failed',
                                 'modbuses' => $th->getMessage()
                             ]);
                         }

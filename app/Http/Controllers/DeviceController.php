@@ -133,7 +133,29 @@ class DeviceController extends Controller
 
     public function destroy(Device $device)
     {
-        //
+        try {
+            DB::beginTransaction();
+            foreach ($device->histories as $history) {
+                $history->delete();
+            }
+
+            foreach ($device->modbuses as $modbus) {
+                $modbus->delete();
+            }
+
+            foreach ($device->digitalInputs as $digital) {
+                $digital->delete();
+            }
+
+            $device->delete();
+
+            DB::commit();
+
+            return back()->with('success', 'Device successfully deleted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
     }
 
     public function get()
