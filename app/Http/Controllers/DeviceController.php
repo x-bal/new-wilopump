@@ -266,10 +266,10 @@ class DeviceController extends Controller
                 $q->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')]);
             })->latest()->get();
         } else {
-            $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->whereHas('histories', function ($q) {
-                $q->limit(10)->latest();
-            })->with('histories', function ($q) {
-                $q->limit(10)->latest();
+            $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->with('histories', function ($q) {
+                $q->latest()->limit(10);
+            })->whereHas('histories', function ($q) {
+                $q->latest()->limit(10);
             })->get();
 
             $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
