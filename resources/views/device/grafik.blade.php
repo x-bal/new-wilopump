@@ -400,6 +400,7 @@ $no = 1;
                 let active = response.active;
                 let history = response.history;
                 let digital = response.digital;
+                console.log(active)
 
                 labelsOne = [];
                 labelsTwo = [];
