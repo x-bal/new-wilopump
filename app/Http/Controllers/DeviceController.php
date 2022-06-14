@@ -267,9 +267,9 @@ class DeviceController extends Controller
             })->latest()->get();
         } else {
             $active = Modbus::where('device_id', $device->id)->where('is_showed', 1)->whereHas('histories', function ($q) {
-                $q->limit(10)->latest()->get();
+                $q->limit(10)->latest();
             })->with('histories', function ($q) {
-                $q->limit(10)->latest()->get();
+                $q->limit(10)->latest();
             })->get();
 
             $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
