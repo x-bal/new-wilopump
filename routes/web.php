@@ -31,12 +31,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/slider', [DashboardController::class, 'slider'])->name('slider');
 
-    Route::get('/setting', [DashboardController::class, 'setting'])->name('setting');
-    Route::post('/setting/{secret_key:id}', [DashboardController::class, 'updateSetting'])->name('setting.update');
-    Route::get('/access-viewer', [DashboardController::class, 'access'])->name('access.viewer');
-    Route::get('/access-create', [DashboardController::class, 'createAccess'])->name('access.create');
-    Route::post('/access-store', [DashboardController::class, 'storeAccess'])->name('access.store');
-    Route::get('/access-edit/{id}', [DashboardController::class, 'editAccess'])->name('access.edit');
+    Route::get('/setting', [DashboardController::class, 'setting'])->name('setting')->middleware('admin');
+    Route::post('/setting/{secret_key:id}', [DashboardController::class, 'updateSetting'])->name('setting.update')->middleware('admin');
+    Route::get('/access-viewer', [DashboardController::class, 'access'])->name('access.viewer')->middleware('admin');
+    Route::get('/access-create', [DashboardController::class, 'createAccess'])->name('access.create')->middleware('admin');
+    Route::post('/access-store', [DashboardController::class, 'storeAccess'])->name('access.store')->middleware('admin');
+    Route::get('/access-edit/{id}', [DashboardController::class, 'editAccess'])->name('access.edit')->middleware('admin');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
@@ -46,12 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/history', [DashboardController::class, 'history'])->name('history');
     Route::get('/export', [DashboardController::class, 'export'])->name('export');
 
-    Route::resource('user', UserController::class);
+    Route::resource('user', UserController::class)->middleware('admin');
     Route::get('/device/{device:id}/grafik', [DeviceController::class, 'grafik'])->name('device.grafik');
     Route::resource('device', DeviceController::class);
 
-    Route::post('/modbus/merge', [ModbusController::class, 'merge'])->name('modbus.merge');
-    Route::post('/merge/{merge:id}', [ModbusController::class, 'deleteMerge'])->name('merge.delete');
+    Route::post('/modbus/merge', [ModbusController::class, 'merge'])->name('modbus.merge')->middleware('admin');
+    Route::post('/merge/{merge:id}', [ModbusController::class, 'deleteMerge'])->name('merge.delete')->middleware('admin');
 
     Route::get('/get-device', [DeviceController::class, 'get']);
 });

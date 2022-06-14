@@ -19,6 +19,8 @@ class DeviceController extends Controller
 
     public function index()
     {
+        $this->middleware('admin');
+
         $devices = Device::get();
 
         return view('device.index', compact('devices'));
@@ -26,6 +28,8 @@ class DeviceController extends Controller
 
     public function create()
     {
+        $this->middleware('admin');
+
         $device = new Device();
         $action = route('device.store');
         $act = 'create';
@@ -35,6 +39,8 @@ class DeviceController extends Controller
 
     public function store(Request $request)
     {
+        $this->middleware('admin');
+
         $attr = $request->validate([
             'name' => 'required|string',
             'type' => 'required|string',
@@ -89,6 +95,8 @@ class DeviceController extends Controller
 
     public function edit(Device $device)
     {
+        $this->middleware('admin');
+
         $action = route('device.update', $device->id);
         $act = 'edit';
 
@@ -97,6 +105,8 @@ class DeviceController extends Controller
 
     public function update(Request $request, Device $device)
     {
+        $this->middleware('admin');
+
         $attr = $request->validate([
             'name' => 'required|string',
             'type' => 'required|string',
@@ -134,6 +144,8 @@ class DeviceController extends Controller
 
     public function destroy(Device $device)
     {
+        $this->middleware('admin');
+
         try {
             DB::beginTransaction();
             foreach ($device->histories as $history) {
