@@ -113,7 +113,7 @@ $no = 1;
                             @foreach(App\Models\History::where('time', $hd->time)->whereHas('modbus', function($q){
                             $q->where('is_used', 1);
                             })->get() as $mod)
-                            <td>{{ $mod->val }}</td>
+                            <td>{{ $mod->val }}{{ App\Models\Modbus::find($mod->modbus_id)->satuan }}</td>
                             @endforeach
                         </tr>
                         @endforeach
@@ -400,7 +400,6 @@ $no = 1;
                 let active = response.active;
                 let history = response.history;
                 let digital = response.digital;
-                console.log(active)
 
                 labelsOne = [];
                 labelsTwo = [];

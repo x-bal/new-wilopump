@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DeviceController extends Controller
 {
+
     public function index()
     {
         $devices = Device::get();

@@ -71,6 +71,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{ $apikey }}&callback=initMap" defer></script>
 
 <script>
+    let level = "{{ auth()->user()->level }}";
+
     let map;
 
     function initFirstMap() {
@@ -131,7 +133,7 @@
 
         let id = "{{ $first->id }}";
 
-        setInterval(function() {
+        function requestAjax() {
             $.ajax({
                 url: '/api/get-device/' + id,
                 type: 'GET',
@@ -140,7 +142,13 @@
                     getData(result.device, result.image, result.modbus, result.digital, result.history, map, dataMarker, result.merge)
                 }
             })
-        }, 3000)
+        }
+
+        requestAjax();
+
+        setInterval(function() {
+            requestAjax()
+        }, 5000)
 
         function getData(device, image, modbus, digital, history, dataMap, dataMarker, merge) {
             let infoFirst = `<div class="card" style="">
@@ -170,12 +178,15 @@
                                         <td>Last Data Send</td>
                                         <td> : </td>
                                         <td>` + history + `</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" class="text-center"><a href="/device/` + device.id + `">More Detail</a></td>
-                                    </tr>
-                                </table>
-                            </div>`;
+                                    </tr>`;
+            if (level == 'Admin') {
+                infoFirst += `<tr>
+                                                <td colspan="3" class="text-center"><a href="/device/` + device.id + `">More Detail</a></td>
+                                            </tr>
+                                        </table>
+                                    </div>`;
+
+            }
             dataMarker[1].setMap(null)
 
             let firstInfo = new google.maps.InfoWindow({

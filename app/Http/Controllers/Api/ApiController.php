@@ -69,7 +69,7 @@ class ApiController extends Controller
                                     'device_id' => $device->id,
                                     'modbus_id' => $modbus->id,
                                     'ket' => 'Insert Data ' . $modbus->name,
-                                    'val' => $val[$i],
+                                    'val' => $after,
                                     'time' => date('Y-m-d H:i')
                                 ]);
                             }

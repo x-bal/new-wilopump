@@ -99,7 +99,6 @@
                                     </div>
                                 </a>
                             </li>
-                            @if(auth()->user()->level == 'Admin')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('chart') ? 'active' : '' }}" href="/chart">
                                     <div class="d-flex align-items-center">
@@ -110,6 +109,7 @@
                                     </div>
                                 </a>
                             </li>
+                            @if(auth()->user()->level == 'Admin')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('access-viewer') ? 'active' : '' }}" href="/access-viewer">
                                     <div class="d-flex align-items-center">
@@ -187,7 +187,7 @@
                 <footer class="footer">
                     <div class="row g-0 justify-content-between align-items-center h-100 mb-3">
                         <div class="col-12 col-sm-auto text-center">
-                            <p class="mb-0 text-900">Thank you for creating with <a href="https://tazaka.co.id" target="__blank">tazaka</a><span class="d-none d-sm-inline-block"></span><span class="mx-1">|</span><br class="d-sm-none">2022 &copy; <a href="#" target="__blank">Wilo Pumps</a></p>
+                            <p class="mb-0 text-900"><span class="d-none d-sm-inline-block"><br class="d-sm-none">2022 &copy; <a href="https://wilo.com/id/en/" target="__blank">PT Wilo Pumps Indonesia</a></p>
                         </div>
                         <div class="col-12 col-sm-auto text-center">
                             <p class="mb-0 text-600">v1.0.1</p>

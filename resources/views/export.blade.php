@@ -26,7 +26,7 @@
             @foreach(App\Models\History::where('time', $hd->time)->whereHas('modbus', function($q){
             $q->where('is_used', 1);
             })->get() as $mod)
-            <td>{{ $mod->val }}</td>
+            <td>{{ $mod->val }}{{ App\Models\Modbus::find($mod->modbus_id)->satuan }}</td>
             @endforeach
         </tr>
         @endforeach

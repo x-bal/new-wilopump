@@ -33,7 +33,10 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ $apikey }}&callback=initMap" defer></script>
 
+
 <script>
+    let level = "{{ auth()->user()->level }}";
+
     let map;
 
     function initMap() {
@@ -104,12 +107,15 @@
                                         <td>Last Data Send</td>
                                         <td> : </td>
                                         <td>` + result.history + `</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" class="text-center"><a href="/device/` + device.id + `">More Detail</a></td>
-                                    </tr>
-                                </table>
-                            </div>`
+                                    </tr>`
+                                if (level == 'Admin') {
+                                    contentString += `<tr>
+                                                <td colspan="3" class="text-center"><a href="/device/` + device.id + `">More Detail</a></td>
+                                            </tr>
+                                        </table>
+                                    </div>`
+                                }
+
 
                                 const infowindow = new google.maps.InfoWindow({
                                     content: contentString,
