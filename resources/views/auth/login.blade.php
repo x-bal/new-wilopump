@@ -63,7 +63,7 @@
                             </div>
                             <div class="row flex-between-center mb-7">
                             </div>
-                            <button class="btn btn-primary w-100 mb-3" type="submit">Login</button>
+                            <button class="btn btn-success w-100 mb-3" type="submit">Login</button>
                         </form>
                     </div>
                 </div>
