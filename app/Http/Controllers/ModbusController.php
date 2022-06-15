@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\History;
 use App\Models\Merge;
 use App\Models\Modbus;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -340,5 +341,20 @@ class ModbusController extends Controller
                 'message' => $th->getMessage()
             ]);
         }
+    }
+
+    public function find(Modbus $modbus)
+    {
+        if (request('from') != '' && request('to') != '') {
+            $history = History::where('modbus_id', $modbus->id)->whereBetween('created_at', [request('from'), Carbon::parse(request('to'))->addDay(1)->format('Y-m-d')])->latest()->get();
+        } else {
+            $history = History::where('modbus_id', $modbus->id)->latest()->get();
+        }
+
+        return response()->json([
+            'modbus' => $modbus,
+            'history' => $history,
+            'request' => request()->all(),
+        ]);
     }
 }

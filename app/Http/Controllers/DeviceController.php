@@ -43,6 +43,8 @@ class DeviceController extends Controller
 
         $attr = $request->validate([
             'name' => 'required|string',
+            'end_user' => 'required|string',
+            'iddev' => 'required|unique:devices',
             'type' => 'required|string',
             'power' => 'required|string',
             'flow' => 'required|string',
@@ -109,6 +111,8 @@ class DeviceController extends Controller
 
         $attr = $request->validate([
             'name' => 'required|string',
+            'end_user' => 'required|string',
+            'iddev' => 'required|unique:devices,iddev,' . $device->iddev,
             'type' => 'required|string',
             'power' => 'required|string',
             'flow' => 'required|string',

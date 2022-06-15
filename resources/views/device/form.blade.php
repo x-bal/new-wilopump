@@ -26,6 +26,26 @@
                 </div>
 
                 <div class="col-md-6">
+                    <label for="iddev">ID Device</label>
+                    <input type="text" name="iddev" id="iddev" class="form-control" value="{{ $device->iddev ?? old('iddev') }}">
+
+                    @error('iddev')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <div class="col-md-6">
+                    <label for="end_user">End User</label>
+                    <input type="text" name="end_user" id="end_user" class="form-control" value="{{ $device->end_user ?? old('end_user') }}">
+
+                    @error('end_user')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="col-md-6">
                     <label for="lat">Latitude</label>
                     <input type="text" name="lat" id="lat" class="form-control" value="{{ $device->lat ?? old('lat') }}">
 

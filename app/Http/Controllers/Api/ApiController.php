@@ -17,7 +17,7 @@ class ApiController extends Controller
             $secretkey = SecretKey::findOrFail(1);
 
             if ($secretkey->key == $request->key) {
-                $device = Device::find($request->iddev);
+                $device = Device::where('iddev', $request->iddev)->first();
 
                 if ($device) {
                     if ($device->is_active == 1) {
@@ -159,7 +159,7 @@ class ApiController extends Controller
             $secretkey = SecretKey::findOrFail(1);
 
             if ($secretkey->key == $request->key) {
-                $device = Device::find($request->iddev);
+                $device = Device::where('iddev', $request->iddev)->first();
 
                 if ($device) {
                     if ($device->is_active == 1) {

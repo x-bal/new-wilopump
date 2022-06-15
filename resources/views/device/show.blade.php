@@ -404,6 +404,11 @@
                                 <h6>` + device.name + `</h6>
                                 <table>
                                     <tr>
+                                        <td>End User</td>
+                                        <td> : </td>
+                                        <td>` + device.end_user + `</td>
+                                    </tr>
+                                    <tr>
                                         <td>Type</td>
                                         <td> : </td>
                                         <td>` + device.type + `</td>

@@ -9,12 +9,13 @@
 
     <title>Wilo Pump - {{ $title }}</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/') }}img/favicons/apple-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/') }}img/favicons/favicon-16x16.png">
-    <!-- <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/favicons/favicon.ico"> -->
-    <link rel="manifest" href="{{ asset('/') }}img/favicons/manifest.json">
-    <!-- <meta name="msapplication-TileImage" content="{{ asset('/') }}img/favicons/mstile-150x150.png"> -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/') }}img/icons/apple-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/') }}img/icons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/icons/favicon.ico">
+    <link rel="manifest" href="{{ asset('/') }}img/icons/manifest.json">
+    <!-- <meta name="msapplication-TileImage" content="{{ asset('/') }}img/icons/mstile-150x150.png"> -->
     <meta name="theme-color" content="#ffffff">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
