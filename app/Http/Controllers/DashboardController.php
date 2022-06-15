@@ -47,9 +47,9 @@ class DashboardController extends Controller
         $delay = intval(SecretKey::findOrFail(3)->key * 1000);
         if (auth()->user()->level == 'Viewer') {
             $user = User::find(auth()->user()->id);
-            $first = $user->devices()->first();
+            $first = $user->devices()->where('is_active', 1)->first();
             if ($first) {
-                $devices = $user->devices()->where('device_id', '!=', $first->id)->get();
+                $devices = $user->devices()->where('device_id', '!=', $first->id)->where('is_active', 1)->get();
             } else {
                 $devices = '';
             }
@@ -203,7 +203,12 @@ class DashboardController extends Controller
 
     public function chart()
     {
-        $devices = Device::where('is_active', 1)->get();
+        if (auth()->user()->level == 'Admin') {
+            $devices = Device::where('is_active', 1)->get();
+        } else {
+            $user = User::find(auth()->user()->id);
+            $devices = $user->devices()->where('is_active', 1)->get();
+        }
         $device = '';
 
         if (request('device')) {
