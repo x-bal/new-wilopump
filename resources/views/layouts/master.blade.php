@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/') }}img/icons/favicon-16x16.png">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/icons/favicon.ico">
-    <link rel="manifest" href="{{ asset('/') }}img/icons/manifest.json">
+    <!-- <link rel="manifest" href="{{ asset('/') }}img/icons/manifest.json"> -->
     <!-- <meta name="msapplication-TileImage" content="{{ asset('/') }}img/icons/mstile-150x150.png"> -->
     <meta name="theme-color" content="#ffffff">
     <link rel="preconnect" href="https://fonts.gstatic.com">
