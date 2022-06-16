@@ -26,7 +26,7 @@
                         <tr>
                             <td class="no">{{ $loop->iteration }}</td>
                             <td class="img"><img src="{{ asset('/storage/'.$device->image) }}" alt="" width="70px"></td>
-                            <td class="id">{{ $device->id }}</td>
+                            <td class="id">{{ $device->iddev }}</td>
                             <td class="name">{{ $device->name }}</td>
                             <td class="type">{{ $device->type }}</td>
                             <td class="lat">{{ $device->lat }}</td>
