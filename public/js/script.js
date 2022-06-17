@@ -113,13 +113,17 @@ function update(id, field, val, url) {
 $(".table").on('change', '.modbus-mark', function () {
     let id = $(this).attr('data-id');
     let mark = $(".mark-" + id).find(":selected").val();
+    let val = $("#math-" + id).val()
 
     if (mark == '&') {
         $("#math-" + id).val('')
         $("#math-" + id).attr('type', 'text')
         $("#math-" + id).attr('placeholder', 'PVmax&PVmin&1000')
+        $(".mod-" + id).append('PVmax&PVmin&Devide');
     } else {
         $("#math-" + id).attr('type', 'number')
+        $("#math-" + id).attr('placeholder', '')
+        $(".mod-" + id).empty();
     }
 })
 

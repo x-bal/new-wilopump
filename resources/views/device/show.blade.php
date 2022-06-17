@@ -84,6 +84,7 @@
                                         </select>
                                         <br>
                                         <input type="{{ $math[0] == '&' ? 'text' : 'number' }}" name="math" id="math-{{ $modbus->id }}" data-id="{{ $modbus->id }}" class="form-control form-control-sm modbus-math" value="{{ $math[1] ?? 1 }}">
+                                        <small class="mod-{{ $modbus->id }}"></small>
                                     </td>
                                     <td class="after">
                                         <input type="text" name="after" id="after-{{ $modbus->id }}" class="form-control form-control-sm" value="{{ $modbus->after }}" disabled>

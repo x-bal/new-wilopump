@@ -66,10 +66,11 @@ class DashboardController extends Controller
 
     public function setting()
     {
+        $secretKey = SecretKey::findOrFail(1);
         $apikey = SecretKey::findOrFail(2);
         $delay = SecretKey::findOrFail(3);
 
-        return view('dashboard.setting', compact('apikey', 'delay'));
+        return view('dashboard.setting', compact('apikey', 'delay', 'secretKey'));
     }
 
     public function updateSetting(Request $request, SecretKey $secretKey)
@@ -89,6 +90,10 @@ class DashboardController extends Controller
 
             if ($request->type == 'delay') {
                 $message  = 'Delay time slider successfully updated';
+            }
+
+            if ($request->type == 'secret') {
+                $message  = 'Secret Key successfully updated';
             }
 
             return back()->with('success', $message);
