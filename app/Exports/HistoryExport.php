@@ -16,12 +16,13 @@ class HistoryExport implements FromView
     {
         $from = request('from');
         $to = Carbon::parse(request('to'))->addDay(1)->format('Y-m-d');
+
         $device = Device::find(request('device'));
 
         $digital = DigitalInput::where('device_id', $device->id)->where('is_used', 1)->get();
         $modbus = Modbus::where('device_id', $device->id)->where('is_used', 1)->get();
 
-        if ($from == '' && $to == '') {
+        if ($from == null && $to == null) {
             $history = History::where('device_id', $device->id)->groupBy('time')->get();
         } else {
             $history = History::where('device_id', $device->id)->whereBetween('created_at', [$from, $to])->groupBy('time')->get();
