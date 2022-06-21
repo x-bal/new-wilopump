@@ -163,13 +163,14 @@ $(".table").on('change', '.modbus-math', function () {
             return false;
         }
 
-        if (val <= 4) {
-            val = 4;
+        if (val <= 4000) {
+            val = 0;
         }
 
-        if (val >= 20) {
-            val = 20;
-        }
+        // if (val >= 20) {
+        //     val = 20;
+        // }
+
         field = mark + ',' + $(this).val()
         after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
     }
@@ -355,13 +356,14 @@ $(".table-merge").on('change', '.merge-math', function () {
             return false;
         }
 
-        if (val <= 4) {
-            val = 4;
+        if (val <= 4000) {
+            val = 0;
         }
 
-        if (val >= 20) {
-            val = 20;
-        }
+        // if (val >= 20) {
+        //     val = 20;
+        // }
+
         field = mark + ',' + $(this).val()
         after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
     }

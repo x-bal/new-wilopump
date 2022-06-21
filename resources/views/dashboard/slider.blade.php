@@ -232,9 +232,9 @@
                                         <td>` + data.name + `</td>
                                         <td> : </td>`;
                         if (data.after == null) {
-                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                            upFirst += `<td>` + data.val + ' ' + data.satuan + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.after + data.satuan + `</td>`;
+                            upFirst += `<td>` + data.after + ' ' + data.satuan + `</td>`;
                         }
                         upFirst += `</tr>`
                     }

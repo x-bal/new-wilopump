@@ -70,8 +70,8 @@ $no = 1;
         </div>
         <div class="col-md-5">
             <div class="form-group">
-                <label for="from">From</label>
-                <input type="date" name="from" id="from" class="form-control">
+                <label for="to">To</label>
+                <input type="date" name="to" id="to" class="form-control">
             </div>
         </div>
         <div class="col-md-2">
@@ -256,7 +256,7 @@ $no = 1;
             });
 
             let imgFirst = `<div class="card text-center" style="">
-                                <img src="` + image + `" alt="" width="60px">
+                                <img src="` + image + `" alt="" width="100 ' '+px">
                             </div>`;
 
             dataMarker[2].setMap(null)
@@ -282,9 +282,9 @@ $no = 1;
                                             <td>` + data.name + `</td>
                                             <td> : </td>`;
                         if (data.after == null) {
-                            upFirst += `<td>` + data.val + data.satuan + `</td>`;
+                            upFirst += `<td>` + data.val + ' ' + data.satuan + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.after + data.satuan + `</td>`;
+                            upFirst += `<td>` + data.after + ' ' + data.satuan + `</td>`;
                         }
                     }
                     upFirst += `</tr>`;
