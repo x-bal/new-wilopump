@@ -113,7 +113,7 @@ $no = 1;
                             @foreach(App\Models\History::where('time', $hd->time)->whereHas('modbus', function($q){
                             $q->where('is_used', 1);
                             })->get() as $mod)
-                            <td>{{ $mod->val }}{{ App\Models\Modbus::find($mod->modbus_id)->satuan }}</td>
+                            <td>{{ number_format((float)$mod->val, 3, '.', '') }} {{ App\Models\Modbus::find($mod->modbus_id)->satuan }}</td>
                             @endforeach
                         </tr>
                         @endforeach
@@ -282,9 +282,9 @@ $no = 1;
                                             <td>` + data.name + `</td>
                                             <td> : </td>`;
                         if (data.after == null) {
-                            upFirst += `<td>` + data.val + ' ' + data.satuan + `</td>`;
+                            upFirst += `<td>` + parseFloat(data.val).toFixed(3) + ' ' + data.satuan + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.after + ' ' + data.satuan + `</td>`;
+                            upFirst += `<td>` + parseFloat(data.after).toFixed(3) + ' ' + data.satuan + `</td>`;
                         }
                     }
                     upFirst += `</tr>`;
@@ -296,9 +296,9 @@ $no = 1;
                                     <td>` + data.name + `</td>
                                     <td> : </td>`;
                         if (data.after == null) {
-                            upFirst += `<td>` + data.val + data.unit + `</td>`;
+                            upFirst += `<td>` + parseFloat(data.val).toFixed(3) + data.unit + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.after + data.unit + `</td>`;
+                            upFirst += `<td>` + parseFloat(data.after).toFixed(3) + data.unit + `</td>`;
                         }
                     })
                 }

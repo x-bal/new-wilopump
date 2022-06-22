@@ -232,9 +232,9 @@
                                         <td>` + data.name + `</td>
                                         <td> : </td>`;
                         if (data.after == null) {
-                            upFirst += `<td>` + data.val + ' ' + data.satuan + `</td>`;
+                            upFirst += `<td>` + parseFloat(data.val).toFixed(3) + ' ' + data.satuan + `</td>`;
                         } else {
-                            upFirst += `<td>` + data.after + ' ' + data.satuan + `</td>`;
+                            upFirst += `<td>` + parseFloat(data.after).toFixed(3) + ' ' + data.satuan + `</td>`;
                         }
                         upFirst += `</tr>`
                     }
@@ -246,9 +246,9 @@
                                         <td>` + mrg.name + `</td>
                                         <td> : </td>`;
                         if (mrg.after == null) {
-                            upFirst += `<td>` + mrg.val + mrg.unit + `</td>`;
+                            upFirst += `<td>` + parseFloat(mrg.val).toFixed(3) + mrg.unit + `</td>`;
                         } else {
-                            upFirst += `<td>` + mrg.after + mrg.unit + `</td>`;
+                            upFirst += `<td>` + parseFloat(mrg.after).toFixed(3) + mrg.unit + `</td>`;
                         }
                     });
                 }
