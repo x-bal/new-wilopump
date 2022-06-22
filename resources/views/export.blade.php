@@ -26,7 +26,7 @@
             @foreach(App\Models\History::where('time', $hd->time)->whereHas('modbus', function($q){
             $q->where('is_used', 1);
             })->get() as $mod)
-            <td>{{ {{ number_format((float)$mod->val, 3, '.', '') }} }} {{ App\Models\Modbus::find($mod->modbus_id)->satuan }}</td>
+            <td>{{ round($mod->val, 3) }} {{ App\Models\Modbus::find($mod->modbus_id)->satuan }}</td>
             @endforeach
         </tr>
         @endforeach
