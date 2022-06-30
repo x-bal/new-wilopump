@@ -103,7 +103,7 @@ $no = 1;
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>{{ Carbon\Carbon::parse($hd->created_at)->format('d/m/Y H:i:s') }}</td>
-                            @foreach(App\Models\History::where('time', $hd->time)->where('digital_id', '!=',0)->whereHas('digital', function($q){
+                            @foreach(App\Models\History::where('time', $hd->time)->where('digital_input_id', '!=',0)->whereHas('digital', function($q){
                             $q->where('is_used', 1);
                             })->get() as $dig)
                             <td>
