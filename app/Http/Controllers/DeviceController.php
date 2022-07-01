@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+set_time_limit(512);
+
 use App\Models\Device;
 use App\Models\DigitalInput;
 use App\Models\History;
