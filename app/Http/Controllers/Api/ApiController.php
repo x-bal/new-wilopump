@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\History;
 use App\Models\SecretKey;
+use App\Models\Temporary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +30,26 @@ class ApiController extends Controller
                             $val = $request->val;
                             $used = $request->used;
                             $limit = count($address);
+
+                            $temporaries = Temporary::where('device_id', $device->id)->get();
+                            // return response()->json([
+                            //     'tmp' => $temporaries
+                            // ]);
+
+                            foreach ($device->digitalInputs()->get() as $a => $digital) {
+                                $digital->update([
+                                    'is_used' => $temporaries[$a]->is_used,
+                                    // 'val' => $temporaries[$a]->val
+                                ]);
+
+                                History::create([
+                                    'device_id' => $device->id,
+                                    'digital_input_id' => $digital->id,
+                                    'ket' => 'Insert Data ' . $digital->name,
+                                    'val' => $temporaries[$a]->val,
+                                    'time' => date('Y-m-d H:i')
+                                ]);
+                            }
 
                             foreach ($device->modbuses()->limit($limit)->get() as $i => $modbus) {
                                 if ($modbus->math != NULL) {
@@ -72,6 +93,10 @@ class ApiController extends Controller
                                     'val' => $after,
                                     'time' => date('Y-m-d H:i')
                                 ]);
+                            }
+
+                            foreach ($temporaries as $tmp) {
+                                $tmp->delete();
                             }
 
                             foreach ($device->merges as $i => $merge) {
@@ -170,19 +195,29 @@ class ApiController extends Controller
                             $limit = count($used);
 
                             foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
-                                $digital->update([
-                                    'is_used' => $used[$i],
-                                    'val' => $value[$i],
-                                ]);
-
-                                History::create([
+                                Temporary::create([
                                     'device_id' => $device->id,
                                     'digital_input_id' => $digital->id,
-                                    'ket' => 'Insert Data ' . $digital->name,
                                     'val' => $value[$i],
-                                    'time' => date('Y-m-d H:i')
+                                    'ket' => 'Insert Data ' . $digital->name,
+                                    'is_used' => $used[$i]
                                 ]);
                             }
+
+                            // foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
+                            //     $digital->update([
+                            //         'is_used' => $used[$i],
+                            //         'val' => $value[$i],
+                            //     ]);
+
+                            //     History::create([
+                            //         'device_id' => $device->id,
+                            //         'digital_input_id' => $digital->id,
+                            //         'ket' => 'Insert Data ' . $digital->name,
+                            //         'val' => $value[$i],
+                            //         'time' => date('Y-m-d H:i')
+                            //     ]);
+                            // }
 
                             DB::commit();
 
