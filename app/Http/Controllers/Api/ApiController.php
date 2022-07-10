@@ -39,7 +39,7 @@ class ApiController extends Controller
                             foreach ($device->digitalInputs()->get() as $a => $digital) {
                                 $digital->update([
                                     'is_used' => $temporaries[$a]->is_used,
-                                    // 'val' => $temporaries[$a]->val
+                                    'val' => $temporaries[$a]->val
                                 ]);
 
                                 History::create([
