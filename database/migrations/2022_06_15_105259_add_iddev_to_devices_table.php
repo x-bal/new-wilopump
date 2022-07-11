@@ -14,8 +14,8 @@ class AddIddevToDevicesTable extends Migration
     public function up()
     {
         Schema::table('devices', function (Blueprint $table) {
-            $table->integer('iddev')->unique()->after('id');
-            $table->string('end_user')->after('name');
+            // $table->integer('iddev')->unique()->after('id');
+            // $table->string('end_user')->after('name');
         });
     }
 

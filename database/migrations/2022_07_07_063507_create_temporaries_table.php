@@ -21,6 +21,7 @@ class CreateTemporariesTable extends Migration
             $table->string('val')->nullable();
             $table->string('ket')->nullable();
             $table->integer('is_used')->default(0);
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

@@ -31,7 +31,7 @@ class ApiController extends Controller
                             $used = $request->used;
                             $limit = count($address);
 
-                            $temporaries = Temporary::where('device_id', $device->id)->get();
+                            $temporaries = Temporary::where('device_id', $device->id)->where('status', 1)->get();
                             // return response()->json([
                             //     'tmp' => $temporaries
                             // ]);
@@ -96,7 +96,9 @@ class ApiController extends Controller
                             }
 
                             foreach ($temporaries as $tmp) {
-                                $tmp->delete();
+                                $tmp->update([
+                                    'status' => 0
+                                ]);
                             }
 
                             foreach ($device->merges as $i => $merge) {
@@ -195,13 +197,17 @@ class ApiController extends Controller
                             $limit = count($used);
 
                             foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
-                                Temporary::create([
-                                    'device_id' => $device->id,
-                                    'digital_input_id' => $digital->id,
-                                    'val' => $value[$i],
-                                    'ket' => 'Insert Data ' . $digital->name,
-                                    'is_used' => $used[$i]
-                                ]);
+                                Temporary::updateOrCreate(
+                                    [
+                                        'device_id' => $device->id,
+                                        'digital_input_id' => $digital->id,
+                                    ],
+                                    [
+                                        'val' => $value[$i],
+                                        'ket' => 'Insert Data ' . $digital->name,
+                                        'is_used' => $used[$i],
+                                    ]
+                                );
                             }
 
                             // foreach ($device->digitalInputs()->limit($limit)->get() as $i => $digital) {
