@@ -338,4 +338,22 @@ class DeviceController extends Controller
 
         return view('device.grafik', compact('device', 'apikey', 'modbus', 'digital', 'history',));
     }
+
+    public function reset(Device $device)
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($device->histories as $his) {
+                $his->delete();
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Device successfully reseted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+    }
 }

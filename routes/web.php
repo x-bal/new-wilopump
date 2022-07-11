@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('user', UserController::class)->middleware('admin');
     Route::get('/device/{device:id}/grafik', [DeviceController::class, 'grafik'])->name('device.grafik');
+    Route::get('/device/{device:id}/reset', [DeviceController::class, 'reset'])->name('device.reset');
     Route::resource('device', DeviceController::class);
 
     Route::post('/modbus/merge', [ModbusController::class, 'merge'])->name('modbus.merge')->middleware('admin');

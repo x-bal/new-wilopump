@@ -43,6 +43,8 @@
 
                                 <a href="{{ route('device.edit', $device->id) }}" class="btn btn-sm btn-info mr-2"><i class="fas fa-edit"></i></a>
 
+                                <a href="{{ route('device.reset', $device->id) }}" class="btn btn-sm btn-success mr-2" onclick="return confirm('Reset device ?')"><i class="fas fa-sync"></i></a>
+
                                 <form action="{{ route('device.destroy', $device->id) }}" method="post" style="display: inline;">
                                     @method('DELETE')
                                     @csrf
