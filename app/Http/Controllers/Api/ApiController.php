@@ -206,6 +206,7 @@ class ApiController extends Controller
                                         'val' => $value[$i],
                                         'ket' => 'Insert Data ' . $digital->name,
                                         'is_used' => $used[$i],
+                                        'status' => 1
                                     ]
                                 );
                             }
