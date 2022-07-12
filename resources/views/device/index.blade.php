@@ -37,19 +37,19 @@
                             <td class="lat">{{ $device->lat }}</td>
                             <td class="long">{{ $device->long }}</td>
                             <td class="action">
-                                <a href="{{ route('device.show', $device->id) }}" class="btn btn-sm btn-secondary mr-2"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('device.show', $device->id) }}" title="Show Device" class="btn btn-sm btn-secondary mr-2"><i class="fas fa-eye"></i></a>
 
-                                <a href="{{ route('device.grafik', $device->id) }}" class="btn btn-sm btn-warning mr-2"><i class="fas fa-chart-line"></i></a>
+                                <a href="{{ route('device.grafik', $device->id) }}" title="Grafik Device" class="btn btn-sm btn-warning mr-2"><i class="fas fa-chart-line"></i></a>
 
-                                <a href="{{ route('device.edit', $device->id) }}" class="btn btn-sm btn-info mr-2"><i class="fas fa-edit"></i></a>
+                                <a href="{{ route('device.edit', $device->id) }}" title="Edit Device" class="btn btn-sm btn-info mr-2"><i class="fas fa-edit"></i></a>
 
-                                <a href="{{ route('device.reset', $device->id) }}" class="btn btn-sm btn-success mr-2" onclick="return confirm('Reset device ?')"><i class="fas fa-sync"></i></a>
+                                <a href="{{ route('device.reset', $device->id) }}" title="Reset Device" class="btn btn-sm btn-success mr-2" onclick="return confirm('Reset device ?')"><i class="fas fa-sync"></i></a>
 
                                 <form action="{{ route('device.destroy', $device->id) }}" method="post" style="display: inline;">
                                     @method('DELETE')
                                     @csrf
 
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure delete this data?')"><i class="fas fa-trash"></i></button>
+                                    <button type="submit" title="Delete Device" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure delete this data?')"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                             <td class="is_active">
