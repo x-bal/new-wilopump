@@ -163,16 +163,13 @@ $(".table").on('change', '.modbus-math', function () {
             return false;
         }
 
-        if (val <= 4000) {
-            val = 0;
+        if (val < 4000) {
+            field = mark + ',' + $(this).val()
+            after = 0;
+        } else {
+            field = mark + ',' + $(this).val()
+            after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
         }
-
-        // if (val >= 20) {
-        //     val = 20;
-        // }
-
-        field = mark + ',' + $(this).val()
-        after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
     }
 
     $("#after-" + id).empty().val(after)
@@ -356,7 +353,8 @@ $(".table-merge").on('change', '.merge-math', function () {
             return false;
         }
 
-        if (val <= 4000) {
+        if (val < 4000) {
+            field = mark + ',' + $(this).val()
             after = 0;
         } else {
             field = mark + ',' + $(this).val()
