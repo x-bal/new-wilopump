@@ -30,10 +30,12 @@
 <div class="row">
     <div class="col-md-12">
         @if(request()->is('slider') && request('q') == 'full')
-        <h2 class="mb-3 lh-sm">Slider</h2>
+        <div class="d-flex justify-content-between">
+            <h2 class="mb-5 lh-sm">Monitoring Dashboard</h2>
+            <img src="{{ asset('img/wilo.png') }}" alt="" width="100" height="50">
+        </div>
         @else
         <h2 class="mb-3 lh-sm">Slider</h2>
-
         <a href="/slider?q=full" target="__blank" class="btn btn-success mb-3">Full Size</a>
         @endif
         <div id="carouselExampleControls" class="carousel carousel-dark slide mb-3" data-bs-ride="carousel">
