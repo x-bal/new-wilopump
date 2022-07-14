@@ -14,7 +14,7 @@
     <tbody class="list">
         @foreach($history as $hd)
         <tr>
-            <td>{{ $no++ }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ Carbon\Carbon::parse($hd->created_at)->format('d/m/Y H:i:s') }}</td>
             @foreach(App\Models\History::where('time', $hd->time)->where('device_id', $device->id)->whereHas('digital', function($q){
             $q->where('is_used', 1);
