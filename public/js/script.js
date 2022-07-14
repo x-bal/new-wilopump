@@ -357,15 +357,15 @@ $(".table-merge").on('change', '.merge-math', function () {
         }
 
         if (val <= 4000) {
-            val = 0;
+            after = 0;
+        } else {
+            field = mark + ',' + $(this).val()
+            after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
         }
 
         // if (val >= 20) {
         //     val = 20;
         // }
-
-        field = mark + ',' + $(this).val()
-        after = (((val / devide) - 4) / 16 * (parseFloat(max) - parseFloat(min))) + parseFloat(min);
     }
 
     $("#merge-after-" + id).empty().val(after)
