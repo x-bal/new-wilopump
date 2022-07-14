@@ -41,11 +41,11 @@
                 <div class="col-md-12" style="width: 96%;">
                     <div class="carousel-inner">
                         <div class=" carousel-item active" data-bs-interval="{{ $delay }}">
-                            <div id="first-map" style="width: 100%; height: 480px;" class="d-block w-100"></div>
+                            <div id="first-map" style="width: 100%; height: {{ request('q') == 'full' ? '720px' : '480px' }};" class="d-block w-100"></div>
                         </div>
                         @foreach($devices as $device)
                         <div class="carousel-item" data-bs-interval="{{ $delay }}">
-                            <div id="{{ $device->id }}" style="width: 100%; height: 480px;" class="d-block w-100 maps">{{ $device->lat }}, {{ $device->long }}, {{ $device->name }}</div>
+                            <div id="{{ $device->id }}" style="width: 100%; height: {{ request('q') == 'full' ? '720px' : '480px' }};" class="d-block w-100 maps">{{ $device->lat }}, {{ $device->long }}, {{ $device->name }}</div>
                         </div>
                         @endforeach
                     </div>
