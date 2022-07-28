@@ -78,8 +78,8 @@
     let map;
 
     function initFirstMap() {
-        let lat = parseFloat("{{ $first->lat }}");
-        let long = parseFloat("{{ $first->long }}");
+        let lat = parseFloat("{{ $first->lat ?? '' }}");
+        let long = parseFloat("{{ $first->long ?? '' }}");
 
         let map = new google.maps.Map(document.getElementById("first-map"), {
             center: new google.maps.LatLng(lat, long),
@@ -93,7 +93,7 @@
             },
             map: map,
             label: {
-                text: "{{ $first->name }}",
+                text: "{{ $first->name ?? '' }}",
                 color: "#d93025",
                 fontFamily: "Poppins",
                 className: "map-label"
@@ -133,7 +133,7 @@
         });
 
 
-        let id = "{{ $first->id }}";
+        let id = "{{ $first->id ?? '' }}";
 
         function requestAjax() {
             $.ajax({

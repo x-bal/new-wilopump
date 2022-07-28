@@ -51,14 +51,14 @@ class DashboardController extends Controller
             if ($first) {
                 $devices = $user->devices()->where('device_id', '!=', $first->id)->where('is_active', 1)->get();
             } else {
-                $devices = '';
+                $devices = [];
             }
         } else {
             $first = Device::where('is_active', 1)->first();
             if ($first) {
                 $devices = Device::where('is_active', 1)->where('id', '!=', $first->id)->get();
             } else {
-                $devices = '';
+                $devices = [];
             }
         }
         return view('dashboard.slider', compact('apikey', 'first', 'devices', 'delay'));
