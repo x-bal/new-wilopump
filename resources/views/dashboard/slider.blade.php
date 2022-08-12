@@ -228,16 +228,11 @@
                                         <h6>` + device.modbus + `</h6>
                                         <table>`
                 $.each(modbus, function(i, data) {
-                    console.log(data.after)
                     if (data.merge_id == 0) {
                         upFirst += `<tr>
                                         <td>` + data.name + `</td>
                                         <td> : </td>`;
-                        if (data.after == null) {
-                            upFirst += `<td>` + Number(Number(data.val).toFixed(3)) + ' ' + data.satuan + `</td>`;
-                        } else {
-                            upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + ' ' + data.satuan + `</td>`;
-                        }
+                        upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + ' ' + data.satuan + `</td>`;
                         upFirst += `</tr>`
                     }
                 })
@@ -247,11 +242,8 @@
                         upFirst += `<tr>
                                         <td>` + mrg.name + `</td>
                                         <td> : </td>`;
-                        if (mrg.after == null) {
-                            upFirst += `<td>` + Number(Number(data.val).toFixed(3)) + mrg.unit + `</td>`;
-                        } else {
-                            upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + mrg.unit + `</td>`;
-                        }
+
+                        upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + mrg.unit + `</td>`;
                     });
                 }
 
