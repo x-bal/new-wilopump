@@ -281,11 +281,9 @@ $no = 1;
                         upFirst += `<tr>
                                             <td>` + data.name + `</td>
                                             <td> : </td>`;
-                        if (data.after == null) {
-                            upFirst += `<td>` + Number(Number(data.val).toFixed(3)) + ' ' + data.satuan + `</td>`;
-                        } else {
-                            upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + ' ' + data.satuan + `</td>`;
-                        }
+
+                        upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + ' ' + data.satuan + `</td>`;
+
                     }
                     upFirst += `</tr>`;
                 })
@@ -295,11 +293,9 @@ $no = 1;
                         upFirst += `<tr>
                                     <td>` + data.name + `</td>
                                     <td> : </td>`;
-                        if (data.after == null) {
-                            upFirst += `<td>` + Number(Number(data.val).toFixed(3)) + data.unit + `</td>`;
-                        } else {
-                            upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + data.unit + `</td>`;
-                        }
+
+                        upFirst += `<td>` + Number(Number(data.after).toFixed(3)) + data.unit + `</td>`;
+
                     })
                 }
 
