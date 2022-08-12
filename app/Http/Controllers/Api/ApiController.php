@@ -83,7 +83,7 @@ class ApiController extends Controller
                                     'val' => $val[$i],
                                     'is_used' => $used[$i],
                                     'math' => $modbus->after == NULL ? 'x,1' : $modbus->math,
-                                    'after' => $after ?? $val[$i] * 1,
+                                    'after' => $after,
                                 ]);
 
                                 History::create([
