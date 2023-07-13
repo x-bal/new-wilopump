@@ -1,229 +1,233 @@
-<!doctype html>
-<html lang="en-US" dir="ltr">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="utf-8" />
+    <title>Wilopump | Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
 
-    <title>Wilo Pump - {{ $title }}</title>
-
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/') }}img/icons/apple-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/android-chrome-512x512.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/') }}img/icons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/icons/favicon.ico">
-    <!-- <link rel="manifest" href="{{ asset('/') }}img/icons/manifest.json"> -->
-    <!-- <meta name="msapplication-TileImage" content="{{ asset('/') }}img/icons/mstile-150x150.png"> -->
-    <meta name="theme-color" content="#ffffff">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
-    <link href="{{ asset('/') }}css/phoenix.min.css" rel="stylesheet" id="style-default">
-    <link href="{{ asset('/') }}css/user.min.css" rel="stylesheet" id="user-style-default">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        body {
-            opacity: 0;
-        }
-    </style>
+    <!-- ================== BEGIN core-css ================== -->
+    <link href="{{ asset('/') }}css/vendor.min.css" rel="stylesheet" />
+    <link href="{{ asset('/') }}css/apple/app.min.css" rel="stylesheet" />
+    <link href="{{ asset('/') }}plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <!-- ================== END core-css ================== -->
 
     @stack('style')
 </head>
 
 <body>
-    <main class="main" id="top">
-        <div class="container-fluid px-0">
-            @if(request()->is('slider') && request('q') == 'full')
+    <!-- BEGIN #loader -->
+    <div id="loader" class="app-loader">
+        <span class="spinner"></span>
+    </div>
+    <!-- END #loader -->
 
-            @else
-            <nav class="navbar navbar-light navbar-vertical navbar-vibrant navbar-expand-lg">
-                <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
-                    <div class="navbar-vertical-content scrollbar">
-                        <ul class="navbar-nav flex-column" id="navbarVerticalNav">
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="/dashboard">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon">
-                                            <span data-feather="cast"></span>
-                                        </span>
-                                        <span class="nav-link-text">Dashbboard</span>
-                                    </div>
-                                </a>
-                            </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('slider') ? 'active' : '' }}" href="/slider">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon">
-                                            <span data-feather="clock"></span>
-                                        </span>
-                                        <span class="nav-link-text">Slider</span>
-                                    </div>
-                                </a>
-                            </li>
+    <!-- BEGIN #app -->
+    <div id="app" class="app app-header-fixed app-sidebar-fixed">
+        @if(request()->is('slider') && request('q') == 'full')
 
-                            @if(auth()->user()->level == 'Admin')
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('user*') ? 'active' : '' || request()->is('device*') ? 'active' : '' }} dropdown-indicator" href="#master" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="master">
-                                    <div class="d-flex align-items-center">
-                                        <div class="dropdown-indicator-icon d-flex flex-center"><span class="fas fa-caret-right fs-0"></span></div><span class="nav-link-icon"><span data-feather="file-text"></span></span><span class="nav-link-text">Data Master</span>
-                                    </div>
-                                </a>
-                                <ul class="nav collapse parent {{ request()->is('user*') ? 'show' : '' || request()->is('device*') ? 'show' : '' }}" id="master">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('user.index') }}" data-bs-toggle="" aria-expanded="false">
-                                            <div class="d-flex align-items-center">
-                                                <span class="nav-link-text">Data User</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('device.index') }}" data-bs-toggle="" aria-expanded="false">
-                                            <div class="d-flex align-items-center">
-                                                <span class="nav-link-text">Data Device</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            @endif
+        @else
+        <div id="header" class="app-header">
+            <div class="navbar-header">
+                <a href="/dashboard" class="navbar-brand">
+                    <img src="{{ asset('/') }}img/logo/wilo.png" alt="" class="navbar-logo">
+                </a>
 
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('view-data') ? 'active' : '' }}" href="/view-data">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </span>
-                                        <span class="nav-link-text">View Data</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('chart') ? 'active' : '' }}" href="/chart">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon">
-                                            <i class="fas fa-chart-line"></i>
-                                        </span>
-                                        <span class="nav-link-text">Chart</span>
-                                    </div>
-                                </a>
-                            </li>
-                            @if(auth()->user()->level == 'Admin')
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('access-viewer') ? 'active' : '' }}" href="/access-viewer">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon">
-                                            <span data-feather="settings"></span>
-                                        </span>
-                                        <span class="nav-link-text">Access Viewer</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('setting') ? 'active' : '' }}" href="/setting">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon">
-                                            <span data-feather="settings"></span>
-                                        </span>
-                                        <span class="nav-link-text">Setting</span>
-                                    </div>
-                                </a>
-                            </li>
-                            @endif
-                        </ul>
+                <button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+
+            <div class="navbar-nav">
+
+                <div class="navbar-item navbar-user dropdown">
+                    <a href="#" class="navbar-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                        <img src="{{ asset('/') }}img/user/user-13.jpg" alt="" />
+                        <span>
+                            <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+                            <b class="caret"></b>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end me-1">
+                        <a href="javascript:;" class="dropdown-item">Edit Profile</a>
+                        <a href="javascript:;" class="dropdown-item"><span class="badge bg-danger float-end rounded-pill">2</span> Inbox</a>
+                        <a href="javascript:;" class="dropdown-item">Calendar</a>
+                        <a href="javascript:;" class="dropdown-item">Setting</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="dropdown-item">Log Out</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </div>
                 </div>
-            </nav>
-
-            <nav class="navbar navbar-light navbar-top navbar-expand">
-                <div class="navbar-logo"><button class="btn navbar-toggler navbar-toggler-humburger-icon" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button> <a class="navbar-brand me-1 me-sm-3" href="/dashboard">
-                        <div class="d-flex align-items-center">
-                            <div class="d-flex align-items-center"><img src="{{ asset('/') }}img/wilologo.png" alt=" wilo" width="70">
-                            </div>
-                        </div>
-                    </a></div>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav navbar-nav-icons ms-auto flex-row">
-                        <li class="nav-item dropdown"><a class="nav-link lh-1 px-0 ms-5" id="navbarDropdownUser" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="avatar avatar-l"><img class="rounded-circle" src="{{ asset('storage/'. auth()->user()->image) }}" alt=""></div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end py-0 dropdown-profile shadow border border-300" aria-labelledby="navbarDropdownUser">
-                                <div class="card bg-white position-relative border-0">
-                                    <div class="card-body p-0 overflow-auto scrollbar" style="height: 18rem;">
-                                        <div class="text-center pt-4 pb-3">
-                                            <div class="avatar avatar-xl"><img class="rounded-circle" src="{{ asset('storage/'. auth()->user()->image) }}" alt=""></div>
-                                            <h6 class="mt-2">{{ auth()->user()->name }}</h6>
-                                        </div>
-
-                                        <ul class="nav d-flex flex-column mb-2">
-                                            <li class="nav-item"><a class="nav-link px-3" href="/profile"><span class="me-2 text-900" data-feather="user"></span>Profile</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link px-3" href="{{ route('logout') }}" onclick="event.preventDefault();            document.getElementById('logout-form').submit();"><span class="me-2" data-feather="log-out"></span>
-                                                    Logout
-
-                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                        @csrf
-                                                    </form>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            @endif
-
-            <div class="content">
-                @yield('content')
-
-                @if(request()->is('slider') && request('q') == 'full')
-
-                @else
-                <footer class="footer">
-                    <div class="row g-0 justify-content-between align-items-center h-100 mb-3">
-                        <div class="col-12 col-sm-auto text-center">
-                            <p class="mb-0 text-900"><span class="d-none d-sm-inline-block"><br class="d-sm-none">2022 &copy; <a href="https://wilo.com/id/en/" target="__blank">PT Wilo Pumps Indonesia</a></p>
-                        </div>
-                        <div class="col-12 col-sm-auto text-center">
-                            <p class="mb-0 text-600">v1.0.1</p>
-                        </div>
-                    </div>
-                </footer>
-                @endif
             </div>
         </div>
-    </main>
-    <script src="{{ asset('/') }}js/phoenix.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <div id="sidebar" class="app-sidebar">
+            <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+                <div class="menu">
+                    <div class="menu-profile">
+                        <a href="javascript:;" class="menu-profile-link" data-toggle="app-sidebar-profile" data-target="#appSidebarProfileMenu">
+                            <div class="menu-profile-cover with-shadow"></div>
+                            <div class="menu-profile-image">
+                                <img src="{{ asset('/') }}img/user/user-13.jpg" alt="" />
+                            </div>
+                            <div class="menu-profile-info">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        {{ auth()->user()->name }}
+                                    </div>
+                                    <div class="menu-caret ms-auto"></div>
+                                </div>
+                                <small>{{ auth()->user()->level }}</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div id="appSidebarProfileMenu" class="collapse">
+                        <div class="menu-item pt-5px">
+                            <a href="javascript:;" class="menu-link">
+                                <div class="menu-icon"><i class="fa fa-cog"></i></div>
+                                <div class="menu-text">Settings</div>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="javascript:;" class="menu-link">
+                                <div class="menu-icon"><i class="fa fa-pencil-alt"></i></div>
+                                <div class="menu-text"> Send Feedback</div>
+                            </a>
+                        </div>
+                        <div class="menu-item pb-5px">
+                            <a href="javascript:;" class="menu-link">
+                                <div class="menu-icon"><i class="fa fa-question-circle"></i></div>
+                                <div class="menu-text"> Helps</div>
+                            </a>
+                        </div>
+                        <div class="menu-divider m-0"></div>
+                    </div>
+                    <div class="menu-header">Navigation</div>
+                    <div class="menu-item">
+                        <a href="/dashboard" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-th bg-blue"></i>
+                            </div>
+                            <div class="menu-text">Dashboard</div>
+                        </a>
+                    </div>
 
+                    <div class="menu-item">
+                        <a href="/slider" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-th bg-blue"></i>
+                            </div>
+                            <div class="menu-text">Slider</div>
+                        </a>
+                    </div>
 
-    @if(session('success'))
-    <script>
-        iziToast.success({
-            title: 'Success',
-            position: 'topRight',
-            message: '{{ session("success") }}',
-        });
-    </script>
-    @endif
+                    <div class="menu-item has-sub">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="ion-ios-pulse"></i>
+                            </div>
+                            <div class="menu-text">Data Master</div>
+                            <div class="menu-caret"></div>
+                        </a>
+                        <div class="menu-submenu">
+                            <div class="menu-item">
+                                <a href="{{ route('user.index') }}" class="menu-link">
+                                    <div class="menu-text">Data User</div>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a href="{{ route('device.index') }}" class="menu-link">
+                                    <div class="menu-text">Data Device</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-    @if(session('error'))
-    <script>
-        iziToast.error({
-            title: 'Error',
-            position: 'topRight',
-            message: '{{ session("error") }}',
-        });
-    </script>
-    @endif
+                    <div class="menu-item">
+                        <a href="/view-data" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-th bg-blue"></i>
+                            </div>
+                            <div class="menu-text">View Data</div>
+                        </a>
+                    </div>
+
+                    <div class="menu-item">
+                        <a href="/chart" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-th bg-blue"></i>
+                            </div>
+                            <div class="menu-text">Chart</div>
+                        </a>
+                    </div>
+
+                    <div class="menu-item">
+                        <a href="/access-viewer" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-th bg-blue"></i>
+                            </div>
+                            <div class="menu-text">Access Viewer</div>
+                        </a>
+                    </div>
+
+                    <div class="menu-item">
+                        <a href="/setting" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-th bg-blue"></i>
+                            </div>
+                            <div class="menu-text">Setting</div>
+                        </a>
+                    </div>
+
+                    <!-- BEGIN minify-button -->
+                    <div class="menu-item d-flex">
+                        <a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i class="ion-ios-arrow-back"></i>
+                            <div class="menu-text">Collapse</div>
+                        </a>
+                    </div>
+                    <!-- END minify-button -->
+                </div>
+                <!-- END menu -->
+            </div>
+            <!-- END scrollbar -->
+        </div>
+        <div class="app-sidebar-bg"></div>
+        <div class="app-sidebar-mobile-backdrop"><a href="#" data-dismiss="app-sidebar-mobile" class="stretched-link"></a></div>
+        <!-- END #sidebar -->
+        @endif
+
+        <!-- BEGIN #content -->
+        <div id="content" class="app-content">
+
+            @yield('content')
+
+        </div>
+        <!-- END #content -->
+
+        @if(request()->is('slider') && request('q') == 'full')
+
+        @else
+        <!-- BEGIN scroll-top-btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-primary btn-scroll-to-top" data-toggle="scroll-to-top"><i class="fa fa-angle-up"></i></a>
+        <!-- END scroll-top-btn -->
+        @endif
+    </div>
+    <!-- END #app -->
+
+    <!-- ================== BEGIN core-js ================== -->
+    <script src="{{ asset('/') }}js/vendor.min.js"></script>
+    <script src="{{ asset('/') }}js/app.min.js"></script>
+    <script src="{{ asset('/') }}js/theme/apple.min.js"></script>
+    <!-- ================== END core-js ================== -->
 
     @stack('script')
 </body>

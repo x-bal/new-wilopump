@@ -15,7 +15,7 @@
             @endif
             @csrf
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name ?? old('name') }}">
 
@@ -24,7 +24,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ $user->email ?? old('email') }}">
 
@@ -33,7 +33,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" class="form-control" value="{{ old('password') }}">
 
@@ -42,7 +42,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="level">Level</label>
                 <select name="level" id="level" class="form-control">
                     <option disabled selected>-- Select Level --</option>
@@ -55,7 +55,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="image">Image</label>
                 <input type="file" name="image" id="image" class="form-control" value="{{ $user->image ?? old('image') }}">
 
@@ -64,7 +64,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <button type="submit" class="btn btn-success mt-3">Submit</button>
             </div>
         </form>

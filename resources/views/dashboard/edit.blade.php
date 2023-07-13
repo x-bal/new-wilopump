@@ -25,7 +25,7 @@
                 <div class="row">
                     @foreach($devices as $device)
                     <div class="col-md-4">
-                        <input class="form-check-input access-check" id="" type="checkbox" value="{{ $device->id }}" @if(in_array($device->id, $user->devices()->pluck('device_id')->toArray())) checked @endif>
+                        <input class="form-check-input access-check" id="" name="device_id" type="checkbox" value="{{ $device->id }}" @if(in_array($device->id, $user->devices()->pluck('device_id')->toArray())) checked @endif>
                         <label class="form-check-label" for="">{{ $device->name }}</label>
                     </div>
                     @endforeach

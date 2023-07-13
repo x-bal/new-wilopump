@@ -1,76 +1,102 @@
-<!doctype html>
-<html lang="en-US" dir="ltr">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Wilo Pump - Login</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/') }}img/icons/apple-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/android-chrome-512x512.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/') }}img/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/') }}img/icons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/icons/favicon.ico">
-    <!-- <link rel="manifest" href="{{ asset('/') }}img/favicons/manifest.json"> -->
-    <meta name="msapplication-TileImage" content="{{ asset('/') }}img/favicons/mstile-150x150.png">
-    <meta name="theme-color" content="#ffffff">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
-    <link href="{{ asset('/') }}css/phoenix.min.css" rel="stylesheet" id="style-default">
-    <link href="{{ asset('/') }}css/user.min.css" rel="stylesheet" id="user-style-default">
-    <style>
-        body {
-            opacity: 0;
-        }
-    </style>
+    <meta charset="utf-8" />
+    <title>Wilopump | Login</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <!-- ================== BEGIN core-css ================== -->
+    <link href="{{ asset('/') }}css/vendor.min.css" rel="stylesheet" />
+    <link href="{{ asset('/') }}css/apple/app.min.css" rel="stylesheet" />
+    <link href="{{ asset('/') }}plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <!-- ================== END core-css ================== -->
 </head>
 
-<body>
-    <main class="main" id="top">
-        <div class="container-fluid px-0">
-            <div class="container">
-                <div class="row flex-center min-vh-100 py-5">
-                    <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3"><a class="d-flex flex-center text-decoration-none mb-4" href="/">
-                            <div class="d-flex align-items-center"><img src="{{ asset('/') }}img/wilo.png" alt="wilo" width="120"></div>
-                        </a>
-                        <div class="text-center mb-7">
-                            <h3>Login</h3>
-                            <p class="text-700">Get access to your account</p>
-                        </div>
+<body class='pace-top'>
+    <!-- BEGIN #loader -->
+    <div id="loader" class="app-loader">
+        <span class="spinner"></span>
+    </div>
+    <!-- END #loader -->
 
-                        <div class="position-relative mt-4">
-                            <hr class="bg-200">
-                            <div class="divider-content-center">Use email & password</div>
-                        </div>
-                        <form action="{{ route('login') }}" method="post">
-                            @csrf
-                            <div class="mb-3 text-start">
-                                <label class="form-label" for="email">Email address</label>
-                                <div class="form-icon-container">
-                                    <input class="form-control form-icon-input" id="email" name="email" type="email" placeholder="name@example.com" value="{{ old('email') }}">
-                                    <span class="fas fa-user text-900 fs--1 form-icon"></span>
-                                </div>
 
-                                @error('email')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="mb-3 text-start">
-                                <label class="form-label" for="password">Password</label>
-                                <div class="form-icon-container"><input class="form-control form-icon-input" type="password" name="password" placeholder="Password"><span class="fas fa-user text-900 fs--1 form-icon"></span>
-                                </div>
-                            </div>
-                            <div class="row flex-between-center mb-7">
-                            </div>
-                            <button class="btn btn-success w-100 mb-3" type="submit">Login</button>
-                        </form>
-                    </div>
+    <!-- BEGIN #app -->
+    <div id="app" class="app">
+        <!-- BEGIN login -->
+        <div class="login login-v2 fw-bold">
+            <!-- BEGIN login-cover -->
+            <div class="login-cover">
+                <div class="login-cover-img" style="background-image: url({{ asset('/') }}img/login-bg/login-bg-17.jpg)" data-id="login-cover-image"></div>
+                <div class="login-cover-bg"></div>
+            </div>
+            <!-- END login-cover -->
+
+            <!-- BEGIN login-container -->
+            <div class="login-container">
+                <!-- BEGIN login-header -->
+                <div class="login-header">
+                    <img src="{{ asset('/') }}img/logo/wilo.png" alt="" class="logo" width="200" style="margin-left: 75px !important;">
                 </div>
+                <!-- END login-header -->
+
+                <!-- BEGIN login-content -->
+                <div class="login-content">
+                    <form action="{{ route('login') }}" method="POST">
+                        @csrf
+
+                        <div class="form-floating mb-20px">
+                            <input type="email" class="form-control fs-13px h-45px border-0" placeholder="Email Address" id="emailAddress" name="email" />
+                            <label for="emailAddress" class="d-flex align-items-center text-gray-600 fs-13px">Email Address</label>
+
+                            @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-floating mb-20px">
+                            <input type="password" class="form-control fs-13px h-45px border-0" placeholder="Password" name="password" />
+                            <label for="password" class="d-flex align-items-center text-gray-600 fs-13px">Password</label>
+
+                            @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-20px">
+                            <button type="submit" class="btn btn-success d-block w-100 h-45px btn-lg">Login</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- END login-content -->
+            </div>
+            <!-- END login-container -->
+        </div>
+        <!-- END login -->
+
+        <!-- BEGIN login-bg -->
+        <div class="login-bg-list clearfix">
+            <div class="login-bg-list-item active">
+                <a href="javascript:;" class="login-bg-list-link" data-toggle="login-change-bg" data-img="{{ asset('/') }}img/login-bg/login-bg-17.jpg" style="background-image: url({{ asset('/') }}img/login-bg/login-bg-17.jpg)"></a>
             </div>
         </div>
-    </main>
-    <script src="{{ asset('/') }}js/phoenix.js"></script>
+        <!-- END login-bg -->
+
+        <!-- BEGIN scroll-top-btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-primary btn-scroll-to-top" data-toggle="scroll-to-top"><i class="fa fa-angle-up"></i></a>
+        <!-- END scroll-top-btn -->
+    </div>
+    <!-- END #app -->
+
+    <!-- ================== BEGIN core-js ================== -->
+    <script src="{{ asset('/') }}js/vendor.min.js"></script>
+    <script src="{{ asset('/') }}js/app.min.js"></script>
+    <script src="{{ asset('/') }}js/theme/apple.min.js"></script>
+    <!-- ================== END core-js ================== -->
+
+    <!-- ================== BEGIN page-js ================== -->
+    <script src="{{ asset('/') }}js/demo/login-v2.demo.js"></script>
+    <!-- ================== END page-js ================== -->
 </body>
 
 </html>

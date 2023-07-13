@@ -38,27 +38,29 @@
         <h2 class="mb-3 lh-sm">Slider</h2>
         <a href="/slider?q=full" target="__blank" class="btn btn-success mb-3">Full Size</a>
         @endif
+
         <div id="carouselExampleControls" class="carousel carousel-dark slide mb-3" data-bs-ride="carousel">
             <div class="row justify-content-center">
-                <div class="col-md-12" style="width: 96%;">
-                    <div class="carousel-inner">
-                        <div class=" carousel-item active" data-bs-interval="{{ $delay }}">
-                            <div id="first-map" style="width: 100%; height: {{ request('q') == 'full' ? '720px' : '480px' }};" class="d-block w-100"></div>
-                        </div>
-                        @foreach($devices as $device)
-                        <div class="carousel-item" data-bs-interval="{{ $delay }}">
-                            <div id="{{ $device->id }}" style="width: 100%; height: {{ request('q') == 'full' ? '720px' : '480px' }};" class="d-block w-100 maps">{{ $device->lat }}, {{ $device->long }}, {{ $device->name }}</div>
-                        </div>
-                        @endforeach
+                <!-- <div class="col-md-12" style="width: 96%;"> -->
+                <div class="carousel-inner">
+                    <div class=" carousel-item active" data-bs-interval="{{ $delay }}">
+                        <div id="first-map" style="width: 100%; height: {{ request('q') == 'full' ? '720px' : '480px' }};" class="d-block w-100"></div>
                     </div>
+                    @foreach($devices as $device)
+                    <div class="carousel-item" data-bs-interval="{{ $delay }}">
+                        <div id="{{ $device->id }}" style="width: 100%; height: {{ request('q') == 'full' ? '720px' : '480px' }};" class="d-block w-100 maps">{{ $device->lat }}, {{ $device->long }}, {{ $device->name }}</div>
+                    </div>
+                    @endforeach
                 </div>
+                <!-- </div> -->
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev" style="margin-left: -10%">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev" style="margin-left: -9%">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" style="margin-right: -10%">
+
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" style="margin-right: -9%">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>

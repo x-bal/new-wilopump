@@ -13,18 +13,45 @@
         font-weight: bold;
         font-size: 16px !important;
     }
-
-    /* .gm-style .gm-style-iw {
-        background-color: #009c81;
-    } */
 </style>
 @endpush
+
 @section('content')
+<h1 class="page-header">Dashboard</h1>
+
 <div class="row">
     <div class="col-md-12">
-        <h2 class="mb-3 lh-sm">Dashboard</h2>
-
         <div id="map" style="width: 100%; height: 480px;" class="d-block w-100"></div>
+    </div>
+
+    <div class="col-md-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center">Install-Based Population</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Company Logo</th>
+                                <th>Company Name</th>
+                                <th>Total Installed Pump</th>
+                                <th>Total Pump Running</th>
+                                <th>Total Pump Off</th>
+                                <th>Total Pump Trip</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <a href="" class="btn btn-success text-center">Click for more</a>
+            </div>
+        </div>
     </div>
 </div>
 @stop
